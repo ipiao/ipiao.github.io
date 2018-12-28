@@ -10,7 +10,7 @@
   <meta content="telephone=no" name="format-detection">
   <meta name="description" content="没有理由，只是想做些什么">
   <meta name="keywords" content="go,ipiao">
-  <title>about | 欣欣然不知所以</title>
+  <title>Project Euler 1 | 欣欣然不知所以</title>
   <link rel="stylesheet" type="text/css" href="//fonts.neworld.org/css?family=Source+Code+Pro">
   <link rel="stylesheet" type="text/css" href="/css/style.css?v=2.0.1">
   <link rel="stylesheet" type="text/css" href="/css/highlight.css?v=2.0.1">
@@ -25,10 +25,10 @@
   <div class="body_container">
     <div id="header">
       <div class="site-name">
-        <h1 class="hidden">about</h1><a id="logo" href="/.">欣欣然不知所以</a>
+        <h1 class="hidden">Project Euler 1</h1><a id="logo" href="/.">欣欣然不知所以</a>
         <p class="description">......</p>
       </div>
-      <div id="nav-menu"><a href="/."><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/about/" class="current"><i class="fa fa-user"> 关于</i></a><a href="/atom.xml"><i class="fa fa-rss"> 订阅</i></a></div>
+      <div id="nav-menu"><a href="/." class="current"><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/about/"><i class="fa fa-user"> 关于</i></a><a href="/atom.xml"><i class="fa fa-rss"> 订阅</i></a></div>
       <div id="search-form">
         <div id="result-mask" class="hide"></div><label><input id="search-key" type="text" autocomplete="off" placeholder="input keywork to search..."></label>
         <div id="result-wrap" class="hide">
@@ -47,19 +47,64 @@
       <div class="layout-l">
         <div class="content_container">
           <div class="post">
-            <h1 class="post-title">about</h1>
-            <div class="post-content">
-              <div class="author-page"><a href="javascript:;" class="photo"><img src="http://obzf7z93c.bkt.clouddn.com/themeauthor.jpg"></a>
-                <div class="author">
-                  <p><i class="fa fa-user">name：</i>ipiao</p>
-                  <p><i class="fa fa-email">email：</i><a href="mailto:530151330@qq.com" target="_blank">530151330@qq.com</a></p>
-                  <p><i class="fa fa-github">github：</i><a href="https://github.com/ipiao" target="_blank">ipiao</a></p>
-                  <p><i class="fa fa-weibo">weibo：</i><a target="_blank"></a></p>
-                </div>
-              </div>
+            <h1 class="post-title">Project Euler 1</h1>
+            <div class="post-meta"><a href="/2018/12/24/Project-Euler-1/#comments" class="comment-count"><i id="changyan_count_unit" data-xid="2018/12/24/Project-Euler-1/"></i>留言,<i id="changyan_parti_unit" data-xid="2018/12/24/Project-Euler-1/"></i>参与</a>
+              <p><span class="date">Dec 24, 2018</span><span><a href="/categories/我爱数学/" class="category">我爱数学</a></span></p>
             </div>
+            <div class="post-content">
+              <h4 id="1-3的倍数和5的倍数"><a href="#1-3的倍数和5的倍数" class="headerlink" title="1.3的倍数和5的倍数"></a>1.3的倍数和5的倍数</h4>
+              <blockquote>
+                <p>如果我们列出10以内所有3或5的倍数，我们将得到3、5、6和9，这些数的和是23。求1000以内所有3或5的倍数的和。</p>
+              </blockquote>
+              <blockquote>
+                <ul>
+                  <li>中学经典求和问题。计算 和=3的倍数和+5的倍数和-15的倍数和。<figure class="highlight lsl">
+                      <table>
+                        <tr>
+                          <td class="gutter">
+                            <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre>
+                          </td>
+                          <td class="code">
+                            <pre><span class="line"><span class="number">3</span>的倍数和 s1 = <span class="number">333</span>*<span class="number">334</span>/<span class="number">2</span>*<span class="number">3</span> = <span class="number">166833</span></span><br><span class="line"><span class="number">5</span>的倍数和 s2 = <span class="number">199</span>*<span class="number">200</span>/<span class="number">2</span>*<span class="number">5</span> = <span class="number">99500</span></span><br><span class="line"><span class="number">15</span>的倍数和 s3 = <span class="number">66</span>*<span class="number">67</span>/<span class="number">2</span>*<span class="number">15</span> = <span class="number">33165</span></span><br><span class="line">s = <span class="number">233168</span></span><br></pre>
+                          </td>
+                        </tr>
+                      </table>
+                    </figure>
+                  </li>
+                </ul>
+              </blockquote>
+              <blockquote>
+                <ul>
+                  <li>code<figure class="highlight clean">
+                      <table>
+                        <tr>
+                          <td class="gutter">
+                            <pre><span class="line">1</span><br></pre>
+                          </td>
+                          <td class="code">
+                            <pre><span class="line">...</span><br></pre>
+                          </td>
+                        </tr>
+                      </table>
+                    </figure>
+                  </li>
+                </ul>
+              </blockquote>
+              <a id="more"></a>
+              <h4 id="2-偶斐波那契数"><a href="#2-偶斐波那契数" class="headerlink" title="2.偶斐波那契数"></a>2.偶斐波那契数</h4>
+              <blockquote>
+                <p>斐波那契数列中的每一项都是前两项的和。由1和2开始生成的斐波那契数列前10项为：1, 2, 3, 5, 8, 13, 21, 34, 55, 89, … 考虑该斐波那契数列中不超过四百万的项，求其中为偶数的项之和。。</p>
+              </blockquote>
+              <blockquote>
+              </blockquote>
+            </div>
+            <div class="tags"><a href="/tags/pe/">pe</a></div>
+            <div class="post-share">
+              <div class="bdsharebuttonbox"><span style="float:left;line-height: 28px;height: 28px;font-size:16px;font-weight:blod">分享到：</span><a href="#" data-cmd="more" class="bds_more"></a><a href="#" data-cmd="mshare" title="分享到一键分享" class="bds_mshare"></a><a href="#" data-cmd="fbook" title="分享到Facebook" class="bds_fbook"></a><a href="#" data-cmd="twi" title="分享到Twitter" class="bds_twi"></a><a href="#" data-cmd="linkedin" title="分享到linkedin" class="bds_linkedin"></a><a href="#" data-cmd="youdao" title="分享到有道云笔记" class="bds_youdao"></a><a href="#" data-cmd="evernotecn" title="分享到印象笔记" class="bds_evernotecn"></a><a href="#" data-cmd="weixin" title="分享到微信" class="bds_weixin"></a><a href="#" data-cmd="qzone" title="分享到QQ空间" class="bds_qzone"></a><a href="#" data-cmd="tsina" title="分享到新浪微博" class="bds_tsina"></a></div>
+            </div>
+            <div class="post-nav"><a href="/2018/12/24/Leetcode-1-5/" class="pre">Leetcode 1-5</a><a href="/2018/12/17/快慢指针法/" class="next">链表（一）</a></div>
             <div id="comments">
-              <div id="SOHUCS" sid="about/index.html"></div>
+              <div id="SOHUCS" sid="2018/12/24/Project-Euler-1/"></div>
             </div>
           </div>
         </div>
@@ -67,6 +112,13 @@
       <div class="layout-r">
         <div id="sidebar">
           <div class="search-pla"></div>
+          <div id="toc" class="widget">
+            <div class="widget-title"><i class="fa fa-fei">文章目录</i></div>
+            <ol class="toc">
+              <li class="toc-item toc-level-4"><a class="toc-link" href="#1-3的倍数和5的倍数"><span class="toc-text">1.3的倍数和5的倍数</span></a></li>
+              <li class="toc-item toc-level-4"><a class="toc-link" href="#2-偶斐波那契数"><span class="toc-text">2.偶斐波那契数</span></a></li>
+            </ol>
+          </div>
           <div class="widget">
             <div class="widget-title"><i class="fa fa-xie"> 最新文章</i></div>
             <ul class="post-list">
@@ -128,7 +180,7 @@
     })();
   </script>
   <script type="text/javascript" src="/js/search.json.js?v=2.0.1"></script>
-  <script type="text/javascript" src="/js/totop.js?v=2.0.1" async></script>
+  <script type="text/javascript" src="/js/toctotop.js?v=2.0.1" async></script>
   <script>
     window._bd_share_config = {
       "common": {

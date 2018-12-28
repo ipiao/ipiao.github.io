@@ -10,7 +10,7 @@
   <meta content="telephone=no" name="format-detection">
   <meta name="description" content="没有理由，只是想做些什么">
   <meta name="keywords" content="go,ipiao">
-  <title>about | 欣欣然不知所以</title>
+  <title>Leetcode 21-30 | 欣欣然不知所以</title>
   <link rel="stylesheet" type="text/css" href="//fonts.neworld.org/css?family=Source+Code+Pro">
   <link rel="stylesheet" type="text/css" href="/css/style.css?v=2.0.1">
   <link rel="stylesheet" type="text/css" href="/css/highlight.css?v=2.0.1">
@@ -25,10 +25,10 @@
   <div class="body_container">
     <div id="header">
       <div class="site-name">
-        <h1 class="hidden">about</h1><a id="logo" href="/.">欣欣然不知所以</a>
+        <h1 class="hidden">Leetcode 21-30</h1><a id="logo" href="/.">欣欣然不知所以</a>
         <p class="description">......</p>
       </div>
-      <div id="nav-menu"><a href="/."><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/about/" class="current"><i class="fa fa-user"> 关于</i></a><a href="/atom.xml"><i class="fa fa-rss"> 订阅</i></a></div>
+      <div id="nav-menu"><a href="/." class="current"><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/about/"><i class="fa fa-user"> 关于</i></a><a href="/atom.xml"><i class="fa fa-rss"> 订阅</i></a></div>
       <div id="search-form">
         <div id="result-mask" class="hide"></div><label><input id="search-key" type="text" autocomplete="off" placeholder="input keywork to search..."></label>
         <div id="result-wrap" class="hide">
@@ -47,19 +47,83 @@
       <div class="layout-l">
         <div class="content_container">
           <div class="post">
-            <h1 class="post-title">about</h1>
-            <div class="post-content">
-              <div class="author-page"><a href="javascript:;" class="photo"><img src="http://obzf7z93c.bkt.clouddn.com/themeauthor.jpg"></a>
-                <div class="author">
-                  <p><i class="fa fa-user">name：</i>ipiao</p>
-                  <p><i class="fa fa-email">email：</i><a href="mailto:530151330@qq.com" target="_blank">530151330@qq.com</a></p>
-                  <p><i class="fa fa-github">github：</i><a href="https://github.com/ipiao" target="_blank">ipiao</a></p>
-                  <p><i class="fa fa-weibo">weibo：</i><a target="_blank"></a></p>
-                </div>
-              </div>
+            <h1 class="post-title">Leetcode 21-30</h1>
+            <div class="post-meta"><a href="/2018/12/27/Leetcode-21-30/#comments" class="comment-count"><i id="changyan_count_unit" data-xid="2018/12/27/Leetcode-21-30/"></i>留言,<i id="changyan_parti_unit" data-xid="2018/12/27/Leetcode-21-30/"></i>参与</a>
+              <p><span class="date">Dec 27, 2018</span><span><a href="/categories/日常练习/" class="category">日常练习</a></span></p>
             </div>
+            <div class="post-content">
+              <h4 id="21-合并两个有序链表"><a href="#21-合并两个有序链表" class="headerlink" title="21. 合并两个有序链表"></a>21. 合并两个有序链表</h4>
+              <blockquote>
+                <p>将两个有序链表合并为一个新的有序链表并返回。新链表是通过拼接给定的两个链表的所有节点组成的。<br>示例：<br>输入：1-&gt;2-&gt;4, 1-&gt;3-&gt;4<br>输出：1-&gt;1-&gt;2-&gt;3-&gt;4-&gt;4</p>
+              </blockquote>
+              <a id="more"></a>
+              <ul>
+                <li>
+                  <p>code</p>
+                  <figure class="highlight go">
+                    <table>
+                      <tr>
+                        <td class="gutter">
+                          <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre>
+                        </td>
+                        <td class="code">
+                          <pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Definition for singly-linked list.</span></span><br><span class="line"><span class="comment"> * type ListNode struct &#123;</span></span><br><span class="line"><span class="comment"> *     Val int</span></span><br><span class="line"><span class="comment"> *     Next *ListNode</span></span><br><span class="line"><span class="comment"> * &#125;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">mergeTwoLists</span><span class="params">(l1 *ListNode, l2 *ListNode)</span> *<span class="title">ListNode</span></span> &#123;</span><br><span class="line">    <span class="keyword">if</span> l1 == <span class="literal">nil</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> l2</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> l2 == <span class="literal">nil</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> l1</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">var</span> root = <span class="built_in">new</span>(ListNode)</span><br><span class="line">    <span class="keyword">if</span> l1.Val &lt; l2.Val&#123;</span><br><span class="line">        root.Val = l1.Val</span><br><span class="line">        l1 = l1.Next</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        root.Val = l2.Val</span><br><span class="line">        l2 = l2.Next</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> l1 !=<span class="literal">nil</span> || l2!=<span class="literal">nil</span>&#123;</span><br><span class="line">        root.Next = mergeTwoLists(l1, l2)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> root</span><br><span class="line">&#125;</span><br></pre>
+                        </td>
+                      </tr>
+                    </table>
+                  </figure>
+                </li>
+              </ul>
+              <h4 id="22-括号生成"><a href="#22-括号生成" class="headerlink" title="22. 括号生成"></a>22. 括号生成</h4>
+              <blockquote>
+                <p>给出 n 代表生成括号的对数，请你写出一个函数，使其能够生成所有可能的并且有效的括号组合。<br>例如，给出 n = 3，生成结果为：<br>[<br> “((()))”,<br> “(()())”,<br> “(())()”,<br> “()(())”,<br> “()()()”<br>]</p>
+              </blockquote>
+              <ul>
+                <li>
+                  <p>code</p>
+                  <figure class="highlight go">
+                    <table>
+                      <tr>
+                        <td class="gutter">
+                          <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre>
+                        </td>
+                        <td class="code">
+                          <pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">generateParenthesis</span><span class="params">(n <span class="keyword">int</span>)</span> []<span class="title">string</span></span> &#123;</span><br><span class="line">    <span class="keyword">var</span> ans = []<span class="keyword">string</span>&#123;&#125;</span><br><span class="line">    generate(&amp;ans, <span class="string">""</span>, <span class="number">0</span>, <span class="number">0</span>, n)</span><br><span class="line">    <span class="keyword">return</span> ans</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">generate</span><span class="params">(ans *[]<span class="keyword">string</span>,cur <span class="keyword">string</span>,l <span class="keyword">int</span>, r <span class="keyword">int</span>, max <span class="keyword">int</span>)</span></span> &#123;</span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">len</span>(cur) == max*<span class="number">2</span>&#123;</span><br><span class="line">        *ans = <span class="built_in">append</span>(*ans, cur)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> l &lt; max&#123;</span><br><span class="line">         generate(ans, cur + <span class="string">"("</span>, l+<span class="number">1</span>, r, max)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> r &lt; l&#123;</span><br><span class="line">        generate(ans, cur + <span class="string">")"</span>, l, r+<span class="number">1</span>, max)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre>
+                        </td>
+                      </tr>
+                    </table>
+                  </figure>
+                </li>
+              </ul>
+              <h4 id="23-合并K个排序链表"><a href="#23-合并K个排序链表" class="headerlink" title="23. 合并K个排序链表"></a>23. 合并K个排序链表</h4>
+              <blockquote>
+                <p>合并 k 个排序链表，返回合并后的排序链表。请分析和描述算法的复杂度。</p>
+              </blockquote>
+              <ul>
+                <li>
+                  <p>code</p>
+                  <figure class="highlight go">
+                    <table>
+                      <tr>
+                        <td class="gutter">
+                          <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre>
+                        </td>
+                        <td class="code">
+                          <pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Definition for singly-linked list.</span></span><br><span class="line"><span class="comment"> * type ListNode struct &#123;</span></span><br><span class="line"><span class="comment"> *     Val int</span></span><br><span class="line"><span class="comment"> *     Next *ListNode</span></span><br><span class="line"><span class="comment"> * &#125;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">mergeKLists</span><span class="params">(lists []*ListNode)</span> *<span class="title">ListNode</span></span> &#123;</span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">len</span>(lists) == <span class="number">0</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">len</span>(lists) == <span class="number">1</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> lists[<span class="number">0</span>]</span><br><span class="line">    &#125; </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> mergeTwoLists(mergeKLists(lists[:<span class="built_in">len</span>(lists)/<span class="number">2</span>]), mergeKLists(lists[<span class="built_in">len</span>(lists)/<span class="number">2</span>:]))</span><br><span class="line">&#125;</span><br></pre>
+                        </td>
+                      </tr>
+                    </table>
+                  </figure>
+                </li>
+              </ul>
+            </div>
+            <div class="tags"><a href="/tags/leetcode/">leetcode</a></div>
+            <div class="post-share">
+              <div class="bdsharebuttonbox"><span style="float:left;line-height: 28px;height: 28px;font-size:16px;font-weight:blod">分享到：</span><a href="#" data-cmd="more" class="bds_more"></a><a href="#" data-cmd="mshare" title="分享到一键分享" class="bds_mshare"></a><a href="#" data-cmd="fbook" title="分享到Facebook" class="bds_fbook"></a><a href="#" data-cmd="twi" title="分享到Twitter" class="bds_twi"></a><a href="#" data-cmd="linkedin" title="分享到linkedin" class="bds_linkedin"></a><a href="#" data-cmd="youdao" title="分享到有道云笔记" class="bds_youdao"></a><a href="#" data-cmd="evernotecn" title="分享到印象笔记" class="bds_evernotecn"></a><a href="#" data-cmd="weixin" title="分享到微信" class="bds_weixin"></a><a href="#" data-cmd="qzone" title="分享到QQ空间" class="bds_qzone"></a><a href="#" data-cmd="tsina" title="分享到新浪微博" class="bds_tsina"></a></div>
+            </div>
+            <div class="post-nav"><a href="/2018/12/26/Leetcode-11-20/" class="next">Leetcode 11-20</a></div>
             <div id="comments">
-              <div id="SOHUCS" sid="about/index.html"></div>
+              <div id="SOHUCS" sid="2018/12/27/Leetcode-21-30/"></div>
             </div>
           </div>
         </div>
@@ -67,6 +131,14 @@
       <div class="layout-r">
         <div id="sidebar">
           <div class="search-pla"></div>
+          <div id="toc" class="widget">
+            <div class="widget-title"><i class="fa fa-fei">文章目录</i></div>
+            <ol class="toc">
+              <li class="toc-item toc-level-4"><a class="toc-link" href="#21-合并两个有序链表"><span class="toc-text">21. 合并两个有序链表</span></a></li>
+              <li class="toc-item toc-level-4"><a class="toc-link" href="#22-括号生成"><span class="toc-text">22. 括号生成</span></a></li>
+              <li class="toc-item toc-level-4"><a class="toc-link" href="#23-合并K个排序链表"><span class="toc-text">23. 合并K个排序链表</span></a></li>
+            </ol>
+          </div>
           <div class="widget">
             <div class="widget-title"><i class="fa fa-xie"> 最新文章</i></div>
             <ul class="post-list">
@@ -128,7 +200,7 @@
     })();
   </script>
   <script type="text/javascript" src="/js/search.json.js?v=2.0.1"></script>
-  <script type="text/javascript" src="/js/totop.js?v=2.0.1" async></script>
+  <script type="text/javascript" src="/js/toctotop.js?v=2.0.1" async></script>
   <script>
     window._bd_share_config = {
       "common": {

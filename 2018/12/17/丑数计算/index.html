@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta name="generator" content="Hexo 3.8.0">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta content="yes" name="apple-mobile-web-app-capable">
+  <meta content="black-translucent" name="apple-mobile-web-app-status-bar-style">
+  <meta content="telephone=no" name="format-detection">
+  <meta name="description" content="没有理由，只是想做些什么">
+  <meta name="keywords" content="go,ipiao">
+  <title>数——丑数 | 欣欣然不知所以</title>
+  <link rel="stylesheet" type="text/css" href="//fonts.neworld.org/css?family=Source+Code+Pro">
+  <link rel="stylesheet" type="text/css" href="/css/style.css?v=2.0.1">
+  <link rel="stylesheet" type="text/css" href="/css/highlight.css?v=2.0.1">
+  <link rel="Shortcut Icon" href="/favicon.ico">
+  <link rel="bookmark" href="/favicon.ico">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png">
+  <link rel="alternate" type="application/atom+xml" href="/atom.xml">
+</head>
+
+<body>
+  <div class="body_container">
+    <div id="header">
+      <div class="site-name">
+        <h1 class="hidden">数——丑数</h1><a id="logo" href="/.">欣欣然不知所以</a>
+        <p class="description">......</p>
+      </div>
+      <div id="nav-menu"><a href="/." class="current"><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/about/"><i class="fa fa-user"> 关于</i></a><a href="/atom.xml"><i class="fa fa-rss"> 订阅</i></a></div>
+      <div id="search-form">
+        <div id="result-mask" class="hide"></div><label><input id="search-key" type="text" autocomplete="off" placeholder="input keywork to search..."></label>
+        <div id="result-wrap" class="hide">
+          <div id="search-result"></div>
+        </div>
+        <div class="hide"><template id="search-tpl">
+            <div class="item"><a href="/{path}" title="{title}">
+                <div class="title">{title}</div>
+                <div class="time">{date}</div>
+                <div class="tags">{tags}</div>
+              </a></div>
+          </template></div>
+      </div>
+    </div>
+    <div id="layout" class="layout-g">
+      <div class="layout-l">
+        <div class="content_container">
+          <div class="post">
+            <h1 class="post-title">数——丑数</h1>
+            <div class="post-meta"><a href="/2018/12/17/丑数计算/#comments" class="comment-count"><i id="changyan_count_unit" data-xid="2018/12/17/丑数计算/"></i>留言,<i id="changyan_parti_unit" data-xid="2018/12/17/丑数计算/"></i>参与</a>
+              <p><span class="date">Dec 17, 2018</span><span><a href="/categories/日常练习/" class="category">日常练习</a></span></p>
+            </div>
+            <div class="post-content">
+              <h4 id="丑数计算"><a href="#丑数计算" class="headerlink" title="丑数计算"></a>丑数计算</h4>
+              <blockquote>
+                <p>要求输入一个n数输出第n个丑数。丑数是素因子只有2,3,5,7…</p>
+              </blockquote>
+              <a id="more"></a>
+              <figure class="highlight go">
+                <table>
+                  <tr>
+                    <td class="gutter">
+                      <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br></pre>
+                    </td>
+                    <td class="code">
+                      <pre><span class="line"><span class="keyword">package</span> cal</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">"math"</span></span><br><span class="line">	<span class="string">"sort"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment">// Ugly 丑数，基础</span></span><br><span class="line"><span class="comment">// base 素数数组 可以是 2,3,5|3,5,7</span></span><br><span class="line"><span class="keyword">type</span> Ugly <span class="keyword">struct</span> &#123;</span><br><span class="line">	base  []<span class="keyword">int</span>   <span class="comment">// 基础素因子</span></span><br><span class="line">	bmul  <span class="keyword">int</span>     <span class="comment">// 基础素因子 乘积</span></span><br><span class="line">	cbase [][]<span class="keyword">int</span> <span class="comment">// 素因子对应的第i次计算次数</span></span><br><span class="line">	ranks [][]<span class="keyword">int</span> <span class="comment">// 素因子各次值排序</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// NewUgly 创建一个丑数计算基础</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">NewUgly</span><span class="params">(base []<span class="keyword">int</span>)</span> *<span class="title">Ugly</span></span> &#123;</span><br><span class="line">	sort.Ints(base)</span><br><span class="line">	u := &amp;Ugly&#123;</span><br><span class="line">		base: base,</span><br><span class="line">		bmul: mul(base),</span><br><span class="line">	&#125;</span><br><span class="line">	u.calNext()</span><br><span class="line">	<span class="keyword">return</span> u</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Get 获取第n个丑数</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(u *Ugly)</span> <span class="title">Get</span><span class="params">(n <span class="keyword">int</span>)</span> <span class="title">int</span></span> &#123;</span><br><span class="line">	<span class="keyword">for</span> sumLen(u.ranks) &lt; n &#123;</span><br><span class="line">		u.calNext()</span><br><span class="line">	&#125;</span><br><span class="line">	sl := <span class="number">0</span></span><br><span class="line">	ret := <span class="number">0</span></span><br><span class="line">	<span class="keyword">for</span> i := <span class="keyword">range</span> u.ranks &#123;</span><br><span class="line">		li := <span class="built_in">len</span>(u.ranks[i])</span><br><span class="line">		<span class="keyword">if</span> sl+li &gt;= n &#123;</span><br><span class="line">			ret = u.ranks[i][n-sl<span class="number">-1</span>]</span><br><span class="line">			<span class="keyword">break</span></span><br><span class="line">		&#125;</span><br><span class="line">		sl += li</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> ret</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 第n次计算</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(u *Ugly)</span> <span class="title">calNext</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="keyword">var</span> n = <span class="built_in">len</span>(u.cbase) + <span class="number">1</span></span><br><span class="line">	<span class="keyword">var</span> bb = <span class="built_in">make</span>([]<span class="keyword">int</span>, <span class="built_in">len</span>(u.base))</span><br><span class="line">	<span class="keyword">for</span> i, b := <span class="keyword">range</span> u.base &#123;</span><br><span class="line">		bb[i] = maxc(pow(u.bmul, n), b)</span><br><span class="line">	&#125;</span><br><span class="line">	u.cbase = <span class="built_in">append</span>(u.cbase, bb)</span><br><span class="line">	<span class="comment">//</span></span><br><span class="line">	bn := <span class="built_in">make</span>([]<span class="keyword">int</span>, <span class="built_in">len</span>(bb))</span><br><span class="line">	<span class="keyword">var</span> rank []<span class="keyword">int</span></span><br><span class="line">	min := pow(u.bmul, n<span class="number">-1</span>)</span><br><span class="line">	<span class="keyword">for</span> autoAdd(bn, bb) &#123;</span><br><span class="line">		pm := powmul(u.base, bn)</span><br><span class="line">		<span class="keyword">if</span> pm &gt; min &amp;&amp; pm &lt;= pow(u.bmul, n) &#123;</span><br><span class="line">			rank = <span class="built_in">append</span>(rank, pm)</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	sort.Ints(rank)</span><br><span class="line">	u.ranks = <span class="built_in">append</span>(u.ranks, rank)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 多元排序自增</span></span><br><span class="line"><span class="comment">// 返回是否还有下一个</span></span><br><span class="line"><span class="comment">// ln下限</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">autoAdd</span><span class="params">(bn, ln []<span class="keyword">int</span>)</span> <span class="title">bool</span></span> &#123;</span><br><span class="line">	<span class="keyword">if</span> bn[<span class="number">0</span>] &lt; ln[<span class="number">0</span>] &#123;</span><br><span class="line">		bn[<span class="number">0</span>]++</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">	&#125;</span><br><span class="line">	bn[<span class="number">0</span>] = <span class="number">0</span></span><br><span class="line">	<span class="keyword">if</span> <span class="built_in">len</span>(bn) == <span class="number">1</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> autoAdd(bn[<span class="number">1</span>:], ln[<span class="number">1</span>:])</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 获取a以b为底的整数部分</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">maxc</span><span class="params">(a, b <span class="keyword">int</span>)</span> <span class="title">int</span></span> &#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="keyword">int</span>(math.Log(<span class="keyword">float64</span>(a)) / math.Log(<span class="keyword">float64</span>(b)))</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 获取乘积</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">mul</span><span class="params">(nums []<span class="keyword">int</span>)</span> <span class="title">int</span></span> &#123;</span><br><span class="line">	ret := <span class="number">1</span></span><br><span class="line">	<span class="keyword">for</span> _, n := <span class="keyword">range</span> nums &#123;</span><br><span class="line">		ret *= n</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> ret</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 获取数组所有长度</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">sumLen</span><span class="params">(a [][]<span class="keyword">int</span>)</span> <span class="title">int</span></span> &#123;</span><br><span class="line">	l := <span class="number">0</span></span><br><span class="line">	<span class="keyword">for</span> _, aa := <span class="keyword">range</span> a &#123;</span><br><span class="line">		l += <span class="built_in">len</span>(aa)</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> l</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">pow</span><span class="params">(x, n <span class="keyword">int</span>)</span> <span class="title">int</span></span> &#123;</span><br><span class="line">	<span class="keyword">if</span> n == <span class="number">0</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="number">1</span></span><br><span class="line">	&#125;</span><br><span class="line">	ret := <span class="number">1</span></span><br><span class="line">	<span class="keyword">for</span> i := <span class="number">0</span>; i &lt; n; i++ &#123;</span><br><span class="line">		ret *= x</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> ret</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">powmul</span><span class="params">(a, b []<span class="keyword">int</span>)</span> <span class="title">int</span></span> &#123;</span><br><span class="line">	<span class="keyword">var</span> c = <span class="built_in">make</span>([]<span class="keyword">int</span>, <span class="built_in">len</span>(a))</span><br><span class="line">	<span class="keyword">for</span> i := <span class="keyword">range</span> a &#123;</span><br><span class="line">		c[i] = pow(a[i], b[i])</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> mul(c)</span><br><span class="line">&#125;</span><br></pre>
+                    </td>
+                  </tr>
+                </table>
+              </figure>
+              <h5 id="测试代码"><a href="#测试代码" class="headerlink" title="测试代码"></a>测试代码</h5>
+              <figure class="highlight css">
+                <table>
+                  <tr>
+                    <td class="gutter">
+                      <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre>
+                    </td>
+                    <td class="code">
+                      <pre><span class="line"><span class="selector-tag">func</span> <span class="selector-tag">TestUgly</span>(<span class="selector-tag">t</span> *<span class="selector-tag">testing</span><span class="selector-class">.T</span>) &#123;</span><br><span class="line">    <span class="attribute">ug </span>:= <span class="built_in">NewUgly</span>([]int&#123;2, 3, 5&#125;)</span><br><span class="line">    n := ug.<span class="built_in">Get</span>(1500)</span><br><span class="line">    t.<span class="built_in">Log</span>(n)</span><br><span class="line">    t.<span class="built_in">Log</span>(sumLen(ug.ranks))</span><br><span class="line">    // t.<span class="built_in">Log</span>(ug.ranks)</span><br><span class="line">&#125;</span><br></pre>
+                    </td>
+                  </tr>
+                </table>
+              </figure>
+              <h5 id="返回结果-与网上一些博客给出的答案859963392有差距1个index，本人是以2作为第一个丑数的"><a href="#返回结果-与网上一些博客给出的答案859963392有差距1个index，本人是以2作为第一个丑数的" class="headerlink" title="返回结果,与网上一些博客给出的答案859963392有差距1个index，本人是以2作为第一个丑数的"></a>返回结果,与网上一些博客给出的答案<code>859963392</code>有差距1个index，本人是以2作为第一个丑数的</h5>
+              <figure class="highlight bash">
+                <table>
+                  <tr>
+                    <td class="gutter">
+                      <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre>
+                    </td>
+                    <td class="code">
+                      <pre><span class="line">go <span class="built_in">test</span> -v -run <span class="string">'TestUgly'</span></span><br><span class="line">=== RUN   TestUgly</span><br><span class="line">--- PASS: TestUgly (0.00s)</span><br><span class="line">    cal_test.go:32: 860934420</span><br><span class="line">    cal_test.go:33: 2254</span><br><span class="line">PASS</span><br><span class="line">ok  	github.com/ipiao/metools/math/cal	0.006s</span><br></pre>
+                    </td>
+                  </tr>
+                </table>
+              </figure>
+              <h5 id="附上目标丑数附近的丑数序列"><a href="#附上目标丑数附近的丑数序列" class="headerlink" title="附上目标丑数附近的丑数序列"></a>附上目标丑数附近的丑数序列</h5>
+              <figure class="highlight bash">
+                <table>
+                  <tr>
+                    <td class="gutter">
+                      <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre>
+                    </td>
+                    <td class="code">
+                      <pre><span class="line">810000000 816293376 819200000 820125000 829440000 838860800 839808000 843750000</span><br><span class="line">849346560 850305600 854296875 859963392 860934420 864000000 874800000 878906250</span><br><span class="line">884736000 885735000 895795200 900000000 905969664 906992640 911250000</span><br></pre>
+                    </td>
+                  </tr>
+                </table>
+              </figure>
+            </div>
+            <div class="tags"><a href="/tags/leetcode/">leetcode</a><a href="/tags/博客迁移/">博客迁移</a><a href="/tags/数/">数</a></div>
+            <div class="post-share">
+              <div class="bdsharebuttonbox"><span style="float:left;line-height: 28px;height: 28px;font-size:16px;font-weight:blod">分享到：</span><a href="#" data-cmd="more" class="bds_more"></a><a href="#" data-cmd="mshare" title="分享到一键分享" class="bds_mshare"></a><a href="#" data-cmd="fbook" title="分享到Facebook" class="bds_fbook"></a><a href="#" data-cmd="twi" title="分享到Twitter" class="bds_twi"></a><a href="#" data-cmd="linkedin" title="分享到linkedin" class="bds_linkedin"></a><a href="#" data-cmd="youdao" title="分享到有道云笔记" class="bds_youdao"></a><a href="#" data-cmd="evernotecn" title="分享到印象笔记" class="bds_evernotecn"></a><a href="#" data-cmd="weixin" title="分享到微信" class="bds_weixin"></a><a href="#" data-cmd="qzone" title="分享到QQ空间" class="bds_qzone"></a><a href="#" data-cmd="tsina" title="分享到新浪微博" class="bds_tsina"></a></div>
+            </div>
+            <div class="post-nav"><a href="/2018/12/17/快慢指针法/" class="pre">链表（一）</a><a href="/2018/12/17/Go-return-defer-panic执行分析/" class="next">Go return,defer,panic执行分析</a></div>
+            <div id="comments">
+              <div id="SOHUCS" sid="2018/12/17/丑数计算/"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="layout-r">
+        <div id="sidebar">
+          <div class="search-pla"></div>
+          <div id="toc" class="widget">
+            <div class="widget-title"><i class="fa fa-fei">文章目录</i></div>
+            <ol class="toc">
+              <li class="toc-item toc-level-4"><a class="toc-link" href="#丑数计算"><span class="toc-text">丑数计算</span></a>
+                <ol class="toc-child">
+                  <li class="toc-item toc-level-5"><a class="toc-link" href="#测试代码"><span class="toc-text">测试代码</span></a></li>
+                  <li class="toc-item toc-level-5"><a class="toc-link" href="#返回结果-与网上一些博客给出的答案859963392有差距1个index，本人是以2作为第一个丑数的"><span class="toc-text">返回结果,与网上一些博客给出的答案859963392有差距1个index，本人是以2作为第一个丑数的</span></a></li>
+                  <li class="toc-item toc-level-5"><a class="toc-link" href="#附上目标丑数附近的丑数序列"><span class="toc-text">附上目标丑数附近的丑数序列</span></a></li>
+                </ol>
+              </li>
+            </ol>
+          </div>
+          <div class="widget">
+            <div class="widget-title"><i class="fa fa-xie"> 最新文章</i></div>
+            <ul class="post-list">
+              <li class="post-list-item"><a class="post-list-link" href="/2018/12/27/Leetcode-21-30/">Leetcode 21-30</a></li>
+              <li class="post-list-item"><a class="post-list-link" href="/2018/12/26/Leetcode-11-20/">Leetcode 11-20</a></li>
+              <li class="post-list-item"><a class="post-list-link" href="/2018/12/26/AntDesign-圣诞节彩蛋/">AntDesign 圣诞节彩蛋</a></li>
+              <li class="post-list-item"><a class="post-list-link" href="/2018/12/25/Leetcode-6-10/">Leetcode 6-10</a></li>
+              <li class="post-list-item"><a class="post-list-link" href="/2018/12/24/Leetcode-3/">Leetcode 3</a></li>
+              <li class="post-list-item"><a class="post-list-link" href="/2018/12/24/Leetcode-1-5/">Leetcode 1-5</a></li>
+              <li class="post-list-item"><a class="post-list-link" href="/2018/12/24/Project-Euler-1/">Project Euler 1</a></li>
+              <li class="post-list-item"><a class="post-list-link" href="/2018/12/17/快慢指针法/">链表（一）</a></li>
+              <li class="post-list-item"><a class="post-list-link" href="/2018/12/17/丑数计算/">数——丑数</a></li>
+              <li class="post-list-item"><a class="post-list-link" href="/2018/12/17/Go-return-defer-panic执行分析/">Go return,defer,panic执行分析</a></li>
+            </ul>
+          </div>
+          <div class="widget">
+            <div class="widget-title"><i class="fa fa-gui"> 分类</i></div>
+            <ul class="category-list">
+              <li class="category-list-item"><a class="category-list-link" href="/categories/我爱数学/">我爱数学</a><span class="category-list-count">1</span></li>
+              <li class="category-list-item"><a class="category-list-link" href="/categories/日常练习/">日常练习</a><span class="category-list-count">7</span></li>
+              <li class="category-list-item"><a class="category-list-link" href="/categories/第三方/">第三方</a><span class="category-list-count">1</span></li>
+              <li class="category-list-item"><a class="category-list-link" href="/categories/闲文野趣/">闲文野趣</a><span class="category-list-count">1</span></li>
+            </ul>
+          </div>
+          <div class="widget">
+            <div class="widget-title"><i class="fa fa-biao"> 标签</i></div>
+            <div class="tagcloud"><a href="/tags/apns/" style="font-size: 15px;">apns</a> <a href="/tags/emoji/" style="font-size: 15px;">emoji</a> <a href="/tags/leetcode/" style="font-size: 15px;">leetcode</a> <a href="/tags/吃瓜/" style="font-size: 15px;">吃瓜</a> <a href="/tags/go/" style="font-size: 15px;">go</a> <a href="/tags/博客迁移/" style="font-size: 15px;">博客迁移</a> <a href="/tags/字符串/" style="font-size: 15px;">字符串</a> <a href="/tags/pe/" style="font-size: 15px;">pe</a> <a href="/tags/链表/" style="font-size: 15px;">链表</a> <a href="/tags/数/" style="font-size: 15px;">数</a></div>
+          </div>
+          <div class="widget">
+            <div class="widget-title"><i class="fa fa-archive"> 归档</i></div>
+            <ul class="archive-list">
+              <li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">十二月 2018</a></li>
+            </ul>
+          </div>
+          <div class="widget">
+            <div class="widget-title"><i class="fa fa-you"> 友情链接</i></div>
+            <ul></ul><a href="https://chaoo.oschina.io" title="本站主题（BlueLake）" target="_blank">本站主题（BlueLake）</a>
+            <ul></ul><a href="http://ghost.yukk.top" title="旧站" target="_blank">旧站</a>
+            <ul></ul><a href="http://pe-cn.github.io/problems/" title="欧拉计划（Project Euler）" target="_blank">欧拉计划（Project Euler）</a>
+            <ul></ul><a href="https://leetcode-cn.com/" title="力扣题库（leetcode）" target="_blank">力扣题库（leetcode）</a>
+          </div>
+        </div>
+      </div>
+    </div><a id="totop" href="#top"></a>
+    <div id="footer">
+      <div class="footer-info">
+        <p><a href="/baidusitemap.xml">Baidu Site Haritası</a> | <a href="/atom.xml">订阅</a> | <a href="/about/">关于</a></p>
+        <p><span> Copyright &copy;<a href="/." rel="nofollow">ipiao.</a></span><span> Theme by<a rel="nofollow" target="_blank" href="https://github.com/chaooo/hexo-theme-BlueLake"> BlueLake.</a></span><span> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a></span></p>
+      </div>
+    </div>
+  </div>
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?6d320488e0e5cdce0a6edea059168872";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+  <script type="text/javascript" src="/js/search.json.js?v=2.0.1"></script>
+  <script type="text/javascript" src="/js/toctotop.js?v=2.0.1" async></script>
+  <script>
+    window._bd_share_config = {
+      "common": {
+        "bdSnsKey": {},
+        "bdText": "",
+        "bdMini": "2",
+        "bdMiniList": ["mshare", "weixin", "tsina", "qzone", "linkedin", "fbook", "twi", "print", "renren", "sqq", "evernotecn", "bdysc", "tqq", "tqf", "bdxc", "kaixin001", "tieba", "douban", "bdhome", "thx", "ibaidu", "meilishuo", "mogujie", "diandian", "huaban", "duitang", "hx", "fx", "youdao", "sdo", "qingbiji", "people", "xinhua", "mail", "isohu", "yaolan", "wealink", "ty", "iguba", "h163", "copy"],
+        "bdPic": "",
+        "bdStyle": "1",
+        "bdSize": "16"
+      },
+      "share": {},
+      "image": {
+        "viewList": ["tsina", "qzone", "weixin", "fbook", "twi", "linkedin", "youdao", "evernotecn", "mshare"],
+        "viewText": "分享到：",
+        "viewSize": "16"
+      },
+      "selectShare": {
+        "bdContainerClass": null,
+        "bdSelectMiniList": ["tsina", "qzone", "weixin", "fbook", "twi", "linkedin", "youdao", "evernotecn", "mshare"]
+      }
+    };
+    with(document) 0[(getElementsByTagName('head')[0] || head).appendChild(createElement('script')).src = 'http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion=' + ~(-new Date() / 36e5)];
+  </script>
+  <script>
+    window._config = {
+      showScore: true
+    };
+    (function() {
+      var appid = 'cytY1dJ9s';
+      var conf = '00803aac284d01ab6c837519fdffa5b8';
+      var width = window.innerWidth || document.documentElement.clientWidth;
+      var nodes = document.getElementsByTagName("head")[0] || document.head || document.documentElement;
+      if (/(Android|iPhone|iPad|iPod|iOS)/i.test(navigator.userAgent) && width < 750) {
+        window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>');
+      } else {
+        var loadJs = function(d, a) {
+          var b = document.createElement("script");
+          b.setAttribute("type", "text/javascript");
+          b.setAttribute("charset", "UTF-8");
+          b.setAttribute("src", d);
+          if (typeof a === "function") {
+            if (window.attachEvent) {
+              b.onreadystatechange = function() {
+                var e = b.readyState;
+                if (e === "loaded" || e === "complete") {
+                  b.onreadystatechange = null;
+                  a()
+                }
+              }
+            } else {
+              b.onload = a
+            }
+          }
+          nodes.appendChild(b)
+        };
+        loadJs("https://changyan.sohu.com/upload/changyan.js", function() {
+          window.changyan.api.config({
+            appid: appid,
+            conf: conf
+          })
+        });
+      }
+      var loadCss = function(cssString) {
+        var style = document.createElement("style");
+        style.setAttribute("type", "text/css");
+        if (style.styleSheet) { // IE  
+          style.styleSheet.cssText = cssString;
+        } else { // w3c  
+          var cssText = document.createTextNode(cssString);
+          style.appendChild(cssText);
+        }
+        nodes.appendChild(style);
+      }
+      window.onload = function() {
+        loadCss('.module-hot-topic,.module-cmt-float-bar{display:none!important}#SOHUCS #SOHU_MAIN .module-cmt-box .post-wrap-w .wrap-action-w .cbox-prompt-w span.prompt-empty-w,#SOHUCS #SOHU_MAIN .module-cmt-float-bar .wrap-cont-w .cont-form-w .form-text-w span.text-null,#SOHUCS #SOHU_MAIN .module-cmt-float-bar .wrap-cont-w .cont-minwidth-w div.cont-comment-w a.comment-link-w,#SOHUCS #SOHU_MAIN .module-cmt-float-bar .wrap-cont-w .cont-minwidth-w div.cont-comment-w span.comment-text-w,#SOHUCS #SOHU_MAIN .module-cmt-footer .section-service-w div.service-wrap-w a:hover,#SOHUCS #SOHU_MAIN .module-cmt-header .section-cbox-w .block-head-w div.header-login,#SOHUCS #SOHU_MAIN .module-cmt-header .section-title-w .title-user-w .user-wrap-w span.wrap-name-w,#SOHUCS #SOHU_MAIN .module-cmt-list .action-click-gw span.click-disable-eg a em.icon-name-bg,#SOHUCS #SOHU_MAIN .module-cmt-list .block-title-gw ul li div.title-name-gw,#SOHUCS #SOHU_MAIN .module-cmt-list .cmt-list-type .cmt-list-number .comment-number span.cy-number,#SOHUCS #SOHU_MAIN .module-cmt-list .cmt-list-type .cmt-list-number span.comment-number,#SOHUCS #SOHU_MAIN .module-cmt-list .cmt-list-type .type-lists li.active,#SOHUCS #SOHU_MAIN .module-cmt-list .msg-wrap-gw .wrap-action-gw .action-click-gw span a:hover,#SOHUCS #SOHU_MAIN .module-cmt-list .picture-box-gw div.box-action-gw a:hover,#SOHUCS #SOHU_MAIN .module-cmt-list .wrap-action-gw .action-click-gw span a:hover em.icon-name-bg,#SOHUCS #SOHU_MAIN .module-cmt-list .wrap-user-gw span.user-name-gw a{color:#40759b!important}#SOHUCS #SOHU_MAIN .module-cmt-box .post-wrap-w .post-wrap-border-t div.post-wrap-border-t-r,#SOHUCS #SOHU_MAIN .module-cmt-box .post-wrap-w div.post-wrap-border-l,#SOHUCS #SOHU_MAIN .module-cmt-box .post-wrap-w div.post-wrap-border-r{display:none!important}#SOHUCS #SOHU_MAIN .module-cmt-box .post-wrap-w .post-wrap-border-t div.post-wrap-border-t-l{background:#FFF!important;top:-2px!important}#SOHUCS #SOHU_MAIN .module-cmt-box .post-wrap-w .wrap-action-w .action-function-w .uploading-wrapper-dw div.wrapper-image-dw,#SOHUCS #SOHU_MAIN .module-cmt-box .post-wrap-w div.post-wrap-main,#SOHUCS #SOHU_MAIN .module-cmt-float-bar .wrap-cont-w .cont-form-w div.form-text-w,#SOHUCS #SOHU_MAIN .module-cmt-header .section-cbox-w .block-head-w div.header-login,#SOHUCS #SOHU_MAIN .module-cmt-list .module-cmt-box .post-wrap-w div.post-wrap-main{border:1px solid #e6e6e6!important;border-radius:20px 20px 20px 20px;margin:0!important}#SOHUCS #SOHU_MAIN .module-cmt-box .post-wrap-w .wrap-action-w .action-issue-w .issue-btn-w a .btn-fw{width:130px!important;height:34px!important;line-height:33px!important;font-size:17px!important;background:#5483b1!important;border-radius:20px!important;color:#FFF!important;-webkit-box-shadow:0 -1px 4px #5483b1 inset;box-shadow:0 -1px 10px #5483b1 inset}#SOHUCS #SOHU_MAIN .module-cmt-box .post-wrap-w .wrap-action-w .action-issue-w .issue-btn-w a .btn-fw:before{content:"发表评论"}#SOHUCS #SOHU_MAIN .module-cmt-box .post-wrap-w .wrap-action-w .action-issue-w .issue-btn-w a:hover .btn-fw{color:#40759b!important;background:#FFF!important}#SOHUCS #SOHU_MAIN .module-cmt-list .cmt-list-type .type-lists li{background:none!important;border-bottom:1px solid #e6e6e6}#SOHUCS #SOHU_MAIN .module-cmt-list .cmt-list-type .type-lists li.active{border:1px solid #e6e6e6;border-radius:10px 10px 0 0;border-bottom:none}#SOHUCS #SOHU_MAIN .module-cmt-list .block-title-gw ul li .title-name-gw div.title-name-gw-tag{background:#5483b1!important;border-radius:3px}#SOHUCS #SOHU_MAIN .module-cmt-list .cmt-list-type div.cmt-list-border{background-color:#e6e6e6!important}#SOHUCS #SOHU_MAIN .module-cmt-notice ul.nt-list li.nt-item{border:1px solid #e6e6e6!important}#SOHUCS #SOHU_MAIN .module-cmt-notice ul.nt-list li.nt-item .nt-logo{text-align:center;line-height:40px;border-radius:50%!important;background:#e6e6e6!important}#SOHUCS #SOHU_MAIN .module-cmt-notice ul.nt-list li.nt-item .nt-logo:before{content:"畅";font-size:22px;color:#FFF}#SOHUCS #SOHU_MAIN .module-cmt-notice ul.nt-list li.nt-item a.nt-text,#SOHUCS #SOHU_MAIN .module-cmt-notice ul.nt-list li.nt-item a.nt-text i{color:#5483b1!important}#SOHUCS #SOHU_MAIN .module-cmt-header .section-title-w .title-user-w .user-wrap-w{background:#FFF!important}');
+      };
+    })();
+  </script>
+  <script src="https://assets.changyan.sohu.com/upload/plugins/plugins.count.js"></script>
+</body>
+
+</html>

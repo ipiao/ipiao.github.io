@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta name="generator" content="Hexo 3.8.0">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta content="yes" name="apple-mobile-web-app-capable">
+  <meta content="black-translucent" name="apple-mobile-web-app-status-bar-style">
+  <meta content="telephone=no" name="format-detection">
+  <meta name="description" content="没有理由，只是想做些什么">
+  <meta name="keywords" content="go,ipiao">
+  <title>Leetcode 1-5 | 欣欣然不知所以</title>
+  <link rel="stylesheet" type="text/css" href="//fonts.neworld.org/css?family=Source+Code+Pro">
+  <link rel="stylesheet" type="text/css" href="/css/style.css?v=2.0.1">
+  <link rel="stylesheet" type="text/css" href="/css/highlight.css?v=2.0.1">
+  <link rel="Shortcut Icon" href="/favicon.ico">
+  <link rel="bookmark" href="/favicon.ico">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png">
+  <link rel="alternate" type="application/atom+xml" href="/atom.xml">
+</head>
+
+<body>
+  <div class="body_container">
+    <div id="header">
+      <div class="site-name">
+        <h1 class="hidden">Leetcode 1-5</h1><a id="logo" href="/.">欣欣然不知所以</a>
+        <p class="description">......</p>
+      </div>
+      <div id="nav-menu"><a href="/." class="current"><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/about/"><i class="fa fa-user"> 关于</i></a><a href="/atom.xml"><i class="fa fa-rss"> 订阅</i></a></div>
+      <div id="search-form">
+        <div id="result-mask" class="hide"></div><label><input id="search-key" type="text" autocomplete="off" placeholder="input keywork to search..."></label>
+        <div id="result-wrap" class="hide">
+          <div id="search-result"></div>
+        </div>
+        <div class="hide"><template id="search-tpl">
+            <div class="item"><a href="/{path}" title="{title}">
+                <div class="title">{title}</div>
+                <div class="time">{date}</div>
+                <div class="tags">{tags}</div>
+              </a></div>
+          </template></div>
+      </div>
+    </div>
+    <div id="layout" class="layout-g">
+      <div class="layout-l">
+        <div class="content_container">
+          <div class="post">
+            <h1 class="post-title">Leetcode 1-5</h1>
+            <div class="post-meta"><a href="/2018/12/24/Leetcode-1-5/#comments" class="comment-count"><i id="changyan_count_unit" data-xid="2018/12/24/Leetcode-1-5/"></i>留言,<i id="changyan_parti_unit" data-xid="2018/12/24/Leetcode-1-5/"></i>参与</a>
+              <p><span class="date">Dec 24, 2018</span><span><a href="/categories/日常练习/" class="category">日常练习</a></span></p>
+            </div>
+            <div class="post-content">
+              <h4 id="1-两数之和"><a href="#1-两数之和" class="headerlink" title="1. 两数之和"></a>1. 两数之和</h4>
+              <blockquote>
+                <p>给定一个整数数组<code>nums</code>和一个目标值<code>target</code>，请你在该数组中找出和为目标值的那两个整数，并返回他们的数组下标。</p>
+              </blockquote>
+              <blockquote>
+                <p>解: 目的是要返回数组下标。</p>
+                <ul>
+                  <li>如果不考虑空间复杂度</li>
+                  <li>如果考虑时间复杂度，就要保留一份数组备份，空间复杂度至少O(n),然后对数组进行排序，通过二分法查找，时间复杂度最优的是O(nlogn)</li>
+                </ul>
+              </blockquote>
+              <a id="more"></a>
+              <ul>
+                <li>
+                  <p>code</p>
+                  <figure class="highlight go">
+                    <table>
+                      <tr>
+                        <td class="gutter">
+                          <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre>
+                        </td>
+                        <td class="code">
+                          <pre><span class="line">	<span class="function"><span class="keyword">func</span> <span class="title">twoSum</span><span class="params">(nums []<span class="keyword">int</span>, target <span class="keyword">int</span>)</span> []<span class="title">int</span></span> &#123;</span><br><span class="line">m := <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="keyword">int</span>]<span class="keyword">int</span>)</span><br><span class="line">      <span class="keyword">for</span> i := <span class="number">0</span>; i &lt; <span class="built_in">len</span>(nums); i++ &#123;</span><br><span class="line">          another := target - nums[i]</span><br><span class="line">          <span class="keyword">if</span> _, ok := m[another]; ok &#123;</span><br><span class="line">              <span class="keyword">return</span> []<span class="keyword">int</span>&#123;m[another], i&#125;</span><br><span class="line">          &#125;</span><br><span class="line">          m[nums[i]] = i</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">func</span> <span class="title">twoSum</span><span class="params">(nums []<span class="keyword">int</span>, target <span class="keyword">int</span>)</span> []<span class="title">int</span></span> &#123;</span><br><span class="line">      onum := <span class="built_in">make</span>([]<span class="keyword">int</span>, <span class="built_in">len</span>(nums))</span><br><span class="line">      <span class="built_in">copy</span>(onum, nums) <span class="comment">// 保留备份</span></span><br><span class="line"></span><br><span class="line">      <span class="comment">// Onlgn</span></span><br><span class="line">      sort.Ints(nums) <span class="comment">// 原数组排序</span></span><br><span class="line"></span><br><span class="line">      <span class="keyword">var</span> find = <span class="function"><span class="keyword">func</span><span class="params">(anum []<span class="keyword">int</span>, dest <span class="keyword">int</span>)</span> <span class="title">int</span></span> &#123; <span class="comment">// 二分查找数组中是否存在值为dest的元素</span></span><br><span class="line">          start := <span class="number">0</span></span><br><span class="line">          end := <span class="built_in">len</span>(anum) - <span class="number">1</span></span><br><span class="line">          <span class="keyword">var</span> mid <span class="keyword">int</span></span><br><span class="line">          <span class="keyword">for</span> start &lt; end<span class="number">-1</span> &#123;</span><br><span class="line">              mid = (start + end) / <span class="number">2</span></span><br><span class="line">              <span class="keyword">if</span> anum[mid] == dest &#123;</span><br><span class="line">                  <span class="keyword">return</span> mid</span><br><span class="line">              &#125;</span><br><span class="line">              <span class="keyword">if</span> anum[mid] &gt; dest &#123;</span><br><span class="line">                  end = mid</span><br><span class="line">              &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                  start = mid</span><br><span class="line">              &#125;</span><br><span class="line">          &#125;</span><br><span class="line">          <span class="keyword">if</span> anum[start] == dest &#123;</span><br><span class="line">              <span class="keyword">return</span> start</span><br><span class="line">          &#125;</span><br><span class="line">          <span class="keyword">if</span> anum[end] == dest &#123;</span><br><span class="line">              <span class="keyword">return</span> end</span><br><span class="line">          &#125;</span><br><span class="line">          <span class="keyword">return</span> <span class="number">-1</span></span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      <span class="comment">// 遍历数组匹配</span></span><br><span class="line">      <span class="keyword">for</span> i := <span class="keyword">range</span> nums &#123;</span><br><span class="line">          <span class="keyword">if</span> cj := find(nums[i+<span class="number">1</span>:], target-nums[i]); cj != <span class="number">-1</span> &#123;</span><br><span class="line">              <span class="keyword">var</span> ret = <span class="built_in">make</span>([]<span class="keyword">int</span>, <span class="number">0</span>)</span><br><span class="line">              <span class="keyword">for</span> j := <span class="keyword">range</span> onum &#123;</span><br><span class="line">                  <span class="keyword">if</span> onum[j] == nums[i] || onum[j] == nums[i+<span class="number">1</span>+cj] &#123;</span><br><span class="line">                      ret = <span class="built_in">append</span>(ret, j)</span><br><span class="line">                  &#125;</span><br><span class="line">              &#125;</span><br><span class="line">              <span class="keyword">return</span> ret</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">  &#125;</span><br></pre>
+                        </td>
+                      </tr>
+                    </table>
+                  </figure>
+                </li>
+              </ul>
+              <h4 id="2-两数相加"><a href="#2-两数相加" class="headerlink" title="2. 两数相加"></a>2. 两数相加</h4>
+              <blockquote>
+                <p>给出两个非空的链表用来表示两个非负的整数。其中，它们各自的位数是按照逆序的方式存储的，并且它们的每个节点只能存储一位数字。如果，我们将这两个数相加起来，则会返回一个新的链表来表示它们的和。您可以假设除了数字0之外，这两个数都不会以0开头。</p>
+              </blockquote>
+              <blockquote>
+                <p>解: 注意的只有两点</p>
+                <ul>
+                  <li>进位</li>
+                  <li>链表遍历到最后做长度判断和拼接</li>
+                </ul>
+              </blockquote>
+              <ul>
+                <li>
+                  <p>code</p>
+                  <figure class="highlight go">
+                    <table>
+                      <tr>
+                        <td class="gutter">
+                          <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre>
+                        </td>
+                        <td class="code">
+                          <pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Definition for singly-linked list.</span></span><br><span class="line"><span class="comment"> * type ListNode struct &#123;</span></span><br><span class="line"><span class="comment"> *     Val int</span></span><br><span class="line"><span class="comment"> *     Next *ListNode</span></span><br><span class="line"><span class="comment"> * &#125;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">addTwoNumbers</span><span class="params">(l1 *ListNode, l2 *ListNode)</span> *<span class="title">ListNode</span></span> &#123;</span><br><span class="line">    <span class="keyword">if</span> l1 == <span class="literal">nil</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> l2</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> l2 == <span class="literal">nil</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> l1</span><br><span class="line">    &#125;</span><br><span class="line">    node := <span class="built_in">new</span>(ListNode)</span><br><span class="line">    sum := l1.Val + l2.Val</span><br><span class="line">    node.Next = addTwoNumbers(l1.Next,l2.Next)</span><br><span class="line">    <span class="keyword">if</span> sum &lt;<span class="number">10</span>&#123;</span><br><span class="line">        node.Val = sum</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        node.Val = sum <span class="number">-10</span></span><br><span class="line">        node.Next = addTwoNumbers(node.Next, &amp;ListNode&#123;Val:<span class="number">1</span>&#125;)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> node</span><br><span class="line">&#125;</span><br></pre>
+                        </td>
+                      </tr>
+                    </table>
+                  </figure>
+                </li>
+              </ul>
+              <h4 id="3-无重复字符的最长子串"><a href="#3-无重复字符的最长子串" class="headerlink" title="3. 无重复字符的最长子串"></a>3. 无重复字符的最长子串</h4>
+              <blockquote>
+                <p>给定一个字符串，请你找出其中不含有重复字符的<strong>最长子串</strong>的长度</p>
+              </blockquote>
+              <ul>
+                <li>
+                  <p>code</p>
+                  <figure class="highlight go">
+                    <table>
+                      <tr>
+                        <td class="gutter">
+                          <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre>
+                        </td>
+                        <td class="code">
+                          <pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">lengthOfLongestSubstring</span><span class="params">(s <span class="keyword">string</span>)</span> <span class="title">int</span></span> &#123;</span><br><span class="line">    <span class="keyword">var</span> bMap = <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="keyword">rune</span>]<span class="keyword">int</span>) <span class="comment">// 存储字符索引，用于判断重复</span></span><br><span class="line">    <span class="keyword">var</span> startInd = <span class="number">0</span>              <span class="comment">// 有效点开始</span></span><br><span class="line">    <span class="keyword">var</span> maxLen = <span class="number">0</span>                <span class="comment">// 长度</span></span><br><span class="line">    <span class="keyword">for</span> i, r := <span class="keyword">range</span> s &#123;</span><br><span class="line">        ind,ok :=  bMap[r]</span><br><span class="line">        <span class="keyword">if</span> ok &amp;&amp; ind &gt;= startInd &#123;  <span class="comment">// 判断是否在有效区间内重复</span></span><br><span class="line">             startInd = ind + <span class="number">1</span>     <span class="comment">// 如果是，直接修改起始有效索引，没有比较的必要</span></span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            l := i - startInd + <span class="number">1</span>   <span class="comment">// 否则，每一步计算当前有效区间长度，避免临界问题</span></span><br><span class="line">            <span class="keyword">if</span> l &gt; maxLen&#123;          <span class="comment">// 与已有最大长度比较，如果超过最大长度就更新</span></span><br><span class="line">                maxLen = l</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        bMap[r] = i                 <span class="comment">// 赋值覆盖</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> maxLen</span><br><span class="line">&#125;</span><br></pre>
+                        </td>
+                      </tr>
+                    </table>
+                  </figure>
+                </li>
+              </ul>
+              <h4 id="4-寻找两个有序数组的中位数"><a href="#4-寻找两个有序数组的中位数" class="headerlink" title="4. 寻找两个有序数组的中位数"></a>4. 寻找两个有序数组的中位数</h4>
+              <blockquote>
+                <p>给定两个大小为m和n的有序数组nums1和nums2请你找出这两个有序数组的中位数，并且要求算法的时间复杂度为O(log(m + n))。你可以假设nums1和nums2不会同时为空。</p>
+              </blockquote>
+              <blockquote>
+                <p>解：有序数组，要求时间复杂度是O(log)级别的，应该是要使用二分法的。但是直接的二分法似乎没有可行之路，逐步分析下，发现通过递归可以实现。</p>
+              </blockquote>
+              <ul>
+                <li>
+                  <p>code</p>
+                  <figure class="highlight go">
+                    <table>
+                      <tr>
+                        <td class="gutter">
+                          <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre>
+                        </td>
+                        <td class="code">
+                          <pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">findMedianSortedArrays</span><span class="params">(nums1 []<span class="keyword">int</span>, nums2 []<span class="keyword">int</span>)</span> <span class="title">float64</span></span> &#123;</span><br><span class="line">    total := <span class="built_in">len</span>(nums1) + <span class="built_in">len</span>(nums2)</span><br><span class="line">    <span class="keyword">if</span> total%<span class="number">2</span> == <span class="number">1</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">float64</span>(findKthNum(nums1, nums2, total/<span class="number">2</span>+<span class="number">1</span>))</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0.5</span> * <span class="keyword">float64</span>(findKthNum(nums1, nums2, total/<span class="number">2</span>)+findKthNum(nums1, nums2, total/<span class="number">2</span>+<span class="number">1</span>))</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 查找第k个数</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">findKthNum</span><span class="params">(nums1, nums2 []<span class="keyword">int</span>, k <span class="keyword">int</span>)</span> <span class="title">int</span></span> &#123;</span><br><span class="line">    l1, l2 := <span class="built_in">len</span>(nums1), <span class="built_in">len</span>(nums2)</span><br><span class="line">    <span class="keyword">if</span> l1 &gt; l2 &#123;</span><br><span class="line">        <span class="keyword">return</span> findKthNum(nums2, nums1, k)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> l1 == <span class="number">0</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> nums2[k<span class="number">-1</span>]</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> k == <span class="number">1</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> nums1[<span class="number">0</span>] &lt; nums2[<span class="number">0</span>] &#123;</span><br><span class="line">            <span class="keyword">return</span> nums1[<span class="number">0</span>]</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> nums2[<span class="number">0</span>]</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> pa, pb <span class="keyword">int</span></span><br><span class="line">    <span class="keyword">if</span> l1 &lt; k/<span class="number">2</span> &#123;</span><br><span class="line">        pa = l1</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        pa = k / <span class="number">2</span></span><br><span class="line">    &#125;</span><br><span class="line">    pb = k - pa</span><br><span class="line">    <span class="comment">// 比较较小端可以直接去除，不可能落在那里面，类二分</span></span><br><span class="line">    <span class="keyword">if</span> nums1[pa<span class="number">-1</span>] &lt; nums2[pb<span class="number">-1</span>] &#123;</span><br><span class="line">        <span class="keyword">return</span> findKthNum(nums1[pa:], nums2, k-pa)</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> nums2[pb<span class="number">-1</span>] &lt; nums1[pa<span class="number">-1</span>] &#123;</span><br><span class="line">        <span class="keyword">return</span> findKthNum(nums1, nums2[pb:], k-pb)</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> nums1[pa<span class="number">-1</span>]</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre>
+                        </td>
+                      </tr>
+                    </table>
+                  </figure>
+                </li>
+              </ul>
+              <h4 id="5-最长回文子串"><a href="#5-最长回文子串" class="headerlink" title="5. 最长回文子串"></a>5. 最长回文子串</h4>
+              <blockquote>
+                <p>给定一个字符串 s，找到 s 中最长的回文子串。你可以假设 s 的最大长度为 1000。</p>
+              </blockquote>
+              <blockquote>
+                <p>解: 硬算</p>
+              </blockquote>
+              <ul>
+                <li>
+                  <p>code</p>
+                  <figure class="highlight go">
+                    <table>
+                      <tr>
+                        <td class="gutter">
+                          <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre>
+                        </td>
+                        <td class="code">
+                          <pre><span class="line"> <span class="function"><span class="keyword">func</span> <span class="title">longestPalindrome</span><span class="params">(s <span class="keyword">string</span>)</span> <span class="title">string</span></span> &#123;</span><br><span class="line">    rs := []<span class="keyword">rune</span>(s)</span><br><span class="line">    l := <span class="built_in">len</span>(rs)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> l&lt;=<span class="number">1</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> s</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    mp := rs[<span class="number">0</span>:<span class="number">1</span>] <span class="comment">// 最长子串</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i := <span class="number">0</span>; i &lt; l<span class="number">-1</span>; i++ &#123;</span><br><span class="line">        temp1 := findPalindrome(rs, i, i)</span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">len</span>(temp1) &gt; <span class="built_in">len</span>(mp) &#123;</span><br><span class="line">            mp = temp1</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> rs[i] == rs[i+<span class="number">1</span>] &#123;</span><br><span class="line">            temp2 := findPalindrome(rs, i, i+<span class="number">1</span>)</span><br><span class="line">            <span class="keyword">if</span> <span class="built_in">len</span>(temp2) &gt; <span class="built_in">len</span>(mp) &#123;</span><br><span class="line">                mp = temp2</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">string</span>(mp)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">findPalindrome</span><span class="params">(rs []<span class="keyword">rune</span>, si, ei <span class="keyword">int</span>)</span> []<span class="title">rune</span></span> &#123;</span><br><span class="line">    <span class="keyword">for</span> si &gt; <span class="number">0</span> &amp;&amp; ei &lt; <span class="built_in">len</span>(rs)<span class="number">-1</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> rs[si<span class="number">-1</span>] == rs[ei+<span class="number">1</span>] &#123;</span><br><span class="line">            si--</span><br><span class="line">            ei++</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> rs[si : ei+<span class="number">1</span>]</span><br><span class="line">&#125;</span><br></pre>
+                        </td>
+                      </tr>
+                    </table>
+                  </figure>
+                </li>
+              </ul>
+            </div>
+            <div class="tags"><a href="/tags/leetcode/">leetcode</a></div>
+            <div class="post-share">
+              <div class="bdsharebuttonbox"><span style="float:left;line-height: 28px;height: 28px;font-size:16px;font-weight:blod">分享到：</span><a href="#" data-cmd="more" class="bds_more"></a><a href="#" data-cmd="mshare" title="分享到一键分享" class="bds_mshare"></a><a href="#" data-cmd="fbook" title="分享到Facebook" class="bds_fbook"></a><a href="#" data-cmd="twi" title="分享到Twitter" class="bds_twi"></a><a href="#" data-cmd="linkedin" title="分享到linkedin" class="bds_linkedin"></a><a href="#" data-cmd="youdao" title="分享到有道云笔记" class="bds_youdao"></a><a href="#" data-cmd="evernotecn" title="分享到印象笔记" class="bds_evernotecn"></a><a href="#" data-cmd="weixin" title="分享到微信" class="bds_weixin"></a><a href="#" data-cmd="qzone" title="分享到QQ空间" class="bds_qzone"></a><a href="#" data-cmd="tsina" title="分享到新浪微博" class="bds_tsina"></a></div>
+            </div>
+            <div class="post-nav"><a href="/2018/12/24/Leetcode-3/" class="pre">Leetcode 3</a><a href="/2018/12/24/Project-Euler-1/" class="next">Project Euler 1</a></div>
+            <div id="comments">
+              <div id="SOHUCS" sid="2018/12/24/Leetcode-1-5/"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="layout-r">
+        <div id="sidebar">
+          <div class="search-pla"></div>
+          <div id="toc" class="widget">
+            <div class="widget-title"><i class="fa fa-fei">文章目录</i></div>
+            <ol class="toc">
+              <li class="toc-item toc-level-4"><a class="toc-link" href="#1-两数之和"><span class="toc-text">1. 两数之和</span></a></li>
+              <li class="toc-item toc-level-4"><a class="toc-link" href="#2-两数相加"><span class="toc-text">2. 两数相加</span></a></li>
+              <li class="toc-item toc-level-4"><a class="toc-link" href="#3-无重复字符的最长子串"><span class="toc-text">3. 无重复字符的最长子串</span></a></li>
+              <li class="toc-item toc-level-4"><a class="toc-link" href="#4-寻找两个有序数组的中位数"><span class="toc-text">4. 寻找两个有序数组的中位数</span></a></li>
+              <li class="toc-item toc-level-4"><a class="toc-link" href="#5-最长回文子串"><span class="toc-text">5. 最长回文子串</span></a></li>
+            </ol>
+          </div>
+          <div class="widget">
+            <div class="widget-title"><i class="fa fa-xie"> 最新文章</i></div>
+            <ul class="post-list">
+              <li class="post-list-item"><a class="post-list-link" href="/2018/12/27/Leetcode-21-30/">Leetcode 21-30</a></li>
+              <li class="post-list-item"><a class="post-list-link" href="/2018/12/26/Leetcode-11-20/">Leetcode 11-20</a></li>
+              <li class="post-list-item"><a class="post-list-link" href="/2018/12/26/AntDesign-圣诞节彩蛋/">AntDesign 圣诞节彩蛋</a></li>
+              <li class="post-list-item"><a class="post-list-link" href="/2018/12/25/Leetcode-6-10/">Leetcode 6-10</a></li>
+              <li class="post-list-item"><a class="post-list-link" href="/2018/12/24/Leetcode-3/">Leetcode 3</a></li>
+              <li class="post-list-item"><a class="post-list-link" href="/2018/12/24/Leetcode-1-5/">Leetcode 1-5</a></li>
+              <li class="post-list-item"><a class="post-list-link" href="/2018/12/24/Project-Euler-1/">Project Euler 1</a></li>
+              <li class="post-list-item"><a class="post-list-link" href="/2018/12/17/快慢指针法/">链表（一）</a></li>
+              <li class="post-list-item"><a class="post-list-link" href="/2018/12/17/丑数计算/">数——丑数</a></li>
+              <li class="post-list-item"><a class="post-list-link" href="/2018/12/17/Go-return-defer-panic执行分析/">Go return,defer,panic执行分析</a></li>
+            </ul>
+          </div>
+          <div class="widget">
+            <div class="widget-title"><i class="fa fa-gui"> 分类</i></div>
+            <ul class="category-list">
+              <li class="category-list-item"><a class="category-list-link" href="/categories/我爱数学/">我爱数学</a><span class="category-list-count">1</span></li>
+              <li class="category-list-item"><a class="category-list-link" href="/categories/日常练习/">日常练习</a><span class="category-list-count">7</span></li>
+              <li class="category-list-item"><a class="category-list-link" href="/categories/第三方/">第三方</a><span class="category-list-count">1</span></li>
+              <li class="category-list-item"><a class="category-list-link" href="/categories/闲文野趣/">闲文野趣</a><span class="category-list-count">1</span></li>
+            </ul>
+          </div>
+          <div class="widget">
+            <div class="widget-title"><i class="fa fa-biao"> 标签</i></div>
+            <div class="tagcloud"><a href="/tags/apns/" style="font-size: 15px;">apns</a> <a href="/tags/emoji/" style="font-size: 15px;">emoji</a> <a href="/tags/leetcode/" style="font-size: 15px;">leetcode</a> <a href="/tags/吃瓜/" style="font-size: 15px;">吃瓜</a> <a href="/tags/go/" style="font-size: 15px;">go</a> <a href="/tags/博客迁移/" style="font-size: 15px;">博客迁移</a> <a href="/tags/字符串/" style="font-size: 15px;">字符串</a> <a href="/tags/pe/" style="font-size: 15px;">pe</a> <a href="/tags/链表/" style="font-size: 15px;">链表</a> <a href="/tags/数/" style="font-size: 15px;">数</a></div>
+          </div>
+          <div class="widget">
+            <div class="widget-title"><i class="fa fa-archive"> 归档</i></div>
+            <ul class="archive-list">
+              <li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">十二月 2018</a></li>
+            </ul>
+          </div>
+          <div class="widget">
+            <div class="widget-title"><i class="fa fa-you"> 友情链接</i></div>
+            <ul></ul><a href="https://chaoo.oschina.io" title="本站主题（BlueLake）" target="_blank">本站主题（BlueLake）</a>
+            <ul></ul><a href="http://ghost.yukk.top" title="旧站" target="_blank">旧站</a>
+            <ul></ul><a href="http://pe-cn.github.io/problems/" title="欧拉计划（Project Euler）" target="_blank">欧拉计划（Project Euler）</a>
+            <ul></ul><a href="https://leetcode-cn.com/" title="力扣题库（leetcode）" target="_blank">力扣题库（leetcode）</a>
+          </div>
+        </div>
+      </div>
+    </div><a id="totop" href="#top"></a>
+    <div id="footer">
+      <div class="footer-info">
+        <p><a href="/baidusitemap.xml">Baidu Site Haritası</a> | <a href="/atom.xml">订阅</a> | <a href="/about/">关于</a></p>
+        <p><span> Copyright &copy;<a href="/." rel="nofollow">ipiao.</a></span><span> Theme by<a rel="nofollow" target="_blank" href="https://github.com/chaooo/hexo-theme-BlueLake"> BlueLake.</a></span><span> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a></span></p>
+      </div>
+    </div>
+  </div>
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?6d320488e0e5cdce0a6edea059168872";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+  <script type="text/javascript" src="/js/search.json.js?v=2.0.1"></script>
+  <script type="text/javascript" src="/js/toctotop.js?v=2.0.1" async></script>
+  <script>
+    window._bd_share_config = {
+      "common": {
+        "bdSnsKey": {},
+        "bdText": "",
+        "bdMini": "2",
+        "bdMiniList": ["mshare", "weixin", "tsina", "qzone", "linkedin", "fbook", "twi", "print", "renren", "sqq", "evernotecn", "bdysc", "tqq", "tqf", "bdxc", "kaixin001", "tieba", "douban", "bdhome", "thx", "ibaidu", "meilishuo", "mogujie", "diandian", "huaban", "duitang", "hx", "fx", "youdao", "sdo", "qingbiji", "people", "xinhua", "mail", "isohu", "yaolan", "wealink", "ty", "iguba", "h163", "copy"],
+        "bdPic": "",
+        "bdStyle": "1",
+        "bdSize": "16"
+      },
+      "share": {},
+      "image": {
+        "viewList": ["tsina", "qzone", "weixin", "fbook", "twi", "linkedin", "youdao", "evernotecn", "mshare"],
+        "viewText": "分享到：",
+        "viewSize": "16"
+      },
+      "selectShare": {
+        "bdContainerClass": null,
+        "bdSelectMiniList": ["tsina", "qzone", "weixin", "fbook", "twi", "linkedin", "youdao", "evernotecn", "mshare"]
+      }
+    };
+    with(document) 0[(getElementsByTagName('head')[0] || head).appendChild(createElement('script')).src = 'http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion=' + ~(-new Date() / 36e5)];
+  </script>
+  <script>
+    window._config = {
+      showScore: true
+    };
+    (function() {
+      var appid = 'cytY1dJ9s';
+      var conf = '00803aac284d01ab6c837519fdffa5b8';
+      var width = window.innerWidth || document.documentElement.clientWidth;
+      var nodes = document.getElementsByTagName("head")[0] || document.head || document.documentElement;
+      if (/(Android|iPhone|iPad|iPod|iOS)/i.test(navigator.userAgent) && width < 750) {
+        window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>');
+      } else {
+        var loadJs = function(d, a) {
+          var b = document.createElement("script");
+          b.setAttribute("type", "text/javascript");
+          b.setAttribute("charset", "UTF-8");
+          b.setAttribute("src", d);
+          if (typeof a === "function") {
+            if (window.attachEvent) {
+              b.onreadystatechange = function() {
+                var e = b.readyState;
+                if (e === "loaded" || e === "complete") {
+                  b.onreadystatechange = null;
+                  a()
+                }
+              }
+            } else {
+              b.onload = a
+            }
+          }
+          nodes.appendChild(b)
+        };
+        loadJs("https://changyan.sohu.com/upload/changyan.js", function() {
+          window.changyan.api.config({
+            appid: appid,
+            conf: conf
+          })
+        });
+      }
+      var loadCss = function(cssString) {
+        var style = document.createElement("style");
+        style.setAttribute("type", "text/css");
+        if (style.styleSheet) { // IE  
+          style.styleSheet.cssText = cssString;
+        } else { // w3c  
+          var cssText = document.createTextNode(cssString);
+          style.appendChild(cssText);
+        }
+        nodes.appendChild(style);
+      }
+      window.onload = function() {
+        loadCss('.module-hot-topic,.module-cmt-float-bar{display:none!important}#SOHUCS #SOHU_MAIN .module-cmt-box .post-wrap-w .wrap-action-w .cbox-prompt-w span.prompt-empty-w,#SOHUCS #SOHU_MAIN .module-cmt-float-bar .wrap-cont-w .cont-form-w .form-text-w span.text-null,#SOHUCS #SOHU_MAIN .module-cmt-float-bar .wrap-cont-w .cont-minwidth-w div.cont-comment-w a.comment-link-w,#SOHUCS #SOHU_MAIN .module-cmt-float-bar .wrap-cont-w .cont-minwidth-w div.cont-comment-w span.comment-text-w,#SOHUCS #SOHU_MAIN .module-cmt-footer .section-service-w div.service-wrap-w a:hover,#SOHUCS #SOHU_MAIN .module-cmt-header .section-cbox-w .block-head-w div.header-login,#SOHUCS #SOHU_MAIN .module-cmt-header .section-title-w .title-user-w .user-wrap-w span.wrap-name-w,#SOHUCS #SOHU_MAIN .module-cmt-list .action-click-gw span.click-disable-eg a em.icon-name-bg,#SOHUCS #SOHU_MAIN .module-cmt-list .block-title-gw ul li div.title-name-gw,#SOHUCS #SOHU_MAIN .module-cmt-list .cmt-list-type .cmt-list-number .comment-number span.cy-number,#SOHUCS #SOHU_MAIN .module-cmt-list .cmt-list-type .cmt-list-number span.comment-number,#SOHUCS #SOHU_MAIN .module-cmt-list .cmt-list-type .type-lists li.active,#SOHUCS #SOHU_MAIN .module-cmt-list .msg-wrap-gw .wrap-action-gw .action-click-gw span a:hover,#SOHUCS #SOHU_MAIN .module-cmt-list .picture-box-gw div.box-action-gw a:hover,#SOHUCS #SOHU_MAIN .module-cmt-list .wrap-action-gw .action-click-gw span a:hover em.icon-name-bg,#SOHUCS #SOHU_MAIN .module-cmt-list .wrap-user-gw span.user-name-gw a{color:#40759b!important}#SOHUCS #SOHU_MAIN .module-cmt-box .post-wrap-w .post-wrap-border-t div.post-wrap-border-t-r,#SOHUCS #SOHU_MAIN .module-cmt-box .post-wrap-w div.post-wrap-border-l,#SOHUCS #SOHU_MAIN .module-cmt-box .post-wrap-w div.post-wrap-border-r{display:none!important}#SOHUCS #SOHU_MAIN .module-cmt-box .post-wrap-w .post-wrap-border-t div.post-wrap-border-t-l{background:#FFF!important;top:-2px!important}#SOHUCS #SOHU_MAIN .module-cmt-box .post-wrap-w .wrap-action-w .action-function-w .uploading-wrapper-dw div.wrapper-image-dw,#SOHUCS #SOHU_MAIN .module-cmt-box .post-wrap-w div.post-wrap-main,#SOHUCS #SOHU_MAIN .module-cmt-float-bar .wrap-cont-w .cont-form-w div.form-text-w,#SOHUCS #SOHU_MAIN .module-cmt-header .section-cbox-w .block-head-w div.header-login,#SOHUCS #SOHU_MAIN .module-cmt-list .module-cmt-box .post-wrap-w div.post-wrap-main{border:1px solid #e6e6e6!important;border-radius:20px 20px 20px 20px;margin:0!important}#SOHUCS #SOHU_MAIN .module-cmt-box .post-wrap-w .wrap-action-w .action-issue-w .issue-btn-w a .btn-fw{width:130px!important;height:34px!important;line-height:33px!important;font-size:17px!important;background:#5483b1!important;border-radius:20px!important;color:#FFF!important;-webkit-box-shadow:0 -1px 4px #5483b1 inset;box-shadow:0 -1px 10px #5483b1 inset}#SOHUCS #SOHU_MAIN .module-cmt-box .post-wrap-w .wrap-action-w .action-issue-w .issue-btn-w a .btn-fw:before{content:"发表评论"}#SOHUCS #SOHU_MAIN .module-cmt-box .post-wrap-w .wrap-action-w .action-issue-w .issue-btn-w a:hover .btn-fw{color:#40759b!important;background:#FFF!important}#SOHUCS #SOHU_MAIN .module-cmt-list .cmt-list-type .type-lists li{background:none!important;border-bottom:1px solid #e6e6e6}#SOHUCS #SOHU_MAIN .module-cmt-list .cmt-list-type .type-lists li.active{border:1px solid #e6e6e6;border-radius:10px 10px 0 0;border-bottom:none}#SOHUCS #SOHU_MAIN .module-cmt-list .block-title-gw ul li .title-name-gw div.title-name-gw-tag{background:#5483b1!important;border-radius:3px}#SOHUCS #SOHU_MAIN .module-cmt-list .cmt-list-type div.cmt-list-border{background-color:#e6e6e6!important}#SOHUCS #SOHU_MAIN .module-cmt-notice ul.nt-list li.nt-item{border:1px solid #e6e6e6!important}#SOHUCS #SOHU_MAIN .module-cmt-notice ul.nt-list li.nt-item .nt-logo{text-align:center;line-height:40px;border-radius:50%!important;background:#e6e6e6!important}#SOHUCS #SOHU_MAIN .module-cmt-notice ul.nt-list li.nt-item .nt-logo:before{content:"畅";font-size:22px;color:#FFF}#SOHUCS #SOHU_MAIN .module-cmt-notice ul.nt-list li.nt-item a.nt-text,#SOHUCS #SOHU_MAIN .module-cmt-notice ul.nt-list li.nt-item a.nt-text i{color:#5483b1!important}#SOHUCS #SOHU_MAIN .module-cmt-header .section-title-w .title-user-w .user-wrap-w{background:#FFF!important}');
+      };
+    })();
+  </script>
+  <script src="https://assets.changyan.sohu.com/upload/plugins/plugins.count.js"></script>
+</body>
+
+</html>
