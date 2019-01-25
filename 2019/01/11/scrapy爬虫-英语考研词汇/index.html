@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta name="generator" content="Hexo 3.8.0">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta content="yes" name="apple-mobile-web-app-capable">
+  <meta content="black-translucent" name="apple-mobile-web-app-status-bar-style">
+  <meta content="telephone=no" name="format-detection">
+  <meta name="description" content="没有理由，只是想做些什么">
+  <meta name="keywords" content="go,ipiao">
+  <title>scrapy爬虫-英语考研词汇 | 欣欣然不知所以</title>
+  <link rel="stylesheet" type="text/css" href="//fonts.neworld.org/css?family=Source+Code+Pro">
+  <link rel="stylesheet" type="text/css" href="/css/style.css?v=2.0.1">
+  <link rel="stylesheet" type="text/css" href="/css/highlight.css?v=2.0.1">
+  <link rel="Shortcut Icon" href="/favicon.ico">
+  <link rel="bookmark" href="/favicon.ico">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png">
+  <link rel="alternate" type="application/atom+xml" href="/atom.xml">
+</head>
+
+<body>
+  <div class="body_container">
+    <div id="header">
+      <div class="site-name">
+        <h1 class="hidden">scrapy爬虫-英语考研词汇</h1><a id="logo" href="/.">欣欣然不知所以</a>
+        <p class="description">......</p>
+      </div>
+      <div id="nav-menu"><a href="/." class="current"><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/about/"><i class="fa fa-user"> 关于</i></a><a href="/atom.xml"><i class="fa fa-rss"> 订阅</i></a></div>
+      <div id="search-form">
+        <div id="result-mask" class="hide"></div><label><input id="search-key" type="text" autocomplete="on" placeholder="input keyword to search..."></label>
+        <div id="result-wrap" class="hide">
+          <div id="search-result"></div>
+        </div>
+        <div class="hide"><template id="search-tpl">
+            <div class="item"><a href="/{path}" title="{title}">
+                <div class="title">{title}</div>
+                <div class="time">{date}</div>
+                <div class="tags">{tags}</div>
+              </a></div>
+          </template></div>
+      </div>
+    </div>
+    <div id="layout" class="layout-g">
+      <div class="layout-l">
+        <div class="content_container">
+          <div class="post">
+            <h1 class="post-title">scrapy爬虫-英语考研词汇</h1>
+            <div class="post-meta"><a href="/2019/01/11/scrapy爬虫-英语考研词汇/#comments" class="comment-count"><i id="changyan_count_unit" data-xid="2019/01/11/scrapy爬虫-英语考研词汇/"></i>留言,<i id="changyan_parti_unit" data-xid="2019/01/11/scrapy爬虫-英语考研词汇/"></i>参与</a>
+              <p><span class="date">Jan 11, 2019</span><span><a href="/categories/不务正业/" class="category">不务正业</a></span></p>
+            </div>
+            <div class="post-content">
+              <h4 id="scapy爬虫-考研英语词汇"><a href="#scapy爬虫-考研英语词汇" class="headerlink" title="scapy爬虫-考研英语词汇"></a>scapy爬虫-考研英语词汇</h4>
+              <blockquote>
+                <p>之前都是用go语言爬虫的，学习了一点python，尝试着用scrapy框架爬虫 </p>
+              </blockquote>
+              <blockquote>
+                <p>爬虫之前需要大致了解一下scarpy框架，官方文档实在看的累，找了一个中文翻译的简要了解了一下，地址是(<a href="http://www.scrapyd.cn/doc/165.html" target="_blank" rel="noopener">http://www.scrapyd.cn/doc/165.html</a>)</p>
+              </blockquote>
+              <blockquote>
+                <p>爬取的扇贝网的英语词汇(<a href="https://www.shanbay.com/wordbook/34/)，" target="_blank" rel="noopener">https://www.shanbay.com/wordbook/34/)，</a> 虽然网页访问是要登录的，但是实际爬虫幷不需要。</p>
+                <ul>
+                  <li>1.扇贝网的文档结构十分统一</li>
+                  <li>2.右上角的搜索框，搜一个单词，很容易就通过调试获取到单词信息接口</li>
+                  <li>3.接口有次数限制，最好控制一下频率或者使用代理</li>
+                </ul>
+              </blockquote>
+              <a id="more"></a>
+              <blockquote>
+                <p>于是，根据以上两点，很容易就能做到这个爬虫。而且由于结构的一致性，稍加修改，就能扩展到所有词汇的爬虫。</p>
+              </blockquote>
+              <blockquote>
+                <p>就英语考研词汇而言，内容有限，直接将最后的结果存储到json文件就可以了</p>
+              </blockquote>
+              <blockquote>
+                <p>具体代码如下:</p>
+              </blockquote>
+              <figure class="highlight py">
+                <table>
+                  <tr>
+                    <td class="gutter">
+                      <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br></pre>
+                    </td>
+                    <td class="code">
+                      <pre><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"><span class="keyword">import</span> scrapy</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"><span class="keyword">import</span> urllib3</span><br><span class="line"><span class="keyword">import</span> random</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">WordbookSpider</span><span class="params">(scrapy.Spider)</span>:</span></span><br><span class="line">    wl = []</span><br><span class="line">    failedwds = []</span><br><span class="line">    name = <span class="string">'wordbook'</span></span><br><span class="line">    allowed_domains = [<span class="string">'www.shanbay.com'</span>]</span><br><span class="line">    book = <span class="string">'34'</span></span><br><span class="line">    file = <span class="keyword">None</span></span><br><span class="line">    tmp_fp = <span class="keyword">None</span></span><br><span class="line">    succ_fp = <span class="keyword">None</span></span><br><span class="line">    successws = []</span><br><span class="line">    proxys = [</span><br><span class="line">        <span class="string">"http://124.207.82.166:8008"</span></span><br><span class="line">    ]</span><br><span class="line">    proxyManagers = []</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">randproxy</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> random.choice(self.proxyManagers)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">start_requests</span><span class="params">(self)</span>:</span></span><br><span class="line">        url = <span class="string">"http://www.shanbay.com/wordbook/"</span></span><br><span class="line">        book = getattr(self, <span class="string">'book'</span>, <span class="keyword">None</span>)  <span class="comment"># 获取tag值，也就是爬取时传过来的参数</span></span><br><span class="line">        <span class="keyword">if</span> book <span class="keyword">is</span> <span class="keyword">not</span> <span class="keyword">None</span>:</span><br><span class="line">            self.book = book</span><br><span class="line">        url = url + self.book  <span class="comment"># 构造url</span></span><br><span class="line">        file = getattr(self, <span class="string">'file'</span>)</span><br><span class="line">        <span class="keyword">if</span> file <span class="keyword">is</span> <span class="keyword">None</span>:</span><br><span class="line">            self.file = <span class="string">"shanbei_wordbook_"</span> + self.book + <span class="string">".json"</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            self.file = file</span><br><span class="line">        tmpfile = <span class="string">"shanbei_wordbook_"</span> + self.book + <span class="string">"_tmp.json"</span></span><br><span class="line">        self.tmp_fp = open(tmpfile, <span class="string">'a'</span>, encoding=<span class="string">'utf-8'</span>)</span><br><span class="line"></span><br><span class="line">        successfile = <span class="string">"shanbei_wordbook_"</span> + self.book + <span class="string">"_success.txt"</span></span><br><span class="line">        self.succ_fp = open(successfile, <span class="string">'a'</span>, encoding=<span class="string">'utf-8'</span>)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># self.successws = self.succ_fp.readlines()</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> proxy <span class="keyword">in</span> self.proxys:</span><br><span class="line">            <span class="keyword">try</span>:</span><br><span class="line">                <span class="keyword">if</span> proxy == <span class="string">""</span>:</span><br><span class="line">                    pool = urllib3.PoolManager(num_pools=<span class="number">5</span>)</span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    pool = urllib3.ProxyManager(proxy_url=proxy, num_pools=<span class="number">5</span>)</span><br><span class="line">            <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">                print(<span class="string">"can not conn:"</span>, proxy, e)</span><br><span class="line">                <span class="keyword">continue</span></span><br><span class="line">            self.proxyManagers.append(pool)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">yield</span> scrapy.Request(url, self.parse)  <span class="comment"># 发送请求爬取参数内容</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">parse</span><span class="params">(self, response)</span>:</span></span><br><span class="line">        ll = response.xpath(<span class="string">'//*[@id="wordbook-wordlist-container"]'</span>)</span><br><span class="line">        <span class="keyword">for</span> l <span class="keyword">in</span> ll:</span><br><span class="line">            wa = l.css(<span class="string">'a::attr(href)'</span>).extract()</span><br><span class="line">            <span class="keyword">for</span> w <span class="keyword">in</span> wa:</span><br><span class="line">                next_page = response.urljoin(w) + <span class="string">"?page=1"</span></span><br><span class="line">                <span class="keyword">yield</span> scrapy.Request(next_page, callback=self.parsewds)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 避免一次性操作失败,可以分文件存储或者每一次查找到结果后存储到临时文件,最后统一处理格式</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">parsewds</span><span class="params">(self, response)</span>:</span></span><br><span class="line">        ll = response.xpath(<span class="string">'/html/body/div[3]/div/div[1]/div[2]/div/table'</span>)</span><br><span class="line">        wl = ll.xpath(<span class="string">"//td[@class='span2']/strong//text()"</span>).extract()</span><br><span class="line">        <span class="keyword">for</span> w <span class="keyword">in</span> wl:</span><br><span class="line">            <span class="keyword">if</span> w <span class="keyword">not</span> <span class="keyword">in</span> self.successws:</span><br><span class="line">                <span class="comment"># print(w)</span></span><br><span class="line">                self.searchword(w)</span><br><span class="line">                time.sleep(<span class="number">0.001</span>)</span><br><span class="line">                <span class="comment"># pass</span></span><br><span class="line">        <span class="keyword">if</span> len(wl) &gt; <span class="number">1</span>:</span><br><span class="line">            time.sleep(<span class="number">1</span>)</span><br><span class="line">            ss = response.url.split(<span class="string">'page='</span>)</span><br><span class="line">            page = int(ss[len(ss)<span class="number">-1</span>])</span><br><span class="line">            next_page = ss[<span class="number">0</span>] + <span class="string">"page="</span> + str(page+<span class="number">1</span>)</span><br><span class="line">            <span class="keyword">yield</span> scrapy.Request(next_page, callback=self.parsewds)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">searchword</span><span class="params">(self, w, first=True)</span>:</span></span><br><span class="line">        r = self.randproxy().request(<span class="string">"GET"</span>, self.makesearchpath(w), retries=<span class="number">2</span>)</span><br><span class="line">        resp = json.loads(r.data, encoding=<span class="string">"utf-8"</span>)</span><br><span class="line">        <span class="comment"># resp = requests.get(self.makesearchpath(w)).json(encoding="utf-8")</span></span><br><span class="line">        print(resp)</span><br><span class="line">        <span class="keyword">if</span> resp[<span class="string">'status_code'</span>] == <span class="number">0</span>:</span><br><span class="line">            data = resp[<span class="string">'data'</span>]</span><br><span class="line">            data[<span class="string">'word'</span>] = w</span><br><span class="line">            self.succ_fp.write(w)</span><br><span class="line">            self.succ_fp.write(<span class="string">"\n"</span>)</span><br><span class="line">            self.wl.append(data)</span><br><span class="line">            json.dump(data, self.tmp_fp, ensure_ascii=<span class="keyword">False</span>)</span><br><span class="line">            self.tmp_fp.write(<span class="string">",\n"</span>)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">if</span> first:</span><br><span class="line">                self.searchword(w)</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                self.failedwds.append(w)</span><br><span class="line">        print(data)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">makesearchurl</span><span class="params">(self, w)</span>:</span></span><br><span class="line">        tm = int(time.time()*<span class="number">1000</span>)</span><br><span class="line">        url = <span class="string">"/api/v1/bdc/search/?version=2&amp;word=&#123;&#125;&amp;_=&#123;&#125;"</span>.format(w, tm)</span><br><span class="line">        <span class="keyword">return</span> url</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">makesearchpath</span><span class="params">(self, w)</span>:</span></span><br><span class="line">        tm = int(time.time()*<span class="number">1000</span>)</span><br><span class="line">        path = <span class="string">"http://www.shanbay.com/api/v1/bdc/search/?version=2&amp;word=&#123;&#125;&amp;_=&#123;&#125;"</span>.format(w, tm)</span><br><span class="line">        <span class="keyword">return</span> path</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">close</span><span class="params">(self, spider, reason)</span>:</span></span><br><span class="line">        self.wl.sort(key=<span class="keyword">lambda</span> w: w[<span class="string">'word'</span>].lower())</span><br><span class="line">        fp = open(self.file, <span class="string">'w'</span>, encoding=<span class="string">'utf-8'</span>)</span><br><span class="line">        json.dump(self.wl, fp, ensure_ascii=<span class="keyword">False</span>, indent=<span class="number">4</span>)</span><br><span class="line">        print(<span class="string">"failed words"</span>, self.failedwds)</span><br><span class="line">        fp.close()</span><br><span class="line">        super().close(spider, reason)</span><br></pre>
+                    </td>
+                  </tr>
+                </table>
+              </figure>
+              <blockquote>
+                <p>运行</p>
+              </blockquote>
+              <figure class="highlight sh">
+                <table>
+                  <tr>
+                    <td class="gutter">
+                      <pre><span class="line">1</span><br></pre>
+                    </td>
+                    <td class="code">
+                      <pre><span class="line">scrapy  crawl wordbook -a book=34</span><br></pre>
+                    </td>
+                  </tr>
+                </table>
+              </figure>
+              <blockquote>
+                <p>全部过程</p>
+              </blockquote>
+              <figure class="highlight sh">
+                <table>
+                  <tr>
+                    <td class="gutter">
+                      <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre>
+                    </td>
+                    <td class="code">
+                      <pre><span class="line"><span class="comment">#### 安装包</span></span><br><span class="line">pip install scrapy</span><br><span class="line"><span class="comment">#### 创建项目</span></span><br><span class="line">scrapy startproject xxx</span><br><span class="line"><span class="comment">#### 生成爬虫文件</span></span><br><span class="line">scrapy genspider -t basic wordbook https://www.shanbay.com/wordbook/</span><br><span class="line"><span class="comment">#### 写代码</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#### 执行</span></span><br><span class="line">scrapy  crawl wordbook -a book=34</span><br></pre>
+                    </td>
+                  </tr>
+                </table>
+              </figure>
+            </div>
+            <div class="tags"><a href="/tags/python/">python</a><a href="/tags/爬虫/">爬虫</a></div>
+            <div class="post-share">
+              <div class="bdsharebuttonbox"><span style="float:left;line-height: 28px;height: 28px;font-size:16px;font-weight:blod">分享到：</span><a href="#" data-cmd="more" class="bds_more"></a><a href="#" data-cmd="mshare" title="分享到一键分享" class="bds_mshare"></a><a href="#" data-cmd="fbook" title="分享到Facebook" class="bds_fbook"></a><a href="#" data-cmd="twi" title="分享到Twitter" class="bds_twi"></a><a href="#" data-cmd="linkedin" title="分享到linkedin" class="bds_linkedin"></a><a href="#" data-cmd="youdao" title="分享到有道云笔记" class="bds_youdao"></a><a href="#" data-cmd="evernotecn" title="分享到印象笔记" class="bds_evernotecn"></a><a href="#" data-cmd="weixin" title="分享到微信" class="bds_weixin"></a><a href="#" data-cmd="qzone" title="分享到QQ空间" class="bds_qzone"></a><a href="#" data-cmd="tsina" title="分享到新浪微博" class="bds_tsina"></a></div>
+            </div>
+            <div class="post-nav"><a href="/2019/01/22/数字游戏/" class="pre">数字游戏</a><a href="/2018/12/29/Leetcode-31-40/" class="next">Leetcode 31-40</a></div>
+            <div id="comments">
+              <div id="SOHUCS" sid="2019/01/11/scrapy爬虫-英语考研词汇/"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="layout-r">
+        <div id="sidebar">
+          <div class="search-pla"></div>
+          <div id="toc" class="widget">
+            <div class="widget-title"><i class="fa fa-fei">文章目录</i></div>
+            <ol class="toc">
+              <li class="toc-item toc-level-4"><a class="toc-link" href="#scapy爬虫-考研英语词汇"><span class="toc-text">scapy爬虫-考研英语词汇</span></a></li>
+            </ol>
+          </div>
+          <div class="widget">
+            <div class="widget-title"><i class="fa fa-xie"> 最新文章</i></div>
+            <ul class="post-list">
+              <li class="post-list-item"><a class="post-list-link" href="/2019/01/22/数字游戏/">数字游戏</a></li>
+              <li class="post-list-item"><a class="post-list-link" href="/2019/01/11/scrapy爬虫-英语考研词汇/">scrapy爬虫-英语考研词汇</a></li>
+              <li class="post-list-item"><a class="post-list-link" href="/2018/12/29/Leetcode-31-40/">Leetcode 31-40</a></li>
+              <li class="post-list-item"><a class="post-list-link" href="/2018/12/27/Leetcode-21-30/">Leetcode 21-30</a></li>
+              <li class="post-list-item"><a class="post-list-link" href="/2018/12/26/Leetcode-11-20/">Leetcode 11-20</a></li>
+              <li class="post-list-item"><a class="post-list-link" href="/2018/12/26/AntDesign-圣诞节彩蛋/">AntDesign 圣诞节彩蛋</a></li>
+              <li class="post-list-item"><a class="post-list-link" href="/2018/12/25/Leetcode-6-10/">Leetcode 6-10</a></li>
+              <li class="post-list-item"><a class="post-list-link" href="/2018/12/24/Leetcode-3/">Leetcode 3</a></li>
+              <li class="post-list-item"><a class="post-list-link" href="/2018/12/24/Leetcode-1-5/">Leetcode 1-5</a></li>
+              <li class="post-list-item"><a class="post-list-link" href="/2018/12/24/Project-Euler-1/">Project Euler 1</a></li>
+            </ul>
+          </div>
+          <div class="widget">
+            <div class="widget-title"><i class="fa fa-gui"> 分类</i></div>
+            <ul class="category-list">
+              <li class="category-list-item"><a class="category-list-link" href="/categories/不务正业/">不务正业</a><span class="category-list-count">1</span></li>
+              <li class="category-list-item"><a class="category-list-link" href="/categories/我爱数学/">我爱数学</a><span class="category-list-count">1</span></li>
+              <li class="category-list-item"><a class="category-list-link" href="/categories/日常练习/">日常练习</a><span class="category-list-count">8</span></li>
+              <li class="category-list-item"><a class="category-list-link" href="/categories/第三方/">第三方</a><span class="category-list-count">1</span></li>
+              <li class="category-list-item"><a class="category-list-link" href="/categories/装13指南/">装13指南</a><span class="category-list-count">1</span></li>
+              <li class="category-list-item"><a class="category-list-link" href="/categories/闲文野趣/">闲文野趣</a><span class="category-list-count">1</span></li>
+            </ul>
+          </div>
+          <div class="widget">
+            <div class="widget-title"><i class="fa fa-biao"> 标签</i></div>
+            <div class="tagcloud"><a href="/tags/字符串/" style="font-size: 15px;">字符串</a> <a href="/tags/吃瓜/" style="font-size: 15px;">吃瓜</a> <a href="/tags/博客迁移/" style="font-size: 15px;">博客迁移</a> <a href="/tags/leetcode/" style="font-size: 15px;">leetcode</a> <a href="/tags/apns/" style="font-size: 15px;">apns</a> <a href="/tags/emoji/" style="font-size: 15px;">emoji</a> <a href="/tags/go/" style="font-size: 15px;">go</a> <a href="/tags/pe/" style="font-size: 15px;">pe</a> <a href="/tags/python/" style="font-size: 15px;">python</a> <a href="/tags/爬虫/" style="font-size: 15px;">爬虫</a> <a href="/tags/数/" style="font-size: 15px;">数</a> <a href="/tags/魔术/" style="font-size: 15px;">魔术</a> <a href="/tags/链表/" style="font-size: 15px;">链表</a></div>
+          </div>
+          <div class="widget">
+            <div class="widget-title"><i class="fa fa-archive"> 归档</i></div>
+            <ul class="archive-list">
+              <li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">一月 2019</a></li>
+              <li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">十二月 2018</a></li>
+            </ul>
+          </div>
+          <div class="widget">
+            <div class="widget-title"><i class="fa fa-you"> 友情链接</i></div>
+            <ul></ul><a href="https://chaoo.oschina.io" title="本站主题（BlueLake）" target="_blank">本站主题（BlueLake）</a>
+            <ul></ul><a href="http://ghost.yukk.top" title="旧站" target="_blank">旧站</a>
+            <ul></ul><a href="http://pe-cn.github.io/problems/" title="欧拉计划（Project Euler）" target="_blank">欧拉计划（Project Euler）</a>
+            <ul></ul><a href="https://leetcode-cn.com/" title="力扣题库（leetcode）" target="_blank">力扣题库（leetcode）</a>
+          </div>
+        </div>
+      </div>
+    </div><a id="totop" href="#top"></a>
+    <div id="footer">
+      <div class="footer-info">
+        <p><a href="/baidusitemap.xml">Baidu Site Haritası</a> | <a href="/atom.xml">订阅</a> | <a href="/about/">关于</a></p>
+        <p><span> Copyright &copy;<a href="/." rel="nofollow">ipiao.</a></span><span> Theme by<a rel="nofollow" target="_blank" href="https://github.com/chaooo/hexo-theme-BlueLake"> BlueLake.</a></span><span> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a></span></p>
+      </div>
+    </div>
+  </div>
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?6d320488e0e5cdce0a6edea059168872";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+  <script type="text/javascript" src="/js/search.json.js?v=2.0.1"></script>
+  <script type="text/javascript" src="/js/toctotop.js?v=2.0.1" async></script>
+  <script>
+    window._bd_share_config = {
+      "common": {
+        "bdSnsKey": {},
+        "bdText": "",
+        "bdMini": "2",
+        "bdMiniList": ["mshare", "weixin", "tsina", "qzone", "linkedin", "fbook", "twi", "print", "renren", "sqq", "evernotecn", "bdysc", "tqq", "tqf", "bdxc", "kaixin001", "tieba", "douban", "bdhome", "thx", "ibaidu", "meilishuo", "mogujie", "diandian", "huaban", "duitang", "hx", "fx", "youdao", "sdo", "qingbiji", "people", "xinhua", "mail", "isohu", "yaolan", "wealink", "ty", "iguba", "h163", "copy"],
+        "bdPic": "",
+        "bdStyle": "1",
+        "bdSize": "16"
+      },
+      "share": {},
+      "image": {
+        "viewList": ["tsina", "qzone", "weixin", "fbook", "twi", "linkedin", "youdao", "evernotecn", "mshare"],
+        "viewText": "分享到：",
+        "viewSize": "16"
+      },
+      "selectShare": {
+        "bdContainerClass": null,
+        "bdSelectMiniList": ["tsina", "qzone", "weixin", "fbook", "twi", "linkedin", "youdao", "evernotecn", "mshare"]
+      }
+    };
+    with(document) 0[(getElementsByTagName('head')[0] || head).appendChild(createElement('script')).src = 'http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion=' + ~(-new Date() / 36e5)];
+  </script>
+  <script>
+    window._config = {
+      showScore: true
+    };
+    (function() {
+      var appid = 'cytY1dJ9s';
+      var conf = '00803aac284d01ab6c837519fdffa5b8';
+      var width = window.innerWidth || document.documentElement.clientWidth;
+      var nodes = document.getElementsByTagName("head")[0] || document.head || document.documentElement;
+      if (/(Android|iPhone|iPad|iPod|iOS)/i.test(navigator.userAgent) && width < 750) {
+        window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>');
+      } else {
+        var loadJs = function(d, a) {
+          var b = document.createElement("script");
+          b.setAttribute("type", "text/javascript");
+          b.setAttribute("charset", "UTF-8");
+          b.setAttribute("src", d);
+          if (typeof a === "function") {
+            if (window.attachEvent) {
+              b.onreadystatechange = function() {
+                var e = b.readyState;
+                if (e === "loaded" || e === "complete") {
+                  b.onreadystatechange = null;
+                  a()
+                }
+              }
+            } else {
+              b.onload = a
+            }
+          }
+          nodes.appendChild(b)
+        };
+        loadJs("https://changyan.sohu.com/upload/changyan.js", function() {
+          window.changyan.api.config({
+            appid: appid,
+            conf: conf
+          })
+        });
+      }
+      var loadCss = function(cssString) {
+        var style = document.createElement("style");
+        style.setAttribute("type", "text/css");
+        if (style.styleSheet) { // IE  
+          style.styleSheet.cssText = cssString;
+        } else { // w3c  
+          var cssText = document.createTextNode(cssString);
+          style.appendChild(cssText);
+        }
+        nodes.appendChild(style);
+      }
+      window.onload = function() {
+        loadCss('.module-hot-topic,.module-cmt-float-bar{display:none!important}#SOHUCS #SOHU_MAIN .module-cmt-box .post-wrap-w .wrap-action-w .cbox-prompt-w span.prompt-empty-w,#SOHUCS #SOHU_MAIN .module-cmt-float-bar .wrap-cont-w .cont-form-w .form-text-w span.text-null,#SOHUCS #SOHU_MAIN .module-cmt-float-bar .wrap-cont-w .cont-minwidth-w div.cont-comment-w a.comment-link-w,#SOHUCS #SOHU_MAIN .module-cmt-float-bar .wrap-cont-w .cont-minwidth-w div.cont-comment-w span.comment-text-w,#SOHUCS #SOHU_MAIN .module-cmt-footer .section-service-w div.service-wrap-w a:hover,#SOHUCS #SOHU_MAIN .module-cmt-header .section-cbox-w .block-head-w div.header-login,#SOHUCS #SOHU_MAIN .module-cmt-header .section-title-w .title-user-w .user-wrap-w span.wrap-name-w,#SOHUCS #SOHU_MAIN .module-cmt-list .action-click-gw span.click-disable-eg a em.icon-name-bg,#SOHUCS #SOHU_MAIN .module-cmt-list .block-title-gw ul li div.title-name-gw,#SOHUCS #SOHU_MAIN .module-cmt-list .cmt-list-type .cmt-list-number .comment-number span.cy-number,#SOHUCS #SOHU_MAIN .module-cmt-list .cmt-list-type .cmt-list-number span.comment-number,#SOHUCS #SOHU_MAIN .module-cmt-list .cmt-list-type .type-lists li.active,#SOHUCS #SOHU_MAIN .module-cmt-list .msg-wrap-gw .wrap-action-gw .action-click-gw span a:hover,#SOHUCS #SOHU_MAIN .module-cmt-list .picture-box-gw div.box-action-gw a:hover,#SOHUCS #SOHU_MAIN .module-cmt-list .wrap-action-gw .action-click-gw span a:hover em.icon-name-bg,#SOHUCS #SOHU_MAIN .module-cmt-list .wrap-user-gw span.user-name-gw a{color:#40759b!important}#SOHUCS #SOHU_MAIN .module-cmt-box .post-wrap-w .post-wrap-border-t div.post-wrap-border-t-r,#SOHUCS #SOHU_MAIN .module-cmt-box .post-wrap-w div.post-wrap-border-l,#SOHUCS #SOHU_MAIN .module-cmt-box .post-wrap-w div.post-wrap-border-r{display:none!important}#SOHUCS #SOHU_MAIN .module-cmt-box .post-wrap-w .post-wrap-border-t div.post-wrap-border-t-l{background:#FFF!important;top:-2px!important}#SOHUCS #SOHU_MAIN .module-cmt-box .post-wrap-w .wrap-action-w .action-function-w .uploading-wrapper-dw div.wrapper-image-dw,#SOHUCS #SOHU_MAIN .module-cmt-box .post-wrap-w div.post-wrap-main,#SOHUCS #SOHU_MAIN .module-cmt-float-bar .wrap-cont-w .cont-form-w div.form-text-w,#SOHUCS #SOHU_MAIN .module-cmt-header .section-cbox-w .block-head-w div.header-login,#SOHUCS #SOHU_MAIN .module-cmt-list .module-cmt-box .post-wrap-w div.post-wrap-main{border:1px solid #e6e6e6!important;border-radius:20px 20px 20px 20px;margin:0!important}#SOHUCS #SOHU_MAIN .module-cmt-box .post-wrap-w .wrap-action-w .action-issue-w .issue-btn-w a .btn-fw{width:130px!important;height:34px!important;line-height:33px!important;font-size:17px!important;background:#5483b1!important;border-radius:20px!important;color:#FFF!important;-webkit-box-shadow:0 -1px 4px #5483b1 inset;box-shadow:0 -1px 10px #5483b1 inset}#SOHUCS #SOHU_MAIN .module-cmt-box .post-wrap-w .wrap-action-w .action-issue-w .issue-btn-w a .btn-fw:before{content:"发表评论"}#SOHUCS #SOHU_MAIN .module-cmt-box .post-wrap-w .wrap-action-w .action-issue-w .issue-btn-w a:hover .btn-fw{color:#40759b!important;background:#FFF!important}#SOHUCS #SOHU_MAIN .module-cmt-list .cmt-list-type .type-lists li{background:none!important;border-bottom:1px solid #e6e6e6}#SOHUCS #SOHU_MAIN .module-cmt-list .cmt-list-type .type-lists li.active{border:1px solid #e6e6e6;border-radius:10px 10px 0 0;border-bottom:none}#SOHUCS #SOHU_MAIN .module-cmt-list .block-title-gw ul li .title-name-gw div.title-name-gw-tag{background:#5483b1!important;border-radius:3px}#SOHUCS #SOHU_MAIN .module-cmt-list .cmt-list-type div.cmt-list-border{background-color:#e6e6e6!important}#SOHUCS #SOHU_MAIN .module-cmt-notice ul.nt-list li.nt-item{border:1px solid #e6e6e6!important}#SOHUCS #SOHU_MAIN .module-cmt-notice ul.nt-list li.nt-item .nt-logo{text-align:center;line-height:40px;border-radius:50%!important;background:#e6e6e6!important}#SOHUCS #SOHU_MAIN .module-cmt-notice ul.nt-list li.nt-item .nt-logo:before{content:"畅";font-size:22px;color:#FFF}#SOHUCS #SOHU_MAIN .module-cmt-notice ul.nt-list li.nt-item a.nt-text,#SOHUCS #SOHU_MAIN .module-cmt-notice ul.nt-list li.nt-item a.nt-text i{color:#5483b1!important}#SOHUCS #SOHU_MAIN .module-cmt-header .section-title-w .title-user-w .user-wrap-w{background:#FFF!important}');
+      };
+    })();
+  </script>
+  <script src="https://assets.changyan.sohu.com/upload/plugins/plugins.count.js"></script>
+</body>
+
+</html>
