@@ -10,7 +10,7 @@
   <meta content="telephone=no" name="format-detection">
   <meta name="description" content="没有理由，只是想做些什么">
   <meta name="keywords" content="go,ipiao">
-  <title>about | 欣欣然不知所以</title>
+  <title>docker安装 | 欣欣然不知所以</title>
   <link rel="stylesheet" type="text/css" href="//fonts.neworld.org/css?family=Source+Code+Pro">
   <link rel="stylesheet" type="text/css" href="/css/style.css?v=2.0.1">
   <link rel="stylesheet" type="text/css" href="/css/highlight.css?v=2.0.1">
@@ -25,10 +25,10 @@
   <div class="body_container">
     <div id="header">
       <div class="site-name">
-        <h1 class="hidden">about</h1><a id="logo" href="/.">欣欣然不知所以</a>
+        <h1 class="hidden">docker安装</h1><a id="logo" href="/.">欣欣然不知所以</a>
         <p class="description">......</p>
       </div>
-      <div id="nav-menu"><a href="/."><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/about/" class="current"><i class="fa fa-user"> 关于</i></a><a href="/atom.xml"><i class="fa fa-rss"> 订阅</i></a></div>
+      <div id="nav-menu"><a href="/." class="current"><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/about/"><i class="fa fa-user"> 关于</i></a><a href="/atom.xml"><i class="fa fa-rss"> 订阅</i></a></div>
       <div id="search-form">
         <div id="result-mask" class="hide"></div><label><input id="search-key" type="text" autocomplete="on" placeholder="input keyword to search..."></label>
         <div id="result-wrap" class="hide">
@@ -47,19 +47,86 @@
       <div class="layout-l">
         <div class="content_container">
           <div class="post">
-            <h1 class="post-title">about</h1>
-            <div class="post-content">
-              <div class="author-page"><a href="javascript:;" class="photo"><img src="http://obzf7z93c.bkt.clouddn.com/themeauthor.jpg"></a>
-                <div class="author">
-                  <p><i class="fa fa-user">name：</i>ipiao</p>
-                  <p><i class="fa fa-email">email：</i><a href="mailto:530151330@qq.com" target="_blank">530151330@qq.com</a></p>
-                  <p><i class="fa fa-github">github：</i><a href="https://github.com/ipiao" target="_blank">ipiao</a></p>
-                  <p><i class="fa fa-weibo">weibo：</i><a target="_blank"></a></p>
-                </div>
-              </div>
+            <h1 class="post-title">docker安装</h1>
+            <div class="post-meta"><a href="/2019/04/27/docker安装/#comments" class="comment-count"><i id="changyan_count_unit" data-xid="2019/04/27/docker安装/"></i>留言,<i id="changyan_parti_unit" data-xid="2019/04/27/docker安装/"></i>参与</a>
+              <p><span class="date">Apr 27, 2019</span><span><a href="/categories/不务正业/" class="category">不务正业</a></span></p>
             </div>
+            <div class="post-content">
+              <h4 id="正式环境不能像开发环境一样随意"><a href="#正式环境不能像开发环境一样随意" class="headerlink" title="正式环境不能像开发环境一样随意.."></a>正式环境不能像开发环境一样随意..</h4>
+              <h4 id="网桥"><a href="#网桥" class="headerlink" title="网桥"></a>网桥</h4>
+              <figure class="highlight sh">
+                <table>
+                  <tr>
+                    <td class="gutter">
+                      <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre>
+                    </td>
+                    <td class="code">
+                      <pre><span class="line">cat &gt;&gt; /etc/sysctl.conf&lt;&lt;EOF</span><br><span class="line">net.ipv4.ip_forward=1</span><br><span class="line">net.bridge.bridge-nf-call-iptables=1</span><br><span class="line">net.ipv4.neigh.default.gc_thresh1=4096</span><br><span class="line">net.ipv4.neigh.default.gc_thresh2=6144</span><br><span class="line">net.ipv4.neigh.default.gc_thresh3=8192</span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line"><span class="comment"># 这个其实是重启命令</span></span><br><span class="line">init 6</span><br></pre>
+                    </td>
+                  </tr>
+                </table>
+              </figure>
+              <a id="more"></a>
+              <h4 id="如果已经安装高版本Docker-可进行降级安装-可选"><a href="#如果已经安装高版本Docker-可进行降级安装-可选" class="headerlink" title="如果已经安装高版本Docker,可进行降级安装(可选)"></a>如果已经安装高版本Docker,可进行降级安装(可选)</h4>
+              <figure class="highlight sh">
+                <table>
+                  <tr>
+                    <td class="gutter">
+                      <pre><span class="line">1</span><br></pre>
+                    </td>
+                    <td class="code">
+                      <pre><span class="line">yum downgrade --<span class="built_in">setopt</span>=obsoletes=0 -y docker-ce-<span class="variable">$&#123;version&#125;</span> docker-ce-selinux-<span class="variable">$&#123;version&#125;</span></span><br></pre>
+                    </td>
+                  </tr>
+                </table>
+              </figure>
+              <h4 id="卸载旧版本Docker软件"><a href="#卸载旧版本Docker软件" class="headerlink" title="卸载旧版本Docker软件"></a>卸载旧版本Docker软件</h4>
+              <figure class="highlight sh">
+                <table>
+                  <tr>
+                    <td class="gutter">
+                      <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre>
+                    </td>
+                    <td class="code">
+                      <pre><span class="line">sudo yum remove docker \</span><br><span class="line">              docker-client \</span><br><span class="line">              docker-client-latest \</span><br><span class="line">              docker-common \</span><br><span class="line">              docker-latest \</span><br><span class="line">              docker-latest-logrotate \</span><br><span class="line">              docker-logrotate \</span><br><span class="line">              docker-selinux \</span><br><span class="line">              docker-engine-selinux \</span><br><span class="line">              docker-engine \</span><br><span class="line">              container*</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">sudo adduser docker</span><br><span class="line">sudo <span class="built_in">echo</span> <span class="string">'docker ALL=(ALL) ALL'</span> &gt;&gt; /etc/sudoers</span><br><span class="line"><span class="built_in">export</span> docker_version=17.03.2</span><br><span class="line">sudo yum update -y</span><br><span class="line">sudo yum install -y yum-utils device-mapper-persistent-data lvm2 bash-completion</span><br><span class="line">sudo yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo</span><br><span class="line">sudo yum makecache all</span><br><span class="line">version=$(yum list docker-ce.x86_64 --showduplicates | sort -r|grep <span class="variable">$&#123;docker_version&#125;</span>|awk <span class="string">'&#123;print $2&#125;'</span>)</span><br><span class="line">sudo yum -y install --<span class="built_in">setopt</span>=obsoletes=0 docker-ce-<span class="variable">$&#123;version&#125;</span> docker-ce-selinux-<span class="variable">$&#123;version&#125;</span></span><br><span class="line">sudo usermod -aG docker docker</span><br><span class="line">sudo systemctl <span class="built_in">enable</span> docker</span><br></pre>
+                    </td>
+                  </tr>
+                </table>
+              </figure>
+              <h4 id="物理机需要增加overlay2，云服务器已是overlay2。不需要这配置"><a href="#物理机需要增加overlay2，云服务器已是overlay2。不需要这配置" class="headerlink" title="物理机需要增加overlay2，云服务器已是overlay2。不需要这配置"></a>物理机需要增加overlay2，云服务器已是overlay2。不需要这配置</h4>
+              <figure class="highlight dts">
+                <table>
+                  <tr>
+                    <td class="gutter">
+                      <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre>
+                    </td>
+                    <td class="code">
+                      <pre><span class="line">vi <span class="meta-keyword">/etc/</span>docker/daemon.json</span><br><span class="line">&#123;</span><br><span class="line"><span class="string">"max-concurrent-downloads"</span>: <span class="number">3</span>,</span><br><span class="line"><span class="string">"max-concurrent-uploads"</span>: <span class="number">5</span>,</span><br><span class="line"></span><br><span class="line"><span class="string">"registry-mirrors"</span>: [<span class="string">"https://a9wm3lf0.mirror.aliyuncs.com"</span>],</span><br><span class="line"></span><br><span class="line"><span class="string">"graph"</span>: <span class="string">"/home/docker"</span>,</span><br><span class="line"></span><br><span class="line"><span class="string">"storage-driver"</span>: <span class="string">"overlay2"</span>,</span><br><span class="line"><span class="string">"storage-opts"</span>: [<span class="string">"overlay2.override_kernel_check=true"</span>],</span><br><span class="line"></span><br><span class="line"><span class="string">"log-driver"</span>: <span class="string">"json-file"</span>,</span><br><span class="line"><span class="string">"log-opts"</span>: &#123;</span><br><span class="line">    <span class="string">"max-size"</span>: <span class="string">"100m"</span>,</span><br><span class="line">    <span class="string">"max-file"</span>: <span class="string">"3"</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre>
+                    </td>
+                  </tr>
+                </table>
+              </figure>
+              <h4 id="WARNING-bridge-nf-call-ip6tables-is-disabled"><a href="#WARNING-bridge-nf-call-ip6tables-is-disabled" class="headerlink" title="WARNING: bridge-nf-call-ip6tables is disabled"></a>WARNING: bridge-nf-call-ip6tables is disabled</h4>
+              <figure class="highlight stylus">
+                <table>
+                  <tr>
+                    <td class="gutter">
+                      <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre>
+                    </td>
+                    <td class="code">
+                      <pre><span class="line">vi /etc/sysctl.conf</span><br><span class="line"></span><br><span class="line">net<span class="selector-class">.bridge</span><span class="selector-class">.bridge-nf-call-ip6tables</span> = <span class="number">1</span></span><br><span class="line">net<span class="selector-class">.bridge</span><span class="selector-class">.bridge-nf-call-iptables</span> = <span class="number">1</span></span><br><span class="line"></span><br><span class="line">sysctl -p</span><br></pre>
+                    </td>
+                  </tr>
+                </table>
+              </figure>
+            </div>
+            <div class="tags"><a href="/tags/sh/">sh</a></div>
+            <div class="post-share">
+              <div class="bdsharebuttonbox"><span style="float:left;line-height: 28px;height: 28px;font-size:16px;font-weight:blod">分享到：</span><a href="#" data-cmd="more" class="bds_more"></a><a href="#" data-cmd="mshare" title="分享到一键分享" class="bds_mshare"></a><a href="#" data-cmd="fbook" title="分享到Facebook" class="bds_fbook"></a><a href="#" data-cmd="twi" title="分享到Twitter" class="bds_twi"></a><a href="#" data-cmd="linkedin" title="分享到linkedin" class="bds_linkedin"></a><a href="#" data-cmd="youdao" title="分享到有道云笔记" class="bds_youdao"></a><a href="#" data-cmd="evernotecn" title="分享到印象笔记" class="bds_evernotecn"></a><a href="#" data-cmd="weixin" title="分享到微信" class="bds_weixin"></a><a href="#" data-cmd="qzone" title="分享到QQ空间" class="bds_qzone"></a><a href="#" data-cmd="tsina" title="分享到新浪微博" class="bds_tsina"></a></div>
+            </div>
+            <div class="post-nav"><a href="/2019/04/27/sh字符串截取/" class="next">sh字符串截取</a></div>
             <div id="comments">
-              <div id="SOHUCS" sid="about/index.html"></div>
+              <div id="SOHUCS" sid="2019/04/27/docker安装/"></div>
             </div>
           </div>
         </div>
@@ -67,6 +134,17 @@
       <div class="layout-r">
         <div id="sidebar">
           <div class="search-pla"></div>
+          <div id="toc" class="widget">
+            <div class="widget-title"><i class="fa fa-fei">文章目录</i></div>
+            <ol class="toc">
+              <li class="toc-item toc-level-4"><a class="toc-link" href="#正式环境不能像开发环境一样随意"><span class="toc-text">正式环境不能像开发环境一样随意..</span></a></li>
+              <li class="toc-item toc-level-4"><a class="toc-link" href="#网桥"><span class="toc-text">网桥</span></a></li>
+              <li class="toc-item toc-level-4"><a class="toc-link" href="#如果已经安装高版本Docker-可进行降级安装-可选"><span class="toc-text">如果已经安装高版本Docker,可进行降级安装(可选)</span></a></li>
+              <li class="toc-item toc-level-4"><a class="toc-link" href="#卸载旧版本Docker软件"><span class="toc-text">卸载旧版本Docker软件</span></a></li>
+              <li class="toc-item toc-level-4"><a class="toc-link" href="#物理机需要增加overlay2，云服务器已是overlay2。不需要这配置"><span class="toc-text">物理机需要增加overlay2，云服务器已是overlay2。不需要这配置</span></a></li>
+              <li class="toc-item toc-level-4"><a class="toc-link" href="#WARNING-bridge-nf-call-ip6tables-is-disabled"><span class="toc-text">WARNING: bridge-nf-call-ip6tables is disabled</span></a></li>
+            </ol>
+          </div>
           <div class="widget">
             <div class="widget-title"><i class="fa fa-xie"> 最新文章</i></div>
             <ul class="post-list">
@@ -132,7 +210,7 @@
     })();
   </script>
   <script type="text/javascript" src="/js/search.json.js?v=2.0.1"></script>
-  <script type="text/javascript" src="/js/totop.js?v=2.0.1" async></script>
+  <script type="text/javascript" src="/js/toctotop.js?v=2.0.1" async></script>
   <script>
     window._bd_share_config = {
       "common": {

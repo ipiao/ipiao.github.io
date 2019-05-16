@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://ipiao.top/"/>
-  <updated>2019-01-24T08:55:32.491Z</updated>
+  <updated>2019-04-28T04:10:25.417Z</updated>
   <id>http://ipiao.top/</id>
   
   <author>
@@ -15,6 +15,161 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>docker安装</title>
+    <link href="http://ipiao.top/2019/04/27/docker%E5%AE%89%E8%A3%85/"/>
+    <id>http://ipiao.top/2019/04/27/docker安装/</id>
+    <published>2019-04-27T04:48:00.000Z</published>
+    <updated>2019-04-28T04:10:25.417Z</updated>
+    
+    <content type="html"><![CDATA[<h4 id="正式环境不能像开发环境一样随意"><a href="#正式环境不能像开发环境一样随意" class="headerlink" title="正式环境不能像开发环境一样随意.."></a>正式环境不能像开发环境一样随意..</h4><h4 id="网桥"><a href="#网桥" class="headerlink" title="网桥"></a>网桥</h4><figure class="highlight sh">  <table>    <tr>      <td class="gutter">        <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre>      </td>      <td class="code">        <pre><span class="line">cat &gt;&gt; /etc/sysctl.conf&lt;&lt;EOF</span><br><span class="line">net.ipv4.ip_forward=1</span><br><span class="line">net.bridge.bridge-nf-call-iptables=1</span><br><span class="line">net.ipv4.neigh.default.gc_thresh1=4096</span><br><span class="line">net.ipv4.neigh.default.gc_thresh2=6144</span><br><span class="line">net.ipv4.neigh.default.gc_thresh3=8192</span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line"><span class="comment"># 这个其实是重启命令</span></span><br><span class="line">init 6</span><br></pre>      </td>    </tr>  </table></figure><a id="more"></a><h4 id="如果已经安装高版本Docker-可进行降级安装-可选"><a href="#如果已经安装高版本Docker-可进行降级安装-可选" class="headerlink" title="如果已经安装高版本Docker,可进行降级安装(可选)"></a>如果已经安装高版本Docker,可进行降级安装(可选)</h4><figure class="highlight sh">  <table>    <tr>      <td class="gutter">        <pre><span class="line">1</span><br></pre>      </td>      <td class="code">        <pre><span class="line">yum downgrade --<span class="built_in">setopt</span>=obsoletes=0 -y docker-ce-<span class="variable">$&#123;version&#125;</span> docker-ce-selinux-<span class="variable">$&#123;version&#125;</span></span><br></pre>      </td>    </tr>  </table></figure><h4 id="卸载旧版本Docker软件"><a href="#卸载旧版本Docker软件" class="headerlink" title="卸载旧版本Docker软件"></a>卸载旧版本Docker软件</h4><figure class="highlight sh">  <table>    <tr>      <td class="gutter">        <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre>      </td>      <td class="code">        <pre><span class="line">sudo yum remove docker \</span><br><span class="line">              docker-client \</span><br><span class="line">              docker-client-latest \</span><br><span class="line">              docker-common \</span><br><span class="line">              docker-latest \</span><br><span class="line">              docker-latest-logrotate \</span><br><span class="line">              docker-logrotate \</span><br><span class="line">              docker-selinux \</span><br><span class="line">              docker-engine-selinux \</span><br><span class="line">              docker-engine \</span><br><span class="line">              container*</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">sudo adduser docker</span><br><span class="line">sudo <span class="built_in">echo</span> <span class="string">'docker ALL=(ALL) ALL'</span> &gt;&gt; /etc/sudoers</span><br><span class="line"><span class="built_in">export</span> docker_version=17.03.2</span><br><span class="line">sudo yum update -y</span><br><span class="line">sudo yum install -y yum-utils device-mapper-persistent-data lvm2 bash-completion</span><br><span class="line">sudo yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo</span><br><span class="line">sudo yum makecache all</span><br><span class="line">version=$(yum list docker-ce.x86_64 --showduplicates | sort -r|grep <span class="variable">$&#123;docker_version&#125;</span>|awk <span class="string">'&#123;print $2&#125;'</span>)</span><br><span class="line">sudo yum -y install --<span class="built_in">setopt</span>=obsoletes=0 docker-ce-<span class="variable">$&#123;version&#125;</span> docker-ce-selinux-<span class="variable">$&#123;version&#125;</span></span><br><span class="line">sudo usermod -aG docker docker</span><br><span class="line">sudo systemctl <span class="built_in">enable</span> docker</span><br></pre>      </td>    </tr>  </table></figure><h4 id="物理机需要增加overlay2，云服务器已是overlay2。不需要这配置"><a href="#物理机需要增加overlay2，云服务器已是overlay2。不需要这配置" class="headerlink" title="物理机需要增加overlay2，云服务器已是overlay2。不需要这配置"></a>物理机需要增加overlay2，云服务器已是overlay2。不需要这配置</h4><figure class="highlight dts">  <table>    <tr>      <td class="gutter">        <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre>      </td>      <td class="code">        <pre><span class="line">vi <span class="meta-keyword">/etc/</span>docker/daemon.json</span><br><span class="line">&#123;</span><br><span class="line"><span class="string">"max-concurrent-downloads"</span>: <span class="number">3</span>,</span><br><span class="line"><span class="string">"max-concurrent-uploads"</span>: <span class="number">5</span>,</span><br><span class="line"></span><br><span class="line"><span class="string">"registry-mirrors"</span>: [<span class="string">"https://a9wm3lf0.mirror.aliyuncs.com"</span>],</span><br><span class="line"></span><br><span class="line"><span class="string">"graph"</span>: <span class="string">"/home/docker"</span>,</span><br><span class="line"></span><br><span class="line"><span class="string">"storage-driver"</span>: <span class="string">"overlay2"</span>,</span><br><span class="line"><span class="string">"storage-opts"</span>: [<span class="string">"overlay2.override_kernel_check=true"</span>],</span><br><span class="line"></span><br><span class="line"><span class="string">"log-driver"</span>: <span class="string">"json-file"</span>,</span><br><span class="line"><span class="string">"log-opts"</span>: &#123;</span><br><span class="line">    <span class="string">"max-size"</span>: <span class="string">"100m"</span>,</span><br><span class="line">    <span class="string">"max-file"</span>: <span class="string">"3"</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre>      </td>    </tr>  </table></figure><h4 id="WARNING-bridge-nf-call-ip6tables-is-disabled"><a href="#WARNING-bridge-nf-call-ip6tables-is-disabled" class="headerlink" title="WARNING: bridge-nf-call-ip6tables is disabled"></a>WARNING: bridge-nf-call-ip6tables is disabled</h4><figure class="highlight stylus">  <table>    <tr>      <td class="gutter">        <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre>      </td>      <td class="code">        <pre><span class="line">vi /etc/sysctl.conf</span><br><span class="line"></span><br><span class="line">net<span class="selector-class">.bridge</span><span class="selector-class">.bridge-nf-call-ip6tables</span> = <span class="number">1</span></span><br><span class="line">net<span class="selector-class">.bridge</span><span class="selector-class">.bridge-nf-call-iptables</span> = <span class="number">1</span></span><br><span class="line"></span><br><span class="line">sysctl -p</span><br></pre>      </td>    </tr>  </table></figure>]]></content>
+    
+    <summary type="html">
+    
+      &lt;h4 id=&quot;正式环境不能像开发环境一样随意&quot;&gt;&lt;a href=&quot;#正式环境不能像开发环境一样随意&quot; class=&quot;headerlink&quot; title=&quot;正式环境不能像开发环境一样随意..&quot;&gt;&lt;/a&gt;正式环境不能像开发环境一样随意..&lt;/h4&gt;
+&lt;h4 id=&quot;网桥&quot;&gt;&lt;a href=&quot;#网桥&quot; class=&quot;headerlink&quot; title=&quot;网桥&quot;&gt;&lt;/a&gt;网桥&lt;/h4&gt;
+&lt;figure class=&quot;highlight sh&quot;&gt;
+  &lt;table&gt;
+    &lt;tr&gt;
+      &lt;td class=&quot;gutter&quot;&gt;
+        &lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;
+      &lt;/td&gt;
+      &lt;td class=&quot;code&quot;&gt;
+        &lt;pre&gt;&lt;span class=&quot;line&quot;&gt;cat &amp;gt;&amp;gt; /etc/sysctl.conf&amp;lt;&amp;lt;EOF&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;net.ipv4.ip_forward=1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;net.bridge.bridge-nf-call-iptables=1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;net.ipv4.neigh.default.gc_thresh1=4096&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;net.ipv4.neigh.default.gc_thresh2=6144&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;net.ipv4.neigh.default.gc_thresh3=8192&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;EOF&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;# 这个其实是重启命令&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;init 6&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;
+      &lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/table&gt;
+&lt;/figure&gt;
+    
+    </summary>
+    
+      <category term="不务正业" scheme="http://ipiao.top/categories/%E4%B8%8D%E5%8A%A1%E6%AD%A3%E4%B8%9A/"/>
+    
+    
+      <category term="sh" scheme="http://ipiao.top/tags/sh/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>sh字符串截取</title>
+    <link href="http://ipiao.top/2019/04/27/sh%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%88%AA%E5%8F%96/"/>
+    <id>http://ipiao.top/2019/04/27/sh字符串截取/</id>
+    <published>2019-04-27T04:17:00.000Z</published>
+    <updated>2019-04-27T04:51:48.343Z</updated>
+    
+    <content type="html"><![CDATA[<h4 id="sh字符串截取"><a href="#sh字符串截取" class="headerlink" title="sh字符串截取"></a>sh字符串截取</h4><blockquote>  <p>*的位置,代表删除侧边</p></blockquote><ol>  <li><code>#</code>号截取，<code>*</code> 删除从<strong>左边</strong>满足条件的第一组字符及其左边字符，保留<strong>右边</strong>字符。<figure class="highlight sh">      <table>        <tr>          <td class="gutter">            <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre>          </td>          <td class="code">            <pre><span class="line">var=http://www.aaa.com/123.htm.</span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;var#*//&#125;</span>  <span class="comment"># www.aaa.com/123.htm.</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;var#*/&#125;</span>   <span class="comment"># /www.aaa.com/123.htm.</span></span><br></pre>          </td>        </tr>      </table>    </figure>  </li></ol><a id="more"></a><ol start="2">  <li>    <p><code>##</code>号截取，<code>*</code> 删除从<strong>右边</strong>满足条件的第一组字符及其左边字符，保留<strong>右边</strong>字符</p>    <figure class="highlight sh">      <table>        <tr>          <td class="gutter">            <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre>          </td>          <td class="code">            <pre><span class="line">var=http://www.aaa.com/123.htm.</span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;var##*//&#125;</span>  <span class="comment"># www.aaa.com/123.htm.</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;var##*/&#125;</span>   <span class="comment"># 123.htm.</span></span><br></pre>          </td>        </tr>      </table>    </figure>  </li>  <li>    <p><code>%</code>号截取，<code>*</code> 删除从<strong>左边</strong>满足条件的第一组字符及其左边字符，保留<strong>左边</strong>字符</p>    <figure class="highlight sh">      <table>        <tr>          <td class="gutter">            <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre>          </td>          <td class="code">            <pre><span class="line">var=http://www.aaa.com/123.htm.</span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;var%//*&#125;</span>  <span class="comment"># http:</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;var%/*&#125;</span>   <span class="comment"># http://www.aaa.com</span></span><br></pre>          </td>        </tr>      </table>    </figure>  </li>  <li>    <p><code>%%</code>号截取，<code>*</code> 删除从<strong>右边</strong>满足条件的第一组字符及其左边字符，保留<strong>左边</strong>字符</p>    <figure class="highlight sh">      <table>        <tr>          <td class="gutter">            <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre>          </td>          <td class="code">            <pre><span class="line">var=http://www.aaa.com/123.htm.</span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;var%%//*&#125;</span>  <span class="comment"># http:</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;var%%/*&#125;</span>   <span class="comment"># http:</span></span><br></pre>          </td>        </tr>      </table>    </figure>  </li>  <li>    <p>下标截取(开始位置+长度)(负数下标表示从右边数)</p>    <figure class="highlight php">      <table>        <tr>          <td class="gutter">            <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre>          </td>          <td class="code">            <pre><span class="line"><span class="keyword">var</span>=http:<span class="comment">//www.aaa.com/123.htm.</span></span><br><span class="line"><span class="keyword">echo</span> $&#123;<span class="keyword">var</span>:<span class="number">0</span>:<span class="number">5</span>&#125;   <span class="comment"># http:</span></span><br><span class="line"><span class="keyword">echo</span> $&#123;<span class="keyword">var</span>:<span class="number">0</span>:<span class="number">-1</span>&#125;  <span class="comment"># http://www.aaa.com/123.htm.</span></span><br></pre>          </td>        </tr>      </table>    </figure>  </li>  <li>    <p>缺省下标(个数)截取</p>    <figure class="highlight php">      <table>        <tr>          <td class="gutter">            <pre><span class="line">1</span><br><span class="line">2</span><br></pre>          </td>          <td class="code">            <pre><span class="line"><span class="keyword">var</span>=http:<span class="comment">//www.aaa.com/123.htm.</span></span><br><span class="line"><span class="keyword">echo</span> $&#123;<span class="keyword">var</span>:<span class="number">5</span>&#125;     <span class="comment"># www.aaa.com/123.htm.</span></span><br></pre>          </td>        </tr>      </table>    </figure>  </li></ol>]]></content>
+    
+    <summary type="html">
+    
+      &lt;h4 id=&quot;sh字符串截取&quot;&gt;&lt;a href=&quot;#sh字符串截取&quot; class=&quot;headerlink&quot; title=&quot;sh字符串截取&quot;&gt;&lt;/a&gt;sh字符串截取&lt;/h4&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;*的位置,代表删除侧边&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ol&gt;
+  &lt;li&gt;&lt;code&gt;#&lt;/code&gt;号截取，&lt;code&gt;*&lt;/code&gt; 删除从&lt;strong&gt;左边&lt;/strong&gt;满足条件的第一组字符及其左边字符，保留&lt;strong&gt;右边&lt;/strong&gt;字符。&lt;figure class=&quot;highlight sh&quot;&gt;
+      &lt;table&gt;
+        &lt;tr&gt;
+          &lt;td class=&quot;gutter&quot;&gt;
+            &lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;
+          &lt;/td&gt;
+          &lt;td class=&quot;code&quot;&gt;
+            &lt;pre&gt;&lt;span class=&quot;line&quot;&gt;var=http://www.aaa.com/123.htm.&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;built_in&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;variable&quot;&gt;$&amp;#123;var#*//&amp;#125;&lt;/span&gt;  &lt;span class=&quot;comment&quot;&gt;# www.aaa.com/123.htm.&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;built_in&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;variable&quot;&gt;$&amp;#123;var#*/&amp;#125;&lt;/span&gt;   &lt;span class=&quot;comment&quot;&gt;# /www.aaa.com/123.htm.&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;
+          &lt;/td&gt;
+        &lt;/tr&gt;
+      &lt;/table&gt;
+    &lt;/figure&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+    
+    </summary>
+    
+      <category term="不务正业" scheme="http://ipiao.top/categories/%E4%B8%8D%E5%8A%A1%E6%AD%A3%E4%B8%9A/"/>
+    
+    
+      <category term="sh" scheme="http://ipiao.top/tags/sh/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>ssh-config</title>
+    <link href="http://ipiao.top/2019/04/27/ssh-config/"/>
+    <id>http://ipiao.top/2019/04/27/ssh-config/</id>
+    <published>2019-04-27T03:52:00.000Z</published>
+    <updated>2019-04-27T04:52:12.650Z</updated>
+    
+    <content type="html"><![CDATA[<h4 id="ssh-配置说明"><a href="#ssh-配置说明" class="headerlink" title="ssh 配置说明"></a>ssh 配置说明</h4><ol>  <li>位置:一般是 ~/./ssh/config,文件存在直接创建即可.</li>  <li>格式: </li></ol><figure class="highlight sh">  <table>    <tr>      <td class="gutter">        <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre>      </td>      <td class="code">        <pre><span class="line">Host <span class="built_in">test</span> <span class="comment"># 随意命名</span></span><br><span class="line">    HostName 118.25.7.38 </span><br><span class="line">    User root</span><br><span class="line">    Port 22</span><br><span class="line">    IdentityFile ~/.ssh/id_rsa <span class="comment"># 指定密钥文件</span></span><br><span class="line"><span class="comment"># ProxyCommand ssh test2 -W '%h %p'  # 跳板机跳转</span></span><br><span class="line">    <span class="comment"># ProxyCommand sshpass -p pwd ssh %u@%h  # 账号密码免输入密码登录</span></span><br></pre>      </td>    </tr>  </table></figure><a id="more"></a><ol start="3">  <li>通过 <code>ssh test</code> 就可以登录服务器</li>  <li>ssh-keygen -t rsa 生成自己的密钥</li>  <li>ssh-copy-id 可以在账号密码登录后将自己的密钥拷贝到服务器,以后就可以不用账号密码(支持的情况下)</li>  <li>    <p>ssh 执行多命令(其实是 <code>&lt;&lt; EOF</code> 的使用)</p>    <figure class="highlight bash">      <table>        <tr>          <td class="gutter">            <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre>          </td>          <td class="code">            <pre><span class="line">ssh <span class="variable">$host</span> &lt;&lt;EOF</span><br><span class="line">    <span class="built_in">cd</span> <span class="variable">$path</span></span><br><span class="line">    mv <span class="variable">$tmpbinaryname</span> <span class="variable">$binaryname</span></span><br><span class="line">    cp <span class="variable">$binaryname</span> <span class="variable">$cmd</span></span><br><span class="line">    <span class="built_in">cd</span> <span class="variable">$cmd</span></span><br><span class="line">    nohup ./<span class="variable">$binaryname</span> 2&gt;&amp;1 &amp;</span><br><span class="line">EOF</span><br></pre>          </td>        </tr>      </table>    </figure>    <ul>      <li>6.1 脚本执行可能会在退出的时候切断服务,是由于进程间的依赖关系造成的,可以加 <code>setsid</code>, 如 <code>setsid nohup ./$binaryname 2&gt;&amp;1 &amp;</code></li>    </ul>  </li>  <li>scp, 依赖ssh. <code>scp $binaryname $host:$path/$tmpbinaryname</code>,上传到服务器<ul>      <li>7.1 <code>scp $host:$path/$tmpbinaryname $binaryname</code>,反过来就是从服务器下载</li>    </ul>  </li></ol>]]></content>
+    
+    <summary type="html">
+    
+      &lt;h4 id=&quot;ssh-配置说明&quot;&gt;&lt;a href=&quot;#ssh-配置说明&quot; class=&quot;headerlink&quot; title=&quot;ssh 配置说明&quot;&gt;&lt;/a&gt;ssh 配置说明&lt;/h4&gt;
+&lt;ol&gt;
+  &lt;li&gt;位置:一般是 ~/./ssh/config,文件存在直接创建即可.&lt;/li&gt;
+  &lt;li&gt;格式: &lt;/li&gt;
+&lt;/ol&gt;
+&lt;figure class=&quot;highlight sh&quot;&gt;
+  &lt;table&gt;
+    &lt;tr&gt;
+      &lt;td class=&quot;gutter&quot;&gt;
+        &lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;
+      &lt;/td&gt;
+      &lt;td class=&quot;code&quot;&gt;
+        &lt;pre&gt;&lt;span class=&quot;line&quot;&gt;Host &lt;span class=&quot;built_in&quot;&gt;test&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;# 随意命名&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    HostName 118.25.7.38 &lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    User root&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    Port 22&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    IdentityFile ~/.ssh/id_rsa &lt;span class=&quot;comment&quot;&gt;# 指定密钥文件&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&lt;span class=&quot;comment&quot;&gt;# ProxyCommand ssh test2 -W &#39;%h %p&#39;  # 跳板机跳转&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;comment&quot;&gt;# ProxyCommand sshpass -p pwd ssh %u@%h  # 账号密码免输入密码登录&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;
+      &lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/table&gt;
+&lt;/figure&gt;
+    
+    </summary>
+    
+      <category term="不务正业" scheme="http://ipiao.top/categories/%E4%B8%8D%E5%8A%A1%E6%AD%A3%E4%B8%9A/"/>
+    
+    
+      <category term="sh" scheme="http://ipiao.top/tags/sh/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>文件监听 inotify</title>
+    <link href="http://ipiao.top/2019/04/27/%E6%96%87%E4%BB%B6%E7%9B%91%E5%90%AC-inotify/"/>
+    <id>http://ipiao.top/2019/04/27/文件监听-inotify/</id>
+    <published>2019-04-27T03:17:00.000Z</published>
+    <updated>2019-04-27T04:52:33.211Z</updated>
+    
+    <content type="html"><![CDATA[<h4 id="inotify文件事件的自动化部署"><a href="#inotify文件事件的自动化部署" class="headerlink" title="inotify文件事件的自动化部署"></a>inotify文件事件的自动化部署</h4><ul>  <li>    <p>需要安装,补充inotify命令inotify-tools,inotifywait.</p>    <figure class="highlight sh">      <table>        <tr>          <td class="gutter">            <pre><span class="line">1</span><br></pre>          </td>          <td class="code">            <pre><span class="line">sudo apt-get(yum) install inotify-tools</span><br></pre>          </td>        </tr>      </table>    </figure>  </li>  <li>    <p>inotifywait -h 了解其使用方法</p>  </li></ul><a id="more"></a><h4 id="基于文件事件的自动化部署"><a href="#基于文件事件的自动化部署" class="headerlink" title="基于文件事件的自动化部署"></a>基于文件事件的自动化部署</h4><ul>  <li>1.需求: 由于公司所有服务器采用跳板机(jumpserver)登录方式,目前无法通过任何方式进行直连以及文件的直接传输,于是乎,程序更新部署(尤其是测试环境)显得及其麻烦.当前只能通过将程序文件上传(ftp)到目的服务器临时目录 /tmp,然后再进行二次操作.</li>  <li>2.解决方案: 考虑二次操作,有几个解决方案,其中2个比较代表性的是:<ul>      <li>2.1 通过supervisord配置,界面管理重启.</li>      <li>2.2 通过文件监听inotifywait自己实现监听重启脚本</li>    </ul>  </li>  <li>3.方案对比<ul>      <li>3.1 supervisord劣势: 需要额外的配置文件,需要开放管理界面端口,(根据以往的经验,)容易失效</li>      <li>3.2 supervisord优势: 界面管理,可以随时重启当前服务</li>      <li>3.3 inotifywait劣势: 每次重启需要手动出发事件(相当于去supervisord界面点击一下),但是要通过jumpserver的界面去操作,中间多了好几步.</li>      <li>3.4 inotifywait优势: 安装简单(就是一个安装命令和一个监听脚本),根据自己的服务特性写脚本足够灵活(不必重复的配置文件)</li>    </ul>  </li></ul><h4 id="微服务配置脚本"><a href="#微服务配置脚本" class="headerlink" title="微服务配置脚本"></a>微服务配置脚本</h4><blockquote>  <p>由于完全自己开发,所有的脚本,配置格式都比较统一,所以脚本不会复杂</p></blockquote><figure class="highlight sh">  <table>    <tr>      <td class="gutter">        <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre>      </td>      <td class="code">        <pre><span class="line"><span class="meta">#!/usr/bin/env bash</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 监听文件夹改动并自动编译重启</span></span><br><span class="line">SRCDIR=`<span class="built_in">pwd</span>`</span><br><span class="line"><span class="function"><span class="title">dorestart</span></span>()&#123;</span><br><span class="line">    sleep 2</span><br><span class="line">    <span class="built_in">echo</span> <span class="string">"restart <span class="variable">$1</span>"</span></span><br><span class="line">    <span class="built_in">cd</span> <span class="string">"/srv/onevideo/<span class="variable">$1</span>"</span></span><br><span class="line">    f=<span class="string">"1v1_<span class="variable">$1</span>"</span></span><br><span class="line">    tmpfile=<span class="string">"/tmp/onevideo/<span class="variable">$1</span>/<span class="variable">$f</span>"</span></span><br><span class="line">    <span class="keyword">if</span> [ ! -f <span class="variable">$tmpfile</span> ]; <span class="keyword">then</span></span><br><span class="line">        <span class="built_in">return</span></span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line">    setsid sh restart.sh &amp;</span><br><span class="line">    <span class="comment"># mv $tmpfile ./</span></span><br><span class="line">    <span class="comment"># chmod +x $f</span></span><br><span class="line">    <span class="comment"># ps -aux|grep $f|grep -v grep|awk '&#123;print $2&#125;'|xargs kill -15 # 2|3|15</span></span><br><span class="line">    <span class="comment"># sleep 2</span></span><br><span class="line">    <span class="comment"># dt=`date "+%m%d_%H%M"`</span></span><br><span class="line">    <span class="comment"># if [ ! -d logs_bak ]; then</span></span><br><span class="line">    <span class="comment">#     mkdir logs_bak</span></span><br><span class="line">    <span class="comment"># fi</span></span><br><span class="line">    <span class="comment"># mv "$1.log" "logs_bak/$1"_"$dt.log"</span></span><br><span class="line">    <span class="comment"># setsid nohup ./$f -c "server.yaml" --registry_address "127.0.0.1:8500" 2&gt;&amp;1 &gt;&gt;"$1.log" &amp; </span></span><br><span class="line">    <span class="built_in">cd</span> <span class="variable">$SRCDIR</span></span><br><span class="line">    <span class="keyword">if</span> [ ! -f <span class="string">"<span class="variable">$1</span>/EOF"</span> ]; <span class="keyword">then</span></span><br><span class="line">        touch <span class="string">"<span class="variable">$1</span>/EOF"</span></span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line">    <span class="comment"># setsid sh restart.sh &amp;</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">"restart <span class="variable">$1</span> done"</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 这里 format 定义输出的日志格式, read类似程序里的scan(将输入读取到指定变量的意思)</span></span><br><span class="line">inotifywait -mrq --timefmt <span class="string">'%d/%m/%y %H:%M'</span> --format <span class="string">'%T %Xe %w %f'</span> \</span><br><span class="line"> -e DELETE,CREATE --excludei *.* <span class="variable">$SRCDIR</span>/* | <span class="keyword">while</span> <span class="built_in">read</span> DATE TIME EVENT DIR FILE; <span class="keyword">do</span></span><br><span class="line">RDIR=<span class="variable">$&#123;DIR%/&#125;</span></span><br><span class="line">dir=<span class="variable">$&#123;RDIR##*/&#125;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">"notify <span class="variable">$EVENT</span>:<span class="variable">$dir</span>-<span class="variable">$FILE</span>"</span> </span><br><span class="line"><span class="comment"># if [ "CLOSE_WRITEXCLOSE" == "$EVENT" ] #CLOSE事件不止一次发生,并且暂时不知道怎么判断文件上传结束</span></span><br><span class="line"><span class="keyword">if</span> [ <span class="string">"EOF"</span> == <span class="string">"<span class="variable">$FILE</span>"</span> ] <span class="comment"># 通过EOF文件标记上传结束</span></span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">   dorestart <span class="variable">$dir</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"><span class="keyword">done</span></span><br></pre>      </td>    </tr>  </table></figure><ul>  <li>说明: 略</li>  <li>操作: 每次上传完新程序文件,只需要删除对应目录下(自动生成的)EOF文件即可重启</li>  <li>执行: 不用 -d的原因是 -d -o 执行的时候出现了问题(提示日志文件权限之类的,没有细查…)</li></ul><h4 id="为什么不监听文件上传完成后重启"><a href="#为什么不监听文件上传完成后重启" class="headerlink" title="为什么不监听文件上传完成后重启"></a>为什么不监听文件上传完成后重启</h4><ol>  <li>大文件断续上传,会产生好几个CREATE\CLOSE事件,不好判断(主要是我也不会)文件是否真的完整上传完成.</li>  <li>上传时就在同一个目录下,删除一个EOF文件足够简单.并且这样还可以支持无更新重启(虽然上面脚本没支持)</li>  <li>动作缓冲,潜意识提醒你检查服务状态^0_0*</li></ol>]]></content>
+    
+    <summary type="html">
+    
+      &lt;h4 id=&quot;inotify文件事件的自动化部署&quot;&gt;&lt;a href=&quot;#inotify文件事件的自动化部署&quot; class=&quot;headerlink&quot; title=&quot;inotify文件事件的自动化部署&quot;&gt;&lt;/a&gt;inotify文件事件的自动化部署&lt;/h4&gt;
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;需要安装,补充inotify命令inotify-tools,inotifywait.&lt;/p&gt;
+    &lt;figure class=&quot;highlight sh&quot;&gt;
+      &lt;table&gt;
+        &lt;tr&gt;
+          &lt;td class=&quot;gutter&quot;&gt;
+            &lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;
+          &lt;/td&gt;
+          &lt;td class=&quot;code&quot;&gt;
+            &lt;pre&gt;&lt;span class=&quot;line&quot;&gt;sudo apt-get(yum) install inotify-tools&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;
+          &lt;/td&gt;
+        &lt;/tr&gt;
+      &lt;/table&gt;
+    &lt;/figure&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;inotifywait -h 了解其使用方法&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+    
+    </summary>
+    
+      <category term="不务正业" scheme="http://ipiao.top/categories/%E4%B8%8D%E5%8A%A1%E6%AD%A3%E4%B8%9A/"/>
+    
+    
+      <category term="sh" scheme="http://ipiao.top/tags/sh/"/>
+    
+  </entry>
   
   <entry>
     <title>数字游戏</title>

@@ -10,7 +10,7 @@
   <meta content="telephone=no" name="format-detection">
   <meta name="description" content="没有理由，只是想做些什么">
   <meta name="keywords" content="go,ipiao">
-  <title>about | 欣欣然不知所以</title>
+  <title>sh字符串截取 | 欣欣然不知所以</title>
   <link rel="stylesheet" type="text/css" href="//fonts.neworld.org/css?family=Source+Code+Pro">
   <link rel="stylesheet" type="text/css" href="/css/style.css?v=2.0.1">
   <link rel="stylesheet" type="text/css" href="/css/highlight.css?v=2.0.1">
@@ -25,10 +25,10 @@
   <div class="body_container">
     <div id="header">
       <div class="site-name">
-        <h1 class="hidden">about</h1><a id="logo" href="/.">欣欣然不知所以</a>
+        <h1 class="hidden">sh字符串截取</h1><a id="logo" href="/.">欣欣然不知所以</a>
         <p class="description">......</p>
       </div>
-      <div id="nav-menu"><a href="/."><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/about/" class="current"><i class="fa fa-user"> 关于</i></a><a href="/atom.xml"><i class="fa fa-rss"> 订阅</i></a></div>
+      <div id="nav-menu"><a href="/." class="current"><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/about/"><i class="fa fa-user"> 关于</i></a><a href="/atom.xml"><i class="fa fa-rss"> 订阅</i></a></div>
       <div id="search-form">
         <div id="result-mask" class="hide"></div><label><input id="search-key" type="text" autocomplete="on" placeholder="input keyword to search..."></label>
         <div id="result-wrap" class="hide">
@@ -47,19 +47,116 @@
       <div class="layout-l">
         <div class="content_container">
           <div class="post">
-            <h1 class="post-title">about</h1>
-            <div class="post-content">
-              <div class="author-page"><a href="javascript:;" class="photo"><img src="http://obzf7z93c.bkt.clouddn.com/themeauthor.jpg"></a>
-                <div class="author">
-                  <p><i class="fa fa-user">name：</i>ipiao</p>
-                  <p><i class="fa fa-email">email：</i><a href="mailto:530151330@qq.com" target="_blank">530151330@qq.com</a></p>
-                  <p><i class="fa fa-github">github：</i><a href="https://github.com/ipiao" target="_blank">ipiao</a></p>
-                  <p><i class="fa fa-weibo">weibo：</i><a target="_blank"></a></p>
-                </div>
-              </div>
+            <h1 class="post-title">sh字符串截取</h1>
+            <div class="post-meta"><a href="/2019/04/27/sh字符串截取/#comments" class="comment-count"><i id="changyan_count_unit" data-xid="2019/04/27/sh字符串截取/"></i>留言,<i id="changyan_parti_unit" data-xid="2019/04/27/sh字符串截取/"></i>参与</a>
+              <p><span class="date">Apr 27, 2019</span><span><a href="/categories/不务正业/" class="category">不务正业</a></span></p>
             </div>
+            <div class="post-content">
+              <h4 id="sh字符串截取"><a href="#sh字符串截取" class="headerlink" title="sh字符串截取"></a>sh字符串截取</h4>
+              <blockquote>
+                <p>*的位置,代表删除侧边</p>
+              </blockquote>
+              <ol>
+                <li><code>#</code>号截取，<code>*</code> 删除从<strong>左边</strong>满足条件的第一组字符及其左边字符，保留<strong>右边</strong>字符。<figure class="highlight sh">
+                    <table>
+                      <tr>
+                        <td class="gutter">
+                          <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre>
+                        </td>
+                        <td class="code">
+                          <pre><span class="line">var=http://www.aaa.com/123.htm.</span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;var#*//&#125;</span>  <span class="comment"># www.aaa.com/123.htm.</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;var#*/&#125;</span>   <span class="comment"># /www.aaa.com/123.htm.</span></span><br></pre>
+                        </td>
+                      </tr>
+                    </table>
+                  </figure>
+                </li>
+              </ol>
+              <a id="more"></a>
+              <ol start="2">
+                <li>
+                  <p><code>##</code>号截取，<code>*</code> 删除从<strong>右边</strong>满足条件的第一组字符及其左边字符，保留<strong>右边</strong>字符</p>
+                  <figure class="highlight sh">
+                    <table>
+                      <tr>
+                        <td class="gutter">
+                          <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre>
+                        </td>
+                        <td class="code">
+                          <pre><span class="line">var=http://www.aaa.com/123.htm.</span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;var##*//&#125;</span>  <span class="comment"># www.aaa.com/123.htm.</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;var##*/&#125;</span>   <span class="comment"># 123.htm.</span></span><br></pre>
+                        </td>
+                      </tr>
+                    </table>
+                  </figure>
+                </li>
+                <li>
+                  <p><code>%</code>号截取，<code>*</code> 删除从<strong>左边</strong>满足条件的第一组字符及其左边字符，保留<strong>左边</strong>字符</p>
+                  <figure class="highlight sh">
+                    <table>
+                      <tr>
+                        <td class="gutter">
+                          <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre>
+                        </td>
+                        <td class="code">
+                          <pre><span class="line">var=http://www.aaa.com/123.htm.</span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;var%//*&#125;</span>  <span class="comment"># http:</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;var%/*&#125;</span>   <span class="comment"># http://www.aaa.com</span></span><br></pre>
+                        </td>
+                      </tr>
+                    </table>
+                  </figure>
+                </li>
+                <li>
+                  <p><code>%%</code>号截取，<code>*</code> 删除从<strong>右边</strong>满足条件的第一组字符及其左边字符，保留<strong>左边</strong>字符</p>
+                  <figure class="highlight sh">
+                    <table>
+                      <tr>
+                        <td class="gutter">
+                          <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre>
+                        </td>
+                        <td class="code">
+                          <pre><span class="line">var=http://www.aaa.com/123.htm.</span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;var%%//*&#125;</span>  <span class="comment"># http:</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;var%%/*&#125;</span>   <span class="comment"># http:</span></span><br></pre>
+                        </td>
+                      </tr>
+                    </table>
+                  </figure>
+                </li>
+                <li>
+                  <p>下标截取(开始位置+长度)(负数下标表示从右边数)</p>
+                  <figure class="highlight php">
+                    <table>
+                      <tr>
+                        <td class="gutter">
+                          <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre>
+                        </td>
+                        <td class="code">
+                          <pre><span class="line"><span class="keyword">var</span>=http:<span class="comment">//www.aaa.com/123.htm.</span></span><br><span class="line"><span class="keyword">echo</span> $&#123;<span class="keyword">var</span>:<span class="number">0</span>:<span class="number">5</span>&#125;   <span class="comment"># http:</span></span><br><span class="line"><span class="keyword">echo</span> $&#123;<span class="keyword">var</span>:<span class="number">0</span>:<span class="number">-1</span>&#125;  <span class="comment"># http://www.aaa.com/123.htm.</span></span><br></pre>
+                        </td>
+                      </tr>
+                    </table>
+                  </figure>
+                </li>
+                <li>
+                  <p>缺省下标(个数)截取</p>
+                  <figure class="highlight php">
+                    <table>
+                      <tr>
+                        <td class="gutter">
+                          <pre><span class="line">1</span><br><span class="line">2</span><br></pre>
+                        </td>
+                        <td class="code">
+                          <pre><span class="line"><span class="keyword">var</span>=http:<span class="comment">//www.aaa.com/123.htm.</span></span><br><span class="line"><span class="keyword">echo</span> $&#123;<span class="keyword">var</span>:<span class="number">5</span>&#125;     <span class="comment"># www.aaa.com/123.htm.</span></span><br></pre>
+                        </td>
+                      </tr>
+                    </table>
+                  </figure>
+                </li>
+              </ol>
+            </div>
+            <div class="tags"><a href="/tags/sh/">sh</a></div>
+            <div class="post-share">
+              <div class="bdsharebuttonbox"><span style="float:left;line-height: 28px;height: 28px;font-size:16px;font-weight:blod">分享到：</span><a href="#" data-cmd="more" class="bds_more"></a><a href="#" data-cmd="mshare" title="分享到一键分享" class="bds_mshare"></a><a href="#" data-cmd="fbook" title="分享到Facebook" class="bds_fbook"></a><a href="#" data-cmd="twi" title="分享到Twitter" class="bds_twi"></a><a href="#" data-cmd="linkedin" title="分享到linkedin" class="bds_linkedin"></a><a href="#" data-cmd="youdao" title="分享到有道云笔记" class="bds_youdao"></a><a href="#" data-cmd="evernotecn" title="分享到印象笔记" class="bds_evernotecn"></a><a href="#" data-cmd="weixin" title="分享到微信" class="bds_weixin"></a><a href="#" data-cmd="qzone" title="分享到QQ空间" class="bds_qzone"></a><a href="#" data-cmd="tsina" title="分享到新浪微博" class="bds_tsina"></a></div>
+            </div>
+            <div class="post-nav"><a href="/2019/04/27/docker安装/" class="pre">docker安装</a><a href="/2019/04/27/ssh-config/" class="next">ssh-config</a></div>
             <div id="comments">
-              <div id="SOHUCS" sid="about/index.html"></div>
+              <div id="SOHUCS" sid="2019/04/27/sh字符串截取/"></div>
             </div>
           </div>
         </div>
@@ -67,6 +164,12 @@
       <div class="layout-r">
         <div id="sidebar">
           <div class="search-pla"></div>
+          <div id="toc" class="widget">
+            <div class="widget-title"><i class="fa fa-fei">文章目录</i></div>
+            <ol class="toc">
+              <li class="toc-item toc-level-4"><a class="toc-link" href="#sh字符串截取"><span class="toc-text">sh字符串截取</span></a></li>
+            </ol>
+          </div>
           <div class="widget">
             <div class="widget-title"><i class="fa fa-xie"> 最新文章</i></div>
             <ul class="post-list">
@@ -132,7 +235,7 @@
     })();
   </script>
   <script type="text/javascript" src="/js/search.json.js?v=2.0.1"></script>
-  <script type="text/javascript" src="/js/totop.js?v=2.0.1" async></script>
+  <script type="text/javascript" src="/js/toctotop.js?v=2.0.1" async></script>
   <script>
     window._bd_share_config = {
       "common": {

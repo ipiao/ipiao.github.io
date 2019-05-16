@@ -10,7 +10,7 @@
   <meta content="telephone=no" name="format-detection">
   <meta name="description" content="没有理由，只是想做些什么">
   <meta name="keywords" content="go,ipiao">
-  <title>about | 欣欣然不知所以</title>
+  <title>文件监听 inotify | 欣欣然不知所以</title>
   <link rel="stylesheet" type="text/css" href="//fonts.neworld.org/css?family=Source+Code+Pro">
   <link rel="stylesheet" type="text/css" href="/css/style.css?v=2.0.1">
   <link rel="stylesheet" type="text/css" href="/css/highlight.css?v=2.0.1">
@@ -25,10 +25,10 @@
   <div class="body_container">
     <div id="header">
       <div class="site-name">
-        <h1 class="hidden">about</h1><a id="logo" href="/.">欣欣然不知所以</a>
+        <h1 class="hidden">文件监听 inotify</h1><a id="logo" href="/.">欣欣然不知所以</a>
         <p class="description">......</p>
       </div>
-      <div id="nav-menu"><a href="/."><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/about/" class="current"><i class="fa fa-user"> 关于</i></a><a href="/atom.xml"><i class="fa fa-rss"> 订阅</i></a></div>
+      <div id="nav-menu"><a href="/." class="current"><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/about/"><i class="fa fa-user"> 关于</i></a><a href="/atom.xml"><i class="fa fa-rss"> 订阅</i></a></div>
       <div id="search-form">
         <div id="result-mask" class="hide"></div><label><input id="search-key" type="text" autocomplete="on" placeholder="input keyword to search..."></label>
         <div id="result-wrap" class="hide">
@@ -47,19 +47,84 @@
       <div class="layout-l">
         <div class="content_container">
           <div class="post">
-            <h1 class="post-title">about</h1>
-            <div class="post-content">
-              <div class="author-page"><a href="javascript:;" class="photo"><img src="http://obzf7z93c.bkt.clouddn.com/themeauthor.jpg"></a>
-                <div class="author">
-                  <p><i class="fa fa-user">name：</i>ipiao</p>
-                  <p><i class="fa fa-email">email：</i><a href="mailto:530151330@qq.com" target="_blank">530151330@qq.com</a></p>
-                  <p><i class="fa fa-github">github：</i><a href="https://github.com/ipiao" target="_blank">ipiao</a></p>
-                  <p><i class="fa fa-weibo">weibo：</i><a target="_blank"></a></p>
-                </div>
-              </div>
+            <h1 class="post-title">文件监听 inotify</h1>
+            <div class="post-meta"><a href="/2019/04/27/文件监听-inotify/#comments" class="comment-count"><i id="changyan_count_unit" data-xid="2019/04/27/文件监听-inotify/"></i>留言,<i id="changyan_parti_unit" data-xid="2019/04/27/文件监听-inotify/"></i>参与</a>
+              <p><span class="date">Apr 27, 2019</span><span><a href="/categories/不务正业/" class="category">不务正业</a></span></p>
             </div>
+            <div class="post-content">
+              <h4 id="inotify文件事件的自动化部署"><a href="#inotify文件事件的自动化部署" class="headerlink" title="inotify文件事件的自动化部署"></a>inotify文件事件的自动化部署</h4>
+              <ul>
+                <li>
+                  <p>需要安装,补充inotify命令inotify-tools,inotifywait.</p>
+                  <figure class="highlight sh">
+                    <table>
+                      <tr>
+                        <td class="gutter">
+                          <pre><span class="line">1</span><br></pre>
+                        </td>
+                        <td class="code">
+                          <pre><span class="line">sudo apt-get(yum) install inotify-tools</span><br></pre>
+                        </td>
+                      </tr>
+                    </table>
+                  </figure>
+                </li>
+                <li>
+                  <p>inotifywait -h 了解其使用方法</p>
+                </li>
+              </ul>
+              <a id="more"></a>
+              <h4 id="基于文件事件的自动化部署"><a href="#基于文件事件的自动化部署" class="headerlink" title="基于文件事件的自动化部署"></a>基于文件事件的自动化部署</h4>
+              <ul>
+                <li>1.需求: 由于公司所有服务器采用跳板机(jumpserver)登录方式,目前无法通过任何方式进行直连以及文件的直接传输,于是乎,程序更新部署(尤其是测试环境)显得及其麻烦.当前只能通过将程序文件上传(ftp)到目的服务器临时目录 /tmp,然后再进行二次操作.</li>
+                <li>2.解决方案: 考虑二次操作,有几个解决方案,其中2个比较代表性的是:<ul>
+                    <li>2.1 通过supervisord配置,界面管理重启.</li>
+                    <li>2.2 通过文件监听inotifywait自己实现监听重启脚本</li>
+                  </ul>
+                </li>
+                <li>3.方案对比<ul>
+                    <li>3.1 supervisord劣势: 需要额外的配置文件,需要开放管理界面端口,(根据以往的经验,)容易失效</li>
+                    <li>3.2 supervisord优势: 界面管理,可以随时重启当前服务</li>
+                    <li>3.3 inotifywait劣势: 每次重启需要手动出发事件(相当于去supervisord界面点击一下),但是要通过jumpserver的界面去操作,中间多了好几步.</li>
+                    <li>3.4 inotifywait优势: 安装简单(就是一个安装命令和一个监听脚本),根据自己的服务特性写脚本足够灵活(不必重复的配置文件)</li>
+                  </ul>
+                </li>
+              </ul>
+              <h4 id="微服务配置脚本"><a href="#微服务配置脚本" class="headerlink" title="微服务配置脚本"></a>微服务配置脚本</h4>
+              <blockquote>
+                <p>由于完全自己开发,所有的脚本,配置格式都比较统一,所以脚本不会复杂</p>
+              </blockquote>
+              <figure class="highlight sh">
+                <table>
+                  <tr>
+                    <td class="gutter">
+                      <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre>
+                    </td>
+                    <td class="code">
+                      <pre><span class="line"><span class="meta">#!/usr/bin/env bash</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 监听文件夹改动并自动编译重启</span></span><br><span class="line">SRCDIR=`<span class="built_in">pwd</span>`</span><br><span class="line"><span class="function"><span class="title">dorestart</span></span>()&#123;</span><br><span class="line">    sleep 2</span><br><span class="line">    <span class="built_in">echo</span> <span class="string">"restart <span class="variable">$1</span>"</span></span><br><span class="line">    <span class="built_in">cd</span> <span class="string">"/srv/onevideo/<span class="variable">$1</span>"</span></span><br><span class="line">    f=<span class="string">"1v1_<span class="variable">$1</span>"</span></span><br><span class="line">    tmpfile=<span class="string">"/tmp/onevideo/<span class="variable">$1</span>/<span class="variable">$f</span>"</span></span><br><span class="line">    <span class="keyword">if</span> [ ! -f <span class="variable">$tmpfile</span> ]; <span class="keyword">then</span></span><br><span class="line">        <span class="built_in">return</span></span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line">    setsid sh restart.sh &amp;</span><br><span class="line">    <span class="comment"># mv $tmpfile ./</span></span><br><span class="line">    <span class="comment"># chmod +x $f</span></span><br><span class="line">    <span class="comment"># ps -aux|grep $f|grep -v grep|awk '&#123;print $2&#125;'|xargs kill -15 # 2|3|15</span></span><br><span class="line">    <span class="comment"># sleep 2</span></span><br><span class="line">    <span class="comment"># dt=`date "+%m%d_%H%M"`</span></span><br><span class="line">    <span class="comment"># if [ ! -d logs_bak ]; then</span></span><br><span class="line">    <span class="comment">#     mkdir logs_bak</span></span><br><span class="line">    <span class="comment"># fi</span></span><br><span class="line">    <span class="comment"># mv "$1.log" "logs_bak/$1"_"$dt.log"</span></span><br><span class="line">    <span class="comment"># setsid nohup ./$f -c "server.yaml" --registry_address "127.0.0.1:8500" 2&gt;&amp;1 &gt;&gt;"$1.log" &amp; </span></span><br><span class="line">    <span class="built_in">cd</span> <span class="variable">$SRCDIR</span></span><br><span class="line">    <span class="keyword">if</span> [ ! -f <span class="string">"<span class="variable">$1</span>/EOF"</span> ]; <span class="keyword">then</span></span><br><span class="line">        touch <span class="string">"<span class="variable">$1</span>/EOF"</span></span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line">    <span class="comment"># setsid sh restart.sh &amp;</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">"restart <span class="variable">$1</span> done"</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 这里 format 定义输出的日志格式, read类似程序里的scan(将输入读取到指定变量的意思)</span></span><br><span class="line">inotifywait -mrq --timefmt <span class="string">'%d/%m/%y %H:%M'</span> --format <span class="string">'%T %Xe %w %f'</span> \</span><br><span class="line"> -e DELETE,CREATE --excludei *.* <span class="variable">$SRCDIR</span>/* | <span class="keyword">while</span> <span class="built_in">read</span> DATE TIME EVENT DIR FILE; <span class="keyword">do</span></span><br><span class="line">RDIR=<span class="variable">$&#123;DIR%/&#125;</span></span><br><span class="line">dir=<span class="variable">$&#123;RDIR##*/&#125;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">"notify <span class="variable">$EVENT</span>:<span class="variable">$dir</span>-<span class="variable">$FILE</span>"</span> </span><br><span class="line"><span class="comment"># if [ "CLOSE_WRITEXCLOSE" == "$EVENT" ] #CLOSE事件不止一次发生,并且暂时不知道怎么判断文件上传结束</span></span><br><span class="line"><span class="keyword">if</span> [ <span class="string">"EOF"</span> == <span class="string">"<span class="variable">$FILE</span>"</span> ] <span class="comment"># 通过EOF文件标记上传结束</span></span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">   dorestart <span class="variable">$dir</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"><span class="keyword">done</span></span><br></pre>
+                    </td>
+                  </tr>
+                </table>
+              </figure>
+              <ul>
+                <li>说明: 略</li>
+                <li>操作: 每次上传完新程序文件,只需要删除对应目录下(自动生成的)EOF文件即可重启</li>
+                <li>执行: 不用 -d的原因是 -d -o 执行的时候出现了问题(提示日志文件权限之类的,没有细查…)</li>
+              </ul>
+              <h4 id="为什么不监听文件上传完成后重启"><a href="#为什么不监听文件上传完成后重启" class="headerlink" title="为什么不监听文件上传完成后重启"></a>为什么不监听文件上传完成后重启</h4>
+              <ol>
+                <li>大文件断续上传,会产生好几个CREATE\CLOSE事件,不好判断(主要是我也不会)文件是否真的完整上传完成.</li>
+                <li>上传时就在同一个目录下,删除一个EOF文件足够简单.并且这样还可以支持无更新重启(虽然上面脚本没支持)</li>
+                <li>动作缓冲,潜意识提醒你检查服务状态^0_0*</li>
+              </ol>
+            </div>
+            <div class="tags"><a href="/tags/sh/">sh</a></div>
+            <div class="post-share">
+              <div class="bdsharebuttonbox"><span style="float:left;line-height: 28px;height: 28px;font-size:16px;font-weight:blod">分享到：</span><a href="#" data-cmd="more" class="bds_more"></a><a href="#" data-cmd="mshare" title="分享到一键分享" class="bds_mshare"></a><a href="#" data-cmd="fbook" title="分享到Facebook" class="bds_fbook"></a><a href="#" data-cmd="twi" title="分享到Twitter" class="bds_twi"></a><a href="#" data-cmd="linkedin" title="分享到linkedin" class="bds_linkedin"></a><a href="#" data-cmd="youdao" title="分享到有道云笔记" class="bds_youdao"></a><a href="#" data-cmd="evernotecn" title="分享到印象笔记" class="bds_evernotecn"></a><a href="#" data-cmd="weixin" title="分享到微信" class="bds_weixin"></a><a href="#" data-cmd="qzone" title="分享到QQ空间" class="bds_qzone"></a><a href="#" data-cmd="tsina" title="分享到新浪微博" class="bds_tsina"></a></div>
+            </div>
+            <div class="post-nav"><a href="/2019/04/27/ssh-config/" class="pre">ssh-config</a><a href="/2019/01/22/数字游戏/" class="next">数字游戏</a></div>
             <div id="comments">
-              <div id="SOHUCS" sid="about/index.html"></div>
+              <div id="SOHUCS" sid="2019/04/27/文件监听-inotify/"></div>
             </div>
           </div>
         </div>
@@ -67,6 +132,15 @@
       <div class="layout-r">
         <div id="sidebar">
           <div class="search-pla"></div>
+          <div id="toc" class="widget">
+            <div class="widget-title"><i class="fa fa-fei">文章目录</i></div>
+            <ol class="toc">
+              <li class="toc-item toc-level-4"><a class="toc-link" href="#inotify文件事件的自动化部署"><span class="toc-text">inotify文件事件的自动化部署</span></a></li>
+              <li class="toc-item toc-level-4"><a class="toc-link" href="#基于文件事件的自动化部署"><span class="toc-text">基于文件事件的自动化部署</span></a></li>
+              <li class="toc-item toc-level-4"><a class="toc-link" href="#微服务配置脚本"><span class="toc-text">微服务配置脚本</span></a></li>
+              <li class="toc-item toc-level-4"><a class="toc-link" href="#为什么不监听文件上传完成后重启"><span class="toc-text">为什么不监听文件上传完成后重启</span></a></li>
+            </ol>
+          </div>
           <div class="widget">
             <div class="widget-title"><i class="fa fa-xie"> 最新文章</i></div>
             <ul class="post-list">
@@ -132,7 +206,7 @@
     })();
   </script>
   <script type="text/javascript" src="/js/search.json.js?v=2.0.1"></script>
-  <script type="text/javascript" src="/js/totop.js?v=2.0.1" async></script>
+  <script type="text/javascript" src="/js/toctotop.js?v=2.0.1" async></script>
   <script>
     window._bd_share_config = {
       "common": {
