@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta name="generator" content="Hexo 3.8.0">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta content="yes" name="apple-mobile-web-app-capable">
+  <meta content="black-translucent" name="apple-mobile-web-app-status-bar-style">
+  <meta content="telephone=no" name="format-detection">
+  <meta name="description" content="没有理由，只是想做些什么">
+  <meta name="keywords" content="go,ipiao">
+  <title>go-runtime之HACKING.md | 欣欣然不知所以</title>
+  <link rel="stylesheet" type="text/css" href="//fonts.neworld.org/css?family=Source+Code+Pro">
+  <link rel="stylesheet" type="text/css" href="/css/style.css?v=2.0.1">
+  <link rel="stylesheet" type="text/css" href="/css/highlight.css?v=2.0.1">
+  <link rel="Shortcut Icon" href="/favicon.ico">
+  <link rel="bookmark" href="/favicon.ico">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png">
+  <link rel="alternate" type="application/atom+xml" href="/atom.xml">
+</head>
+
+<body>
+  <div class="body_container">
+    <div id="header">
+      <div class="site-name">
+        <h1 class="hidden">go-runtime之HACKING.md</h1><a id="logo" href="/.">欣欣然不知所以</a>
+        <p class="description">......</p>
+      </div>
+      <div id="nav-menu"><a href="/." class="current"><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/about/"><i class="fa fa-user"> 关于</i></a><a href="/atom.xml"><i class="fa fa-rss"> 订阅</i></a></div>
+      <div id="search-form">
+        <div id="result-mask" class="hide"></div><label><input id="search-key" type="text" autocomplete="on" placeholder="input keyword to search..."></label>
+        <div id="result-wrap" class="hide">
+          <div id="search-result"></div>
+        </div>
+        <div class="hide"><template id="search-tpl">
+            <div class="item"><a href="/{path}" title="{title}">
+                <div class="title">{title}</div>
+                <div class="time">{date}</div>
+                <div class="tags">{tags}</div>
+              </a></div>
+          </template></div>
+      </div>
+    </div>
+    <div id="layout" class="layout-g">
+      <div class="layout-l">
+        <div class="content_container">
+          <div class="post">
+            <h1 class="post-title">go-runtime之HACKING.md</h1>
+            <div class="post-meta"><a href="/2019/06/21/go-runtime之HACKING-md/#comments" class="comment-count"><i id="changyan_count_unit" data-xid="2019/06/21/go-runtime之HACKING-md/"></i>留言,<i id="changyan_parti_unit" data-xid="2019/06/21/go-runtime之HACKING-md/"></i>参与</a>
+              <p><span class="date">Jun 21, 2019</span><span><a href="/categories/golang大法好/" class="category">golang大法好</a></span></p>
+            </div>
+            <div class="post-content">
+              <h4 id="HACKING-md"><a href="#HACKING-md" class="headerlink" title="HACKING.md"></a>HACKING.md</h4>
+              <blockquote>
+                <p>这是作者对runtime设计的一个阐述,翻译内容是这样的</p>
+              </blockquote>
+              <p>这是一份原型文档,虽然在当下可能已经有点过时了.目的是讲述go程序运行原理,与我们写的go代码有什么不同.着重讲述一些大概的概念而不是详细的细节.</p>
+              <a id="more"></a>
+              <h1 id="调度器结构"><a href="#调度器结构" class="headerlink" title="调度器结构"></a>调度器结构</h1>
+              <p>调度器管理了三种贯穿整个运行环境的资源:Gs,Ms和Ps.即时不需要操作运行环境也是需要了解的.</p>
+              <h2 id="Gs-Ms-Ps"><a href="#Gs-Ms-Ps" class="headerlink" title="Gs,Ms,Ps"></a>Gs,Ms,Ps</h2>
+              <p>一个”G”就可以简单的代表一个goroutine,有类型<code>g</code>表示,当一个goroutine退出,<code>g</code>对象就会被放在空闲g列表(池),之后被其他goroutine复用.</p>
+              <p>一个”M”代表一个可以真正执行用户代码,运行时代码以,系统调用,也可以空闲.由结构体<code>m</code>表示.在某一时刻可能有任意多的<code>m</code>,因为同时间可能发生任意多的系统调用</p>
+              <p>最后,一个”P”代表执行用户代码所需要的资源,比如调度器和内存分配状态,由结构体<code>p</code>表示.数量可以由<code>GOMAXPROCS</code>决定.一个P就像操作系统的CPU,<code>p</code>的内容就像每个CPU的状态.为了调度效率,将共享状态放在<code>p</code>中比放在每个<code>m</code>中或者每个<code>g</code>里面要好.</p>
+              <p>调度的工作是匹配G(要执行的代码),M(执行时机)和P(执行的资源和环境).当M停止执行用户代码的时候(比如发生系统调用的时候),将P放回P池,在恢复执行之前,再到P池里面取出一个P.</p>
+              <p>所有的<code>g</code>,<code>m</code>,<code>p</code>都是在堆里分配的,并且是不释放的资源,所以他们是稳定存在的,不需要运行时通过write barrier.</p>
+              <h2 id="用户栈和系统栈"><a href="#用户栈和系统栈" class="headerlink" title="用户栈和系统栈"></a>用户栈和系统栈</h2>
+              <p>每个没有进入到死亡状态的G都有一个<em>用户栈</em>,是Go代码运行的地方.用户栈在开始分配的时候很小,在运行过程中动态增长或缩减</p>
+              <p>每个M都有一个<em>系统栈</em>(也就是M的”g0”栈,因为它是固定的),并且在Unix平台中有一个<em>信号栈</em>(gsignal).系统栈和信号栈不会增长,但是足以执行运行时代码和cgo代码(纯go二进制文件是8k;cgo由系统分配)</p>
+              <p>运行时经常会调用<code>systemstack</code>,<code>mcall</code>,或者<code>asmcgocall</code>临时地切换到系统栈取执行那些无法增长栈空间或者且切换用户goroutine的非抢占任务.在系统栈上运行的代码一定是非抢占式的,而且gc无法扫描系统栈.在系统栈上运行的时候,当前的用户栈也不是用来执行代码的.</p>
+              <h2 id="getg-和getg-m-curg"><a href="#getg-和getg-m-curg" class="headerlink" title="getg()和getg().m.curg"></a><code>getg()</code>和<code>getg().m.curg</code></h2>
+              <p>获取当前的用户<code>g</code>,用 <code>getg().m.curg</code>.<code>getg()</code>也返回当前的<code>g</code>,但是在系统栈或者信号栈执行代码的时候,这个方法返回的是当前<code>m</code>的”g0”或者”gsignal”.</p>
+              <p>所以可以用<code>getg() == getg().m.curg</code>判断当前是在用户栈上运行还是系统栈上运行</p>
+              <h1 id="错误处理反馈"><a href="#错误处理反馈" class="headerlink" title="错误处理反馈"></a>错误处理反馈</h1>
+              <p>一般情况下,用户可以捕捉到<code>panic</code>进行处理(recover).但是,有一些情况,比如在系统栈上调用,或者在<code>mallocgc</code>时候调用的<code>panic</code>是灾难性的,无法恢复.</p>
+              <p>大部分在运行时抛出的错误是无法<code>recover</code>的.比如,用<code>throw</code>会立即抛出错误路径幷终止进程.一般情况下,<code>throw</code>应该传递一个常量string参数,避免不安全的分配.最终,在<code>throw</code>之前会打印出以”runtime”开头的错误信息.</p>
+              <p>为了runtime错误进行debug,可以加参数 <code>GOTRACEBACK=system</code>或者<code>GOTRACEBACK=crash</code>.</p>
+              <h1 id="同步"><a href="#同步" class="headerlink" title="同步"></a>同步</h1>
+              <p>运行时有很多不同的同步机制.这与语境上有关,比如goroutine调度上,和系统调度.</p>
+              <p>最简单的是 <code>mutex</code>, 只要使用<code>lock</code>和<code>unlock</code>就行了.这个用在短时间内保护共享结构.在<code>mutex</code>的是阻塞会直接阻塞<code>m</code>,与Go调度没什么关系.这意味着它是安全的也是runtime中最低级别的,因为阻碍了相关的G和P进行重调度.<code>rwmutex</code>也是一样的.</p>
+              <p>在一次性的通知情形下,使用<code>note</code>,提供了 <code>notesleep</code>和<code>notewakeup</code>两个方法.与传统UNIX系统中<code>sleep</code>/<code>wakeup</code>不同.<code>note</code>是一种无静态的调用,在调用<code>notesleep</code>或<code>notewakeup</code>之后立刻返回.<code>note</code>可以在用户调用<code>noteclear</code>之后重置,这也决定了<code>note</code>在sleep或者wakeup的时候不能有竟态.<code>note</code>和<code>mutex</code>一样,阻塞<code>m</code>,但是它进入睡眠状态的方式是不一样的:<code>notesleep</code>也阻碍了相关G和P的重调度,但是<code>notetsleepg</code>就像系统调用的阻塞,不影响在P上运行另一个G.当然,这仍然比阻塞G更低效.</p>
+              <p>用<code>gopark</code>和<code>goready</code>.<code>gopark</code>直接操作goroutine,将当前G放到等待队列幷从M/P就绪队列中移除,然后运行另一个就绪G,<code>goready</code>将一个停下的G重新放入就绪队列等待运行</p>
+              <p>总结一下,阻塞关系就是:</p>
+              <tr>
+                <th></th>
+                <th colspan="3">Blocks</th>
+              </tr><br>
+              <tr>
+                <th>Interface</th>
+                <th>G</th>
+                <th>M</th>
+                <th>P</th>
+              </tr><br>
+              <tr>
+                <td>(rw)mutex</td>
+                <td>Y</td>
+                <td>Y</td>
+                <td>Y</td>
+              </tr><br>
+              <tr>
+                <td>note</td>
+                <td>Y</td>
+                <td>Y</td>
+                <td>Y/N</td>
+              </tr><br>
+              <tr>
+                <td>park</td>
+                <td>Y</td>
+                <td>N</td>
+                <td>N</td>
+              </tr>
+
+
+
+              <h1 id="Atomics"><a href="#Atomics" class="headerlink" title="Atomics"></a>Atomics</h1>
+              <p>运行时有自己的atomic包 <code>runtime/internal/atomic</code>,与<code>sync/atomic</code>对应,但是应为历史遗留问题,函数有不同的名称,还有一下附加的功能</p>
+              <p>一般而言,我们在运行时要慎重使用atomics,最好避免使用atomics操作.如果一个变量有可能被其他的同步机制锁保护,这个被保护的变量一般也不需要是原子的.这其中有个方面的理由:</p>
+              <ol>
+                <li>
+                  <p>使用non-atomic或者atomic会使得相应代码self-documenting.因为atomic的介入往往意味着有会有线程问题.</p>
+                </li>
+                <li>
+                  <p>non-atomic操作允许自动竟态检测,运行时虽然不会惊醒多线程静态检测,但是在不久的将来会.而atomic操作不允许竟态检测.而non-atomic允许你自定义的进行静态检测.</p>
+                </li>
+                <li>
+                  <p>non-atomic可以提升性能</p>
+                </li>
+              </ol>
+              <p>当然,任何对共享变量的non-atomic操作都应该描述清楚如何进行保护</p>
+              <p>有些模式混用了atomic和non-atomic:</p>
+              <ul>
+                <li>
+                  <p>Read-mostly 变量在更新的时候进行保护,而在锁定的时候,读操作不需要是原子的.在锁定区域外,读操作是原子的</p>
+                </li>
+                <li>
+                  <p>在STW的读,因为在STW的时候不会发生写操作</p>
+                </li>
+              </ul>
+              <p>也就是说,就像 Go Memory Model的观点,”Don’t be [too] clever”.这是在runtime里的情况,在其他地方也一样.</p>
+              <h1 id="Unmanaged-memory-非托管内存"><a href="#Unmanaged-memory-非托管内存" class="headerlink" title="Unmanaged memory(非托管内存?)"></a>Unmanaged memory(非托管内存?)</h1>
+              <p>通常,runtime尝试使用正常的堆内存分配.但是,有时runtime必须在无法gc的地方(堆之外)进行分配,也就是<em>unmanaged memory</em>.这是必要的,如果对象是memory manager自己的或者调用方可能没有P.</p>
+              <p>有三种Unmanaged memory 分配机制</p>
+              <ul>
+                <li>
+                  <p>sysAlloc直接从操作系统中获取内存.内存可能来自各个分页,但是通过sysFree可以全部释放</p>
+                </li>
+                <li>
+                  <p>fragmentation从小页中获取内存,联合成sysAlloc一样的,这样避免造成太多的内存碎片,但是正如它的名字,这些内存没有办法释放</p>
+                </li>
+                <li>
+                  <p>fixalloc是SLAB算法分配内存的,它分配固定大小的内存,可以释放,但是这些内存只能由同一个fixalloc池复用.所以这些内存只能被同一种类型数据复用.</p>
+                </li>
+              </ul>
+              <p>通常,使用以上方法分配内存的地方都会注释编译标记<code>//go:notinheap</code>.</p>
+              <p>在Unmanaged memory分配的对象,除了以下情况不许序包含堆指针.</p>
+              <ol>
+                <li>
+                  <p>任何Unmanaged memory里包含的堆内指针必须明确加入gc根(源)<code>runtime.markroot</code></p>
+                </li>
+                <li>
+                  <p>如果内存被复用,他们被标记为GC roots钱必须是零初始化的</p>
+                </li>
+              </ol>
+              <h1 id="Zero-initialization-versus-zeroing"><a href="#Zero-initialization-versus-zeroing" class="headerlink" title="Zero-initialization versus zeroing"></a>Zero-initialization versus zeroing</h1>
+              <p>在运行时有两种类型的零化,取决于内存是否已经初始化成类型安全的状态.</p>
+              <p>如果内存不是类型安全的,意味着它可能包含”garbage”,因为它刚被分配并且正在首次初始化,这种情况,必须使用<em>zero-initialized</em>,也就是<code>memclrNoHeapPointers</code>或者非指针写.这种情况下不会有写屏障write barriers.</p>
+              <p>如果内存已经是类型安全的并且简单的设置为零值了,那么必须使用<code>typedmemclr</code>或者<code>memclrHasPointers</code>,.这种方式有write barriers.</p>
+              <h1 id="Runtime-only-compiler-directives"><a href="#Runtime-only-compiler-directives" class="headerlink" title="Runtime-only compiler directives"></a>Runtime-only compiler directives</h1>
+              <p> 除了”//go:”除了用在文档之外,还可以直接对编译进行干预</p>
+              <h2 id="go-systemstack"><a href="#go-systemstack" class="headerlink" title=" go:systemstack"></a> go:systemstack</h2>
+              <p><code>go:systemstack</code>表示函数必须运行在系统栈,这会在函数的开始进行动态检查</p>
+              <h2 id="go-nowritebarrier"><a href="#go-nowritebarrier" class="headerlink" title="go:nowritebarrier"></a>go:nowritebarrier</h2>
+              <p><code>go:nowritebarrier</code>让函数在出现write barriers的时候报错(无法阻止write barriers的生成,只是简单的插入)</p>
+              <p>通常的使用场景是,最好不要write barriers,但是不是必要的<code>go:nowritebarrierrec</code>. <code>go:nowritebarrier</code> </p>
+              <h2 id="go-nowritebarrierrec-and-go-yeswritebarrierrec"><a href="#go-nowritebarrierrec-and-go-yeswritebarrierrec" class="headerlink" title="go:nowritebarrierrec and go:yeswritebarrierrec"></a>go:nowritebarrierrec and go:yeswritebarrierrec</h2>
+              <p><code>go:nowritebarrierrec</code> 让编译器在函数及其递归调用的的函数中在write barrier的时候抛出错误.相应的 <code>go:yeswritebarrierrec</code>保证编译器进行write barrier</p>
+              <p>逻辑上,编译器floods每个一<code>go:nowritebarrierrec</code> 开始的函数调用图,当遇到一个包含write barrier 的函数的时候.在<code>go:yeswritebarrierrec</code>是没有flood的</p>
+              <p><code>go:nowritebarrierrec</code>用在write barrier的实现上,防止循环初始化</p>
+              <p>两种方式都是直接在调度器使用,write barrier需要一个有效P(<code>getg().m.p != nil</code>)而调度器代码经常不在一个有效P上运行.在这种情况,<code>go:nowritebarrierrec</code>使用在P的释放函数上,或者在没有P的时候,<code>go:yeswritebarrierrec</code>运行在重新获取P的函数上.因为有函数层级概念,释放和获取P要分成2个函数</p>
+              <h2 id="go-notinheap"><a href="#go-notinheap" class="headerlink" title="go:notinheap"></a>go:notinheap</h2>
+              <p><code>go:notinheap</code>运用在类型声明,这意味着一个类型绝不会在GC’d(不GC?)堆里分配.所以,这种类型的指针总是会在<code>runtime.inheap</code>的检查中失败.这种类型可以是全局变量,栈变量或者非托管内存对象( <code>sysAlloc</code>, <code>persistentalloc</code>,<code>fixalloc</code>分配).</p>
+              <ol>
+                <li>
+                  <p><code>new(T)</code>, <code>make([]T)</code>, <code>append([]T, ...)</code> 以及隐藏类型(泛型)分配是不允许的</p>
+                </li>
+                <li>
+                  <p>正常类型的指针(不是<code>unsafe.Pointer</code>)不能被转换成一个<code>go:notinheap</code> 类型,即时它们有相同的底层</p>
+                </li>
+                <li>
+                  <p>任何包含 <code>go:notinheap</code>类型的类型也是<code>go:notinheap</code>的,数组和结构体的元素是<code>go:notinheap</code>的,那么也是.map和channel不允许有<code>go:notinheap</code>.为了明确任何隐藏<code>go:notinheap</code>类型必须声明</p>
+                </li>
+                <li>
+                  <p>在<code>go:notinheap</code>的指针上的Write barriers将被忽略</p>
+                </li>
+              </ol>
+              <p>最后,<code>go:notinheap</code>真正的用处.运行时在低层级的内部结构中使用,以避免调度器和内存分配器上的memory barriers ,因为在这里他们是无效的,这种方式的安全的,也不会影响可读性.</p>
+            </div>
+            <div class="tags"><a href="/tags/go/">go</a></div>
+            <div class="post-share">
+              <div class="bdsharebuttonbox"><span style="float:left;line-height: 28px;height: 28px;font-size:16px;font-weight:blod">分享到：</span><a href="#" data-cmd="more" class="bds_more"></a><a href="#" data-cmd="mshare" title="分享到一键分享" class="bds_mshare"></a><a href="#" data-cmd="fbook" title="分享到Facebook" class="bds_fbook"></a><a href="#" data-cmd="twi" title="分享到Twitter" class="bds_twi"></a><a href="#" data-cmd="linkedin" title="分享到linkedin" class="bds_linkedin"></a><a href="#" data-cmd="youdao" title="分享到有道云笔记" class="bds_youdao"></a><a href="#" data-cmd="evernotecn" title="分享到印象笔记" class="bds_evernotecn"></a><a href="#" data-cmd="weixin" title="分享到微信" class="bds_weixin"></a><a href="#" data-cmd="qzone" title="分享到QQ空间" class="bds_qzone"></a><a href="#" data-cmd="tsina" title="分享到新浪微博" class="bds_tsina"></a></div>
+            </div>
+            <div class="post-nav"><a href="/2019/07/02/一次go内存泄漏调试/" class="pre">一次go内存泄漏调试</a><a href="/2019/06/21/go-runtime之cpuprof-go-1/" class="next">go-runtime之cpuprof.go</a></div>
+            <div id="comments">
+              <div id="SOHUCS" sid="2019/06/21/go-runtime之HACKING-md/"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="layout-r">
+        <div id="sidebar">
+          <div class="search-pla"></div>
+          <div id="toc" class="widget">
+            <div class="widget-title"><i class="fa fa-fei">文章目录</i></div>
+            <ol class="toc">
+              <li class="toc-item toc-level-4"><a class="toc-link" href="#HACKING-md"><span class="toc-text">HACKING.md</span></a></li>
+            </ol>
+            <li class="toc-item toc-level-1"><a class="toc-link" href="#调度器结构"><span class="toc-text">调度器结构</span></a>
+              <ol class="toc-child">
+                <li class="toc-item toc-level-2"><a class="toc-link" href="#Gs-Ms-Ps"><span class="toc-text">Gs,Ms,Ps</span></a></li>
+                <li class="toc-item toc-level-2"><a class="toc-link" href="#用户栈和系统栈"><span class="toc-text">用户栈和系统栈</span></a></li>
+                <li class="toc-item toc-level-2"><a class="toc-link" href="#getg-和getg-m-curg"><span class="toc-text">getg()和getg().m.curg</span></a></li>
+              </ol>
+            </li>
+            <li class="toc-item toc-level-1"><a class="toc-link" href="#错误处理反馈"><span class="toc-text">错误处理反馈</span></a></li>
+            <li class="toc-item toc-level-1"><a class="toc-link" href="#同步"><span class="toc-text">同步</span></a></li>
+            <li class="toc-item toc-level-1"><a class="toc-link" href="#Atomics"><span class="toc-text">Atomics</span></a></li>
+            <li class="toc-item toc-level-1"><a class="toc-link" href="#Unmanaged-memory-非托管内存"><span class="toc-text">Unmanaged memory(非托管内存?)</span></a></li>
+            <li class="toc-item toc-level-1"><a class="toc-link" href="#Zero-initialization-versus-zeroing"><span class="toc-text">Zero-initialization versus zeroing</span></a></li>
+            <li class="toc-item toc-level-1"><a class="toc-link" href="#Runtime-only-compiler-directives"><span class="toc-text">Runtime-only compiler directives</span></a>
+              <ol class="toc-child">
+                <li class="toc-item toc-level-2"><a class="toc-link" href="#go-systemstack"><span class="toc-text"> go:systemstack</span></a></li>
+                <li class="toc-item toc-level-2"><a class="toc-link" href="#go-nowritebarrier"><span class="toc-text">go:nowritebarrier</span></a></li>
+                <li class="toc-item toc-level-2"><a class="toc-link" href="#go-nowritebarrierrec-and-go-yeswritebarrierrec"><span class="toc-text">go:nowritebarrierrec and go:yeswritebarrierrec</span></a></li>
+                <li class="toc-item toc-level-2"><a class="toc-link" href="#go-notinheap"><span class="toc-text">go:notinheap</span></a></li>
+              </ol>
+            </li>
+          </div>
+          <div class="widget">
+            <div class="widget-title"><i class="fa fa-xie"> 最新文章</i></div>
+            <ul class="post-list">
+              <li class="post-list-item"><a class="post-list-link" href="/2019/10/24/mysql并发调试命名/">mysql并发调试</a></li>
+              <li class="post-list-item"><a class="post-list-link" href="/2019/09/11/TCP-Delayed-Ack-Ack确认延迟-Nagle-Algorithm-纳格算法/">TCP Delayed Ack(Ack确认延迟) && Nagle Algorithm(纳格算法)</a></li>
+              <li class="post-list-item"><a class="post-list-link" href="/2019/09/11/Go语言TCP网络编程/">Go语言TCP网络编程</a></li>
+              <li class="post-list-item"><a class="post-list-link" href="/2019/07/23/redis-其他/">redis_其他</a></li>
+              <li class="post-list-item"><a class="post-list-link" href="/2019/07/12/读-Redis设计与实现-与redis-5-0-源码-rdb/">读<<redis设计与实现>>与redis(5.0)源码__rdb</redis设计与实现></a></li>
+              <li class="post-list-item"><a class="post-list-link" href="/2019/07/11/读-Redis设计与实现-与redis-5-0-源码-对象/">读<<redis设计与实现>>与redis(5.0)源码__对象</redis设计与实现></a></li>
+              <li class="post-list-item"><a class="post-list-link" href="/2019/07/11/读-Redis设计与实现-与redis-5-0-源码-ziplist/">读<<redis设计与实现>>与redis(5.0)源码__ziplist</redis设计与实现></a></li>
+              <li class="post-list-item"><a class="post-list-link" href="/2019/07/10/vimium/">vimium</a></li>
+              <li class="post-list-item"><a class="post-list-link" href="/2019/07/09/读-Redis设计与实现-与redis-5-0-源码-skiplist/">读<<redis设计与实现>>与redis(5.0)源码__skiplist</redis设计与实现></a></li>
+              <li class="post-list-item"><a class="post-list-link" href="/2019/07/04/读-Redis设计与实现-与redis-5-0-源码-dict/">读<<redis设计与实现>>与redis(5.0)源码__dict</redis设计与实现></a></li>
+            </ul>
+          </div>
+          <div class="widget">
+            <div class="widget-title"><i class="fa fa-gui"> 分类</i></div>
+            <ul class="category-list">
+              <li class="category-list-item"><a class="category-list-link" href="/categories/golang大法好/">golang大法好</a><span class="category-list-count">10</span></li>
+              <li class="category-list-item"><a class="category-list-link" href="/categories/reading/">reading</a><span class="category-list-count">8</span></li>
+              <li class="category-list-item"><a class="category-list-link" href="/categories/不务正业/">不务正业</a><span class="category-list-count">9</span></li>
+              <li class="category-list-item"><a class="category-list-link" href="/categories/我爱数学/">我爱数学</a><span class="category-list-count">1</span></li>
+              <li class="category-list-item"><a class="category-list-link" href="/categories/日常练习/">日常练习</a><span class="category-list-count">8</span></li>
+              <li class="category-list-item"><a class="category-list-link" href="/categories/第三方/">第三方</a><span class="category-list-count">1</span></li>
+              <li class="category-list-item"><a class="category-list-link" href="/categories/装13指南/">装13指南</a><span class="category-list-count">1</span></li>
+              <li class="category-list-item"><a class="category-list-link" href="/categories/闲文野趣/">闲文野趣</a><span class="category-list-count">1</span></li>
+            </ul>
+          </div>
+          <div class="widget">
+            <div class="widget-title"><i class="fa fa-biao"> 标签</i></div>
+            <div class="tagcloud"><a href="/tags/sh/" style="font-size: 15px;">sh</a> <a href="/tags/吃瓜/" style="font-size: 15px;">吃瓜</a> <a href="/tags/emoji/" style="font-size: 15px;">emoji</a> <a href="/tags/go/" style="font-size: 15px;">go</a> <a href="/tags/博客迁移/" style="font-size: 15px;">博客迁移</a> <a href="/tags/tcp/" style="font-size: 15px;">tcp</a> <a href="/tags/leetcode/" style="font-size: 15px;">leetcode</a> <a href="/tags/字符串/" style="font-size: 15px;">字符串</a> <a href="/tags/pe/" style="font-size: 15px;">pe</a> <a href="/tags/apns/" style="font-size: 15px;">apns</a> <a href="/tags/mysql/" style="font-size: 15px;">mysql</a> <a href="/tags/python/" style="font-size: 15px;">python</a> <a href="/tags/redis/" style="font-size: 15px;">redis</a> <a href="/tags/爬虫/" style="font-size: 15px;">爬虫</a> <a href="/tags/其他/" style="font-size: 15px;">其他</a> <a href="/tags/数/" style="font-size: 15px;">数</a> <a href="/tags/链表/" style="font-size: 15px;">链表</a> <a href="/tags/魔术/" style="font-size: 15px;">魔术</a></div>
+          </div>
+          <div class="widget">
+            <div class="widget-title"><i class="fa fa-archive"> 归档</i></div>
+            <ul class="archive-list">
+              <li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">十月 2019</a></li>
+              <li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">九月 2019</a></li>
+              <li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">七月 2019</a></li>
+              <li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">六月 2019</a></li>
+              <li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">四月 2019</a></li>
+              <li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">一月 2019</a></li>
+              <li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">十二月 2018</a></li>
+            </ul>
+          </div>
+          <div class="widget">
+            <div class="widget-title"><i class="fa fa-you"> 友情链接</i></div>
+            <ul></ul><a href="https://chaoo.oschina.io" title="本站主题（BlueLake）" target="_blank">本站主题（BlueLake）</a>
+            <ul></ul><a href="http://118.25.7.38:8080" title="旧站" target="_blank">旧站</a>
+            <ul></ul><a href="http://pe-cn.github.io/problems/" title="欧拉计划（Project Euler）" target="_blank">欧拉计划（Project Euler）</a>
+            <ul></ul><a href="https://leetcode-cn.com/" title="力扣题库（leetcode）" target="_blank">力扣题库（leetcode）</a>
+          </div>
+        </div>
+      </div>
+    </div><a id="totop" href="#top"></a>
+    <div id="footer">
+      <div class="footer-info">
+        <p><a href="/baidusitemap.xml">Baidu Site Haritası</a> | <a href="/atom.xml">订阅</a> | <a href="/about/">关于</a></p>
+        <p><span> Copyright &copy;<a href="/." rel="nofollow">ipiao.</a></span><span> Theme by<a rel="nofollow" target="_blank" href="https://github.com/chaooo/hexo-theme-BlueLake"> BlueLake.</a></span><span> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a></span></p>
+      </div>
+    </div>
+  </div>
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?6d320488e0e5cdce0a6edea059168872";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+  <script type="text/javascript" src="/js/search.json.js?v=2.0.1"></script>
+  <script type="text/javascript" src="/js/toctotop.js?v=2.0.1" async></script>
+  <script>
+    window._bd_share_config = {
+      "common": {
+        "bdSnsKey": {},
+        "bdText": "",
+        "bdMini": "2",
+        "bdMiniList": ["mshare", "weixin", "tsina", "qzone", "linkedin", "fbook", "twi", "print", "renren", "sqq", "evernotecn", "bdysc", "tqq", "tqf", "bdxc", "kaixin001", "tieba", "douban", "bdhome", "thx", "ibaidu", "meilishuo", "mogujie", "diandian", "huaban", "duitang", "hx", "fx", "youdao", "sdo", "qingbiji", "people", "xinhua", "mail", "isohu", "yaolan", "wealink", "ty", "iguba", "h163", "copy"],
+        "bdPic": "",
+        "bdStyle": "1",
+        "bdSize": "16"
+      },
+      "share": {},
+      "image": {
+        "viewList": ["tsina", "qzone", "weixin", "fbook", "twi", "linkedin", "youdao", "evernotecn", "mshare"],
+        "viewText": "分享到：",
+        "viewSize": "16"
+      },
+      "selectShare": {
+        "bdContainerClass": null,
+        "bdSelectMiniList": ["tsina", "qzone", "weixin", "fbook", "twi", "linkedin", "youdao", "evernotecn", "mshare"]
+      }
+    };
+    with(document) 0[(getElementsByTagName('head')[0] || head).appendChild(createElement('script')).src = 'http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion=' + ~(-new Date() / 36e5)];
+  </script>
+  <script>
+    window._config = {
+      showScore: true
+    };
+    (function() {
+      var appid = 'cytY1dJ9s';
+      var conf = '00803aac284d01ab6c837519fdffa5b8';
+      var width = window.innerWidth || document.documentElement.clientWidth;
+      var nodes = document.getElementsByTagName("head")[0] || document.head || document.documentElement;
+      if (/(Android|iPhone|iPad|iPod|iOS)/i.test(navigator.userAgent) && width < 750) {
+        window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>');
+      } else {
+        var loadJs = function(d, a) {
+          var b = document.createElement("script");
+          b.setAttribute("type", "text/javascript");
+          b.setAttribute("charset", "UTF-8");
+          b.setAttribute("src", d);
+          if (typeof a === "function") {
+            if (window.attachEvent) {
+              b.onreadystatechange = function() {
+                var e = b.readyState;
+                if (e === "loaded" || e === "complete") {
+                  b.onreadystatechange = null;
+                  a()
+                }
+              }
+            } else {
+              b.onload = a
+            }
+          }
+          nodes.appendChild(b)
+        };
+        loadJs("https://changyan.sohu.com/upload/changyan.js", function() {
+          window.changyan.api.config({
+            appid: appid,
+            conf: conf
+          })
+        });
+      }
+      var loadCss = function(cssString) {
+        var style = document.createElement("style");
+        style.setAttribute("type", "text/css");
+        if (style.styleSheet) { // IE  
+          style.styleSheet.cssText = cssString;
+        } else { // w3c  
+          var cssText = document.createTextNode(cssString);
+          style.appendChild(cssText);
+        }
+        nodes.appendChild(style);
+      }
+      window.onload = function() {
+        loadCss('.module-hot-topic,.module-cmt-float-bar{display:none!important}#SOHUCS #SOHU_MAIN .module-cmt-box .post-wrap-w .wrap-action-w .cbox-prompt-w span.prompt-empty-w,#SOHUCS #SOHU_MAIN .module-cmt-float-bar .wrap-cont-w .cont-form-w .form-text-w span.text-null,#SOHUCS #SOHU_MAIN .module-cmt-float-bar .wrap-cont-w .cont-minwidth-w div.cont-comment-w a.comment-link-w,#SOHUCS #SOHU_MAIN .module-cmt-float-bar .wrap-cont-w .cont-minwidth-w div.cont-comment-w span.comment-text-w,#SOHUCS #SOHU_MAIN .module-cmt-footer .section-service-w div.service-wrap-w a:hover,#SOHUCS #SOHU_MAIN .module-cmt-header .section-cbox-w .block-head-w div.header-login,#SOHUCS #SOHU_MAIN .module-cmt-header .section-title-w .title-user-w .user-wrap-w span.wrap-name-w,#SOHUCS #SOHU_MAIN .module-cmt-list .action-click-gw span.click-disable-eg a em.icon-name-bg,#SOHUCS #SOHU_MAIN .module-cmt-list .block-title-gw ul li div.title-name-gw,#SOHUCS #SOHU_MAIN .module-cmt-list .cmt-list-type .cmt-list-number .comment-number span.cy-number,#SOHUCS #SOHU_MAIN .module-cmt-list .cmt-list-type .cmt-list-number span.comment-number,#SOHUCS #SOHU_MAIN .module-cmt-list .cmt-list-type .type-lists li.active,#SOHUCS #SOHU_MAIN .module-cmt-list .msg-wrap-gw .wrap-action-gw .action-click-gw span a:hover,#SOHUCS #SOHU_MAIN .module-cmt-list .picture-box-gw div.box-action-gw a:hover,#SOHUCS #SOHU_MAIN .module-cmt-list .wrap-action-gw .action-click-gw span a:hover em.icon-name-bg,#SOHUCS #SOHU_MAIN .module-cmt-list .wrap-user-gw span.user-name-gw a{color:#40759b!important}#SOHUCS #SOHU_MAIN .module-cmt-box .post-wrap-w .post-wrap-border-t div.post-wrap-border-t-r,#SOHUCS #SOHU_MAIN .module-cmt-box .post-wrap-w div.post-wrap-border-l,#SOHUCS #SOHU_MAIN .module-cmt-box .post-wrap-w div.post-wrap-border-r{display:none!important}#SOHUCS #SOHU_MAIN .module-cmt-box .post-wrap-w .post-wrap-border-t div.post-wrap-border-t-l{background:#FFF!important;top:-2px!important}#SOHUCS #SOHU_MAIN .module-cmt-box .post-wrap-w .wrap-action-w .action-function-w .uploading-wrapper-dw div.wrapper-image-dw,#SOHUCS #SOHU_MAIN .module-cmt-box .post-wrap-w div.post-wrap-main,#SOHUCS #SOHU_MAIN .module-cmt-float-bar .wrap-cont-w .cont-form-w div.form-text-w,#SOHUCS #SOHU_MAIN .module-cmt-header .section-cbox-w .block-head-w div.header-login,#SOHUCS #SOHU_MAIN .module-cmt-list .module-cmt-box .post-wrap-w div.post-wrap-main{border:1px solid #e6e6e6!important;border-radius:20px 20px 20px 20px;margin:0!important}#SOHUCS #SOHU_MAIN .module-cmt-box .post-wrap-w .wrap-action-w .action-issue-w .issue-btn-w a .btn-fw{width:130px!important;height:34px!important;line-height:33px!important;font-size:17px!important;background:#5483b1!important;border-radius:20px!important;color:#FFF!important;-webkit-box-shadow:0 -1px 4px #5483b1 inset;box-shadow:0 -1px 10px #5483b1 inset}#SOHUCS #SOHU_MAIN .module-cmt-box .post-wrap-w .wrap-action-w .action-issue-w .issue-btn-w a .btn-fw:before{content:"发表评论"}#SOHUCS #SOHU_MAIN .module-cmt-box .post-wrap-w .wrap-action-w .action-issue-w .issue-btn-w a:hover .btn-fw{color:#40759b!important;background:#FFF!important}#SOHUCS #SOHU_MAIN .module-cmt-list .cmt-list-type .type-lists li{background:none!important;border-bottom:1px solid #e6e6e6}#SOHUCS #SOHU_MAIN .module-cmt-list .cmt-list-type .type-lists li.active{border:1px solid #e6e6e6;border-radius:10px 10px 0 0;border-bottom:none}#SOHUCS #SOHU_MAIN .module-cmt-list .block-title-gw ul li .title-name-gw div.title-name-gw-tag{background:#5483b1!important;border-radius:3px}#SOHUCS #SOHU_MAIN .module-cmt-list .cmt-list-type div.cmt-list-border{background-color:#e6e6e6!important}#SOHUCS #SOHU_MAIN .module-cmt-notice ul.nt-list li.nt-item{border:1px solid #e6e6e6!important}#SOHUCS #SOHU_MAIN .module-cmt-notice ul.nt-list li.nt-item .nt-logo{text-align:center;line-height:40px;border-radius:50%!important;background:#e6e6e6!important}#SOHUCS #SOHU_MAIN .module-cmt-notice ul.nt-list li.nt-item .nt-logo:before{content:"畅";font-size:22px;color:#FFF}#SOHUCS #SOHU_MAIN .module-cmt-notice ul.nt-list li.nt-item a.nt-text,#SOHUCS #SOHU_MAIN .module-cmt-notice ul.nt-list li.nt-item a.nt-text i{color:#5483b1!important}#SOHUCS #SOHU_MAIN .module-cmt-header .section-title-w .title-user-w .user-wrap-w{background:#FFF!important}');
+      };
+    })();
+  </script>
+  <script src="https://assets.changyan.sohu.com/upload/plugins/plugins.count.js"></script>
+</body>
+
+</html>
