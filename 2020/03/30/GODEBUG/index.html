@@ -10,7 +10,7 @@
   <meta content="telephone=no" name="format-detection">
   <meta name="description" content="没有理由，只是想做些什么">
   <meta name="keywords" content="go,ipiao">
-  <title>pyenv 安装 | 欣欣然不知所以</title>
+  <title>GODEBUG | 欣欣然不知所以</title>
   <link rel="stylesheet" type="text/css" href="//fonts.neworld.org/css?family=Source+Code+Pro">
   <link rel="stylesheet" type="text/css" href="/css/style.css?v=2.0.1">
   <link rel="stylesheet" type="text/css" href="/css/highlight.css?v=2.0.1">
@@ -25,7 +25,7 @@
   <div class="body_container">
     <div id="header">
       <div class="site-name">
-        <h1 class="hidden">pyenv 安装</h1><a id="logo" href="/.">欣欣然不知所以</a>
+        <h1 class="hidden">GODEBUG</h1><a id="logo" href="/.">欣欣然不知所以</a>
         <p class="description">......</p>
       </div>
       <div id="nav-menu"><a href="/." class="current"><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/about/"><i class="fa fa-user"> 关于</i></a><a href="/atom.xml"><i class="fa fa-rss"> 订阅</i></a></div>
@@ -47,133 +47,60 @@
       <div class="layout-l">
         <div class="content_container">
           <div class="post">
-            <h1 class="post-title">pyenv 安装</h1>
-            <div class="post-meta"><a href="/2019/06/04/pyenv-安装/#comments" class="comment-count"><i id="changyan_count_unit" data-xid="2019/06/04/pyenv-安装/"></i>留言,<i id="changyan_parti_unit" data-xid="2019/06/04/pyenv-安装/"></i>参与</a>
-              <p><span class="date">Jun 04, 2019</span><span><a href="/categories/不务正业/" class="category">不务正业</a></span></p>
+            <h1 class="post-title">GODEBUG</h1>
+            <div class="post-meta"><a href="/2020/03/30/GODEBUG/#comments" class="comment-count"><i id="changyan_count_unit" data-xid="2020/03/30/GODEBUG/"></i>留言,<i id="changyan_parti_unit" data-xid="2020/03/30/GODEBUG/"></i>参与</a>
+              <p><span class="date">Mar 30, 2020</span><span><a href="/categories/golang大法好/" class="category">golang大法好</a></span></p>
             </div>
             <div class="post-content">
-              <h4 id="pyenv-安装过程"><a href="#pyenv-安装过程" class="headerlink" title="pyenv 安装过程"></a>pyenv 安装过程</h4>
+              <h3 id="GODEBUG"><a href="#GODEBUG" class="headerlink" title="GODEBUG"></a>GODEBUG</h3>
+              <h4 id="GODEBUG-gctrace-1-打印gc信息"><a href="#GODEBUG-gctrace-1-打印gc信息" class="headerlink" title="GODEBUG=gctrace=1 打印gc信息"></a>GODEBUG=gctrace=1 打印gc信息</h4>
+              <figure class="highlight sh">
+                <table>
+                  <tr>
+                    <td class="gutter">
+                      <pre><span class="line">1</span><br></pre>
+                    </td>
+                    <td class="code">
+                      <pre><span class="line">gc <span class="comment"># @#s #%: #+#+# ms clock, #+#/#/#+# ms cpu, #-&gt;#-&gt;# MB, # MB goal, # P</span></span><br></pre>
+                    </td>
+                  </tr>
+                </table>
+              </figure>
+              <h3 id="含义"><a href="#含义" class="headerlink" title="含义"></a>含义</h3>
+              <ul>
+                <li><code>gc#</code>：GC 执行次数的编号，每次叠加。</li>
+                <li><code>@#s</code>：自程序启动后到当前的具体秒数。</li>
+                <li><code>#%</code>：自程序启动以来在GC中花费的时间百分比。</li>
+                <li><code>#+...+#</code>：GC 的标记工作共使用的 CPU 时间占总 CPU 时间的百分比。</li>
+                <li><code>#-&gt;#-&gt;# MB</code>：分别表示 GC 启动时, GC 结束时, GC 活动时的堆大小.</li>
+                <li><code>#MB goal</code>：下一次触发 GC 的内存占用阈值。</li>
+                <li><code>#P</code>：当前使用的处理器 P 的数量。</li>
+              </ul>
+              <h4 id="schedtrace"><a href="#schedtrace" class="headerlink" title="schedtrace"></a>schedtrace</h4>
               <ol>
-                <li>参考: <a href="https://github.com/pyenv/pyenv" target="_blank" rel="noopener">https://github.com/pyenv/pyenv</a></li>
-                <li>参考: <a href="https://github.com/pyenv/pyenv/wiki" target="_blank" rel="noopener">https://github.com/pyenv/pyenv/wiki</a></li>
+                <li>设置 <code>schedtrace=X</code> 参数可以使运行时在每 X 毫秒发出一行调度器的摘要信息到标准 err 输出中。</li>
               </ol>
-              <a id="more"></a>
-              <h4 id="以bash-centos-为例"><a href="#以bash-centos-为例" class="headerlink" title="以bash/centos 为例"></a>以<code>bash</code>/<code>centos</code> 为例</h4>
+              <blockquote>
+                <p>输出:</p>
+                <p>sched：每一行都代表调度器的调试信息，后面提示的毫秒数表示启动到现在的运行时间，输出的时间间隔受 <code>schedtrace</code> 的值影响。</p>
+                <p>gomaxprocs：当前的 CPU 核心数（GOMAXPROCS 的当前值）。</p>
+                <p>idleprocs：空闲的处理器数量，后面的数字表示当前的空闲数量。</p>
+                <p>threads：OS 线程数量，后面的数字表示当前正在运行的线程数量。</p>
+                <p>spinningthreads：自旋状态的 OS 线程数量。</p>
+                <p>idlethreads：空闲的线程数量。</p>
+                <p>runqueue：全局队列中中的 Goroutine 数量，而后面的 [0 0 1 1] 则分别代表这 4 个 P 的本地队列正在运行的 Goroutine 数量。</p>
+              </blockquote>
               <ol>
-                <li>
-                  <p>pyenv安装路径(也是之后的多版本根路径)</p>
-                  <figure class="highlight sh">
-                    <table>
-                      <tr>
-                        <td class="gutter">
-                          <pre><span class="line">1</span><br></pre>
-                        </td>
-                        <td class="code">
-                          <pre><span class="line">git <span class="built_in">clone</span> https://github.com/pyenv/pyenv.git ~/.pyenv</span><br></pre>
-                        </td>
-                      </tr>
-                    </table>
-                  </figure>
-                </li>
-                <li>
-                  <p>设置环境变量</p>
-                  <figure class="highlight sh">
-                    <table>
-                      <tr>
-                        <td class="gutter">
-                          <pre><span class="line">1</span><br><span class="line">2</span><br></pre>
-                        </td>
-                        <td class="code">
-                          <pre><span class="line"><span class="built_in">echo</span> <span class="string">'export PYENV_ROOT="$HOME/.pyenv"'</span> &gt;&gt; ~/.bash_profile</span><br><span class="line"><span class="built_in">echo</span> <span class="string">'export PATH="$PYENV_ROOT/bin:$PATH"'</span> &gt;&gt; ~/.bash_profile</span><br></pre>
-                        </td>
-                      </tr>
-                    </table>
-                  </figure>
-                </li>
-                <li>
-                  <p>在shell启动后执行 <code>pyenv init</code>,确保在后面执行,依赖PATH</p>
-                  <figure class="highlight sh">
-                    <table>
-                      <tr>
-                        <td class="gutter">
-                          <pre><span class="line">1</span><br></pre>
-                        </td>
-                        <td class="code">
-                          <pre><span class="line"><span class="built_in">echo</span> -e <span class="string">'if command -v pyenv 1&gt;/dev/null 2&gt;&amp;1; then\n  eval "$(pyenv init -)"\nfi'</span> &gt;&gt; ~/.bash_profile</span><br></pre>
-                        </td>
-                      </tr>
-                    </table>
-                  </figure>
-                </li>
-                <li>
-                  <p>重启shell</p>
-                  <figure class="highlight sh">
-                    <table>
-                      <tr>
-                        <td class="gutter">
-                          <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre>
-                        </td>
-                        <td class="code">
-                          <pre><span class="line"><span class="built_in">exec</span> <span class="string">"<span class="variable">$SHELL</span>"</span></span><br><span class="line"><span class="comment"># 如果不行(执行pyenv没反应)</span></span><br><span class="line"><span class="built_in">source</span> ~/.bash_profile</span><br></pre>
-                        </td>
-                      </tr>
-                    </table>
-                  </figure>
-                </li>
-                <li>
-                  <p>安装python的构建依赖</p>
-                  <figure class="highlight sh">
-                    <table>
-                      <tr>
-                        <td class="gutter">
-                          <pre><span class="line">1</span><br></pre>
-                        </td>
-                        <td class="code">
-                          <pre><span class="line">yum install gcc zlib-devel bzip2 bzip2-devel readline-devel sqlite sqlite-devel openssl-devel tk-devel libffi-devel</span><br></pre>
-                        </td>
-                      </tr>
-                    </table>
-                  </figure>
-                </li>
-                <li>
-                  <p>更换pyenv下载源(更换缓存)</p>
-                  <figure class="highlight sh">
-                    <table>
-                      <tr>
-                        <td class="gutter">
-                          <pre><span class="line">1</span><br><span class="line">2</span><br></pre>
-                        </td>
-                        <td class="code">
-                          <pre><span class="line">v=3.7.1;wget http://mirrors.sohu.com/python/<span class="variable">$v</span>/Python-<span class="variable">$v</span>.tar.xz -P ~/.pyenv/cache/;pyenv install <span class="variable">$v</span></span><br><span class="line">// 思想是下载国内镜像到 <span class="variable">$PYENV_ROOT</span>/cache 下,然后pyenv install直接安装</span><br></pre>
-                        </td>
-                      </tr>
-                    </table>
-                  </figure>
-                </li>
-                <li>
-                  <p>安装 pyenv-virtualenv 幷初始化设置</p>
-                  <figure class="highlight sh">
-                    <table>
-                      <tr>
-                        <td class="gutter">
-                          <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre>
-                        </td>
-                        <td class="code">
-                          <pre><span class="line">git <span class="built_in">clone</span> https://github.com/yyuu/pyenv-virtualenv.git ~/.pyenv/plugins/pyenv-virtualenv</span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="string">'eval "$(pyenv virtualenv-init -)"'</span> &gt;&gt; ~/.bash_profile</span><br></pre>
-                        </td>
-                      </tr>
-                    </table>
-                  </figure>
-                </li>
+                <li>设置 <code>schedtrace=X</code> 和 <code>scheddetail=1</code> 可以使运行时在每 X 毫秒发出一次详细的多行信息，信息内容主要包括调度程序、处理器、OS 线程 和 Goroutine 的状态</li>
               </ol>
             </div>
-            <div class="tags"><a href="/tags/sh/">sh</a><a href="/tags/python/">python</a></div>
+            <div class="tags"><a href="/tags/go/">go</a></div>
             <div class="post-share">
               <div class="bdsharebuttonbox"><span style="float:left;line-height: 28px;height: 28px;font-size:16px;font-weight:blod">分享到：</span><a href="#" data-cmd="more" class="bds_more"></a><a href="#" data-cmd="mshare" title="分享到一键分享" class="bds_mshare"></a><a href="#" data-cmd="fbook" title="分享到Facebook" class="bds_fbook"></a><a href="#" data-cmd="twi" title="分享到Twitter" class="bds_twi"></a><a href="#" data-cmd="linkedin" title="分享到linkedin" class="bds_linkedin"></a><a href="#" data-cmd="youdao" title="分享到有道云笔记" class="bds_youdao"></a><a href="#" data-cmd="evernotecn" title="分享到印象笔记" class="bds_evernotecn"></a><a href="#" data-cmd="weixin" title="分享到微信" class="bds_weixin"></a><a href="#" data-cmd="qzone" title="分享到QQ空间" class="bds_qzone"></a><a href="#" data-cmd="tsina" title="分享到新浪微博" class="bds_tsina"></a></div>
             </div>
-            <div class="post-nav"><a href="/2019/06/04/读go源码/" class="pre">go-命令</a><a href="/2019/04/27/docker安装/" class="next">docker安装</a></div>
+            <div class="post-nav"><a href="/2020/03/19/Raft算法/" class="next">Raft算法</a></div>
             <div id="comments">
-              <div id="SOHUCS" sid="2019/06/04/pyenv-安装/"></div>
+              <div id="SOHUCS" sid="2020/03/30/GODEBUG/"></div>
             </div>
           </div>
         </div>
@@ -184,8 +111,16 @@
           <div id="toc" class="widget">
             <div class="widget-title"><i class="fa fa-fei">文章目录</i></div>
             <ol class="toc">
-              <li class="toc-item toc-level-4"><a class="toc-link" href="#pyenv-安装过程"><span class="toc-text">pyenv 安装过程</span></a></li>
-              <li class="toc-item toc-level-4"><a class="toc-link" href="#以bash-centos-为例"><span class="toc-text">以bash/centos 为例</span></a></li>
+              <li class="toc-item toc-level-3"><a class="toc-link" href="#GODEBUG"><span class="toc-text">GODEBUG</span></a>
+                <ol class="toc-child">
+                  <li class="toc-item toc-level-4"><a class="toc-link" href="#GODEBUG-gctrace-1-打印gc信息"><span class="toc-text">GODEBUG=gctrace=1 打印gc信息</span></a></li>
+                </ol>
+              </li>
+              <li class="toc-item toc-level-3"><a class="toc-link" href="#含义"><span class="toc-text">含义</span></a>
+                <ol class="toc-child">
+                  <li class="toc-item toc-level-4"><a class="toc-link" href="#schedtrace"><span class="toc-text">schedtrace</span></a></li>
+                </ol>
+              </li>
             </ol>
           </div>
           <div class="widget">
