@@ -47,6 +47,63 @@
       <div class="layout-l">
         <div class="content_container">
           <div class="post">
+            <h2 class="post-title"><a href="/2019/07/11/读-Redis设计与实现-与redis-5-0-源码-对象/">读&lt;&lt;Redis设计与实现&gt;&gt;与redis(5.0)源码__对象</a></h2>
+            <div class="post-meta"><a href="/2019/07/11/读-Redis设计与实现-与redis-5-0-源码-对象/#comments" class="comment-count"><span id="url::http://ipiao.top/2019/07/11/读-Redis设计与实现-与redis-5-0-源码-对象/" class="cy_cmt_count"></span>留言,<span id="url::http://ipiao.top/2019/07/11/读-Redis设计与实现-与redis-5-0-源码-对象/" class="cy_cmt_participate"></span>参与</a>
+              <p><span class="date">19-07-11</span><span><a href="/categories/reading/" class="category">reading</a></span></p>
+            </div>
+            <div class="post-content">
+              <h4 id="redisObject"><a href="#redisObject" class="headerlink" title="redisObject"></a>redisObject</h4>
+              <figure class="highlight c">
+                <table>
+                  <tr>
+                    <td class="gutter">
+                      <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre>
+                    </td>
+                    <td class="code">
+                      <pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">redisObject</span> &#123;</span></span><br><span class="line">    <span class="keyword">unsigned</span> type:<span class="number">4</span>; <span class="comment">// 类型,4位</span></span><br><span class="line">    <span class="keyword">unsigned</span> encoding:<span class="number">4</span>; <span class="comment">// 编码</span></span><br><span class="line">    <span class="comment">// 上次访问时间</span></span><br><span class="line">    <span class="comment">// #define LRU_BITS 24</span></span><br><span class="line">    <span class="keyword">unsigned</span> lru:LRU_BITS; <span class="comment">/* LRU time (relative to global lru_clock) or</span></span><br><span class="line"><span class="comment">                            * LFU data (least significant 8 bits frequency</span></span><br><span class="line"><span class="comment">                            * and most significant 16 bits access time). */</span></span><br><span class="line">    <span class="keyword">int</span> refcount; <span class="comment">// 引用次数</span></span><br><span class="line">    <span class="keyword">void</span> *ptr;    <span class="comment">// 底层地址</span></span><br><span class="line">&#125; robj;</span><br></pre>
+                    </td>
+                  </tr>
+                </table>
+              </figure>
+            </div>
+            <p class="readmore"><a href="/2019/07/11/读-Redis设计与实现-与redis-5-0-源码-对象/">阅读更多</a></p>
+          </div>
+          <div class="post">
+            <h2 class="post-title"><a href="/2019/07/11/读-Redis设计与实现-与redis-5-0-源码-ziplist/">读&lt;&lt;Redis设计与实现&gt;&gt;与redis(5.0)源码__ziplist</a></h2>
+            <div class="post-meta"><a href="/2019/07/11/读-Redis设计与实现-与redis-5-0-源码-ziplist/#comments" class="comment-count"><span id="url::http://ipiao.top/2019/07/11/读-Redis设计与实现-与redis-5-0-源码-ziplist/" class="cy_cmt_count"></span>留言,<span id="url::http://ipiao.top/2019/07/11/读-Redis设计与实现-与redis-5-0-源码-ziplist/" class="cy_cmt_participate"></span>参与</a>
+              <p><span class="date">19-07-11</span><span><a href="/categories/reading/" class="category">reading</a></span></p>
+            </div>
+            <div class="post-content">
+              <h4 id="ziplist构成"><a href="#ziplist构成" class="headerlink" title="ziplist构成"></a>ziplist构成</h4>
+              <blockquote>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>zlbytes-</th>
+                      <th>ztail-</th>
+                      <th>zllen-</th>
+                      <th>entrys-…-</th>
+                      <th>zlend</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>uint32_t</td>
+                      <td>uint32_t</td>
+                      <td>uint16_t</td>
+                      <td>zlentry</td>
+                      <td>uint8_t</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </blockquote>
+              <blockquote>
+                <p>因为zlend使用固定值<code>ZIP_END = 255</code>作为结束标志(0xFF作为uint8的最大值,与prevlen单字节长度0xFE进行区别,同时是最后面的两个数作为标志(这个懂的吧)).</p>
+              </blockquote>
+            </div>
+            <p class="readmore"><a href="/2019/07/11/读-Redis设计与实现-与redis-5-0-源码-ziplist/">阅读更多</a></p>
+          </div>
+          <div class="post">
             <h2 class="post-title"><a href="/2019/07/10/vimium/">vimium</a></h2>
             <div class="post-meta"><a href="/2019/07/10/vimium/#comments" class="comment-count"><span id="url::http://ipiao.top/2019/07/10/vimium/" class="cy_cmt_count"></span>留言,<span id="url::http://ipiao.top/2019/07/10/vimium/" class="cy_cmt_participate"></span>参与</a>
               <p><span class="date">19-07-10</span><span><a href="/categories/不务正业/" class="category">不务正业</a></span></p>
@@ -297,56 +354,6 @@
             </div>
             <p class="readmore"><a href="/2019/06/20/go-runtime之chan-go/">阅读更多</a></p>
           </div>
-          <div class="post">
-            <h2 class="post-title"><a href="/2019/06/19/go/">go-runtime之pprof子包</a></h2>
-            <div class="post-meta"><a href="/2019/06/19/go/#comments" class="comment-count"><span id="url::http://ipiao.top/2019/06/19/go/" class="cy_cmt_count"></span>留言,<span id="url::http://ipiao.top/2019/06/19/go/" class="cy_cmt_participate"></span>参与</a>
-              <p><span class="date">19-06-19</span><span><a href="/categories/golang大法好/" class="category">golang大法好</a></span></p>
-            </div>
-            <div class="post-content">
-              <h4 id="elf-go"><a href="#elf-go" class="headerlink" title="elf.go"></a>elf.go</h4>
-              <figure class="highlight go">
-                <table>
-                  <tr>
-                    <td class="gutter">
-                      <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre>
-                    </td>
-                    <td class="code">
-                      <pre><span class="line"><span class="comment">// elfBuildID returns the GNU build ID of the named ELF binary,</span></span><br><span class="line"><span class="comment">// without introducing a dependency on debug/elf and its dependencies.</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">elfBuildID</span><span class="params">(file <span class="keyword">string</span>)</span> <span class="params">(<span class="keyword">string</span>, error)</span></span></span><br></pre>
-                    </td>
-                  </tr>
-                </table>
-              </figure>
-              <blockquote>
-                <p>返回ELF二进制文件的GNU build ID</p>
-              </blockquote>
-            </div>
-            <p class="readmore"><a href="/2019/06/19/go/">阅读更多</a></p>
-          </div>
-          <div class="post">
-            <h2 class="post-title"><a href="/2019/06/18/go-runtime之debug子包-1/">go-runtime之debug子包</a></h2>
-            <div class="post-meta"><a href="/2019/06/18/go-runtime之debug子包-1/#comments" class="comment-count"><span id="url::http://ipiao.top/2019/06/18/go-runtime之debug子包-1/" class="cy_cmt_count"></span>留言,<span id="url::http://ipiao.top/2019/06/18/go-runtime之debug子包-1/" class="cy_cmt_participate"></span>参与</a>
-              <p><span class="date">19-06-18</span><span><a href="/categories/golang大法好/" class="category">golang大法好</a></span></p>
-            </div>
-            <div class="post-content">
-              <h4 id="garbage-go"><a href="#garbage-go" class="headerlink" title="garbage.go"></a>garbage.go</h4>
-              <ol>
-                <li>gc 状态<figure class="highlight go">
-                    <table>
-                      <tr>
-                        <td class="gutter">
-                          <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre>
-                        </td>
-                        <td class="code">
-                          <pre><span class="line"><span class="comment">// gc状态集包含了最近的gc信息</span></span><br><span class="line"><span class="keyword">type</span> GCStats <span class="keyword">struct</span> &#123;</span><br><span class="line">	LastGC         time.Time       <span class="comment">// 上次gc时间</span></span><br><span class="line">	NumGC          <span class="keyword">int64</span>           <span class="comment">// gc次数</span></span><br><span class="line">	PauseTotal     time.Duration   <span class="comment">// 所有gc的总暂停时间</span></span><br><span class="line">	Pause          []time.Duration <span class="comment">// gc暂时时间历史记录,最近的在最前</span></span><br><span class="line">	PauseEnd       []time.Time     <span class="comment">// gc暂停结束时间记录,最近的在最前</span></span><br><span class="line">	PauseQuantiles []time.Duration <span class="comment">//</span></span><br><span class="line">&#125;</span><br></pre>
-                        </td>
-                      </tr>
-                    </table>
-                  </figure>
-                </li>
-              </ol>
-            </div>
-            <p class="readmore"><a href="/2019/06/18/go-runtime之debug子包-1/">阅读更多</a></p>
-          </div>
           <nav class="page-navigator"><a class="extend prev" rel="prev" href="/">上一页</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/3/">下一页</a></nav>
         </div>
       </div>
@@ -356,6 +363,8 @@
           <div class="widget">
             <div class="widget-title"><i class="fa fa-xie"> 最新文章</i></div>
             <ul class="post-list">
+              <li class="post-list-item"><a class="post-list-link" href="/2020/06/24/github居然被fork了！/">github居然被fork了！</a></li>
+              <li class="post-list-item"><a class="post-list-link" href="/2020/06/22/开发过程遇到的一些问题排查/">开发过程遇到的一些问题排查</a></li>
               <li class="post-list-item"><a class="post-list-link" href="/2020/03/30/GODEBUG/">GODEBUG</a></li>
               <li class="post-list-item"><a class="post-list-link" href="/2020/03/19/Raft算法/">Raft算法</a></li>
               <li class="post-list-item"><a class="post-list-link" href="/2020/03/11/Go-Plugin动态加载库/">Go Plugin动态加载库</a></li>
@@ -364,30 +373,30 @@
               <li class="post-list-item"><a class="post-list-link" href="/2019/09/11/Go语言TCP网络编程/">Go语言TCP网络编程</a></li>
               <li class="post-list-item"><a class="post-list-link" href="/2019/07/23/redis-其他/">redis_其他</a></li>
               <li class="post-list-item"><a class="post-list-link" href="/2019/07/12/读-Redis设计与实现-与redis-5-0-源码-rdb/">读<<redis设计与实现>>与redis(5.0)源码__rdb</redis设计与实现></a></li>
-              <li class="post-list-item"><a class="post-list-link" href="/2019/07/11/读-Redis设计与实现-与redis-5-0-源码-对象/">读<<redis设计与实现>>与redis(5.0)源码__对象</redis设计与实现></a></li>
-              <li class="post-list-item"><a class="post-list-link" href="/2019/07/11/读-Redis设计与实现-与redis-5-0-源码-ziplist/">读<<redis设计与实现>>与redis(5.0)源码__ziplist</redis设计与实现></a></li>
             </ul>
           </div>
           <div class="widget">
             <div class="widget-title"><i class="fa fa-gui"> 分类</i></div>
             <ul class="category-list">
-              <li class="category-list-item"><a class="category-list-link" href="/categories/golang大法好/">golang大法好</a><span class="category-list-count">12</span></li>
+              <li class="category-list-item"><a class="category-list-link" href="/categories/golang大法好/">golang大法好</a><span class="category-list-count">13</span></li>
               <li class="category-list-item"><a class="category-list-link" href="/categories/reading/">reading</a><span class="category-list-count">9</span></li>
               <li class="category-list-item"><a class="category-list-link" href="/categories/不务正业/">不务正业</a><span class="category-list-count">9</span></li>
               <li class="category-list-item"><a class="category-list-link" href="/categories/我爱数学/">我爱数学</a><span class="category-list-count">1</span></li>
               <li class="category-list-item"><a class="category-list-link" href="/categories/日常练习/">日常练习</a><span class="category-list-count">8</span></li>
               <li class="category-list-item"><a class="category-list-link" href="/categories/第三方/">第三方</a><span class="category-list-count">1</span></li>
               <li class="category-list-item"><a class="category-list-link" href="/categories/装13指南/">装13指南</a><span class="category-list-count">1</span></li>
+              <li class="category-list-item"><a class="category-list-link" href="/categories/闲文野曲/">闲文野曲</a><span class="category-list-count">1</span></li>
               <li class="category-list-item"><a class="category-list-link" href="/categories/闲文野趣/">闲文野趣</a><span class="category-list-count">1</span></li>
             </ul>
           </div>
           <div class="widget">
             <div class="widget-title"><i class="fa fa-biao"> 标签</i></div>
-            <div class="tagcloud"><a href="/tags/sh/" style="font-size: 15px;">sh</a> <a href="/tags/apns/" style="font-size: 15px;">apns</a> <a href="/tags/go/" style="font-size: 15px;">go</a> <a href="/tags/博客迁移/" style="font-size: 15px;">博客迁移</a> <a href="/tags/tcp/" style="font-size: 15px;">tcp</a> <a href="/tags/leetcode/" style="font-size: 15px;">leetcode</a> <a href="/tags/字符串/" style="font-size: 15px;">字符串</a> <a href="/tags/pe/" style="font-size: 15px;">pe</a> <a href="/tags/算法/" style="font-size: 15px;">算法</a> <a href="/tags/分布式/" style="font-size: 15px;">分布式</a> <a href="/tags/emoji/" style="font-size: 15px;">emoji</a> <a href="/tags/mysql/" style="font-size: 15px;">mysql</a> <a href="/tags/python/" style="font-size: 15px;">python</a> <a href="/tags/redis/" style="font-size: 15px;">redis</a> <a href="/tags/爬虫/" style="font-size: 15px;">爬虫</a> <a href="/tags/其他/" style="font-size: 15px;">其他</a> <a href="/tags/数/" style="font-size: 15px;">数</a> <a href="/tags/链表/" style="font-size: 15px;">链表</a> <a href="/tags/魔术/" style="font-size: 15px;">魔术</a> <a href="/tags/吃瓜/" style="font-size: 15px;">吃瓜</a></div>
+            <div class="tagcloud"><a href="/tags/字符串/" style="font-size: 15px;">字符串</a> <a href="/tags/吃瓜/" style="font-size: 15px;">吃瓜</a> <a href="/tags/apns/" style="font-size: 15px;">apns</a> <a href="/tags/emoji/" style="font-size: 15px;">emoji</a> <a href="/tags/博客迁移/" style="font-size: 15px;">博客迁移</a> <a href="/tags/leetcode/" style="font-size: 15px;">leetcode</a> <a href="/tags/tcp/" style="font-size: 15px;">tcp</a> <a href="/tags/pe/" style="font-size: 15px;">pe</a> <a href="/tags/算法/" style="font-size: 15px;">算法</a> <a href="/tags/分布式/" style="font-size: 15px;">分布式</a> <a href="/tags/go/" style="font-size: 15px;">go</a> <a href="/tags/其他/" style="font-size: 15px;">其他</a> <a href="/tags/sh/" style="font-size: 15px;">sh</a> <a href="/tags/python/" style="font-size: 15px;">python</a> <a href="/tags/redis/" style="font-size: 15px;">redis</a> <a href="/tags/mysql/" style="font-size: 15px;">mysql</a> <a href="/tags/爬虫/" style="font-size: 15px;">爬虫</a> <a href="/tags/数/" style="font-size: 15px;">数</a> <a href="/tags/链表/" style="font-size: 15px;">链表</a> <a href="/tags/魔术/" style="font-size: 15px;">魔术</a></div>
           </div>
           <div class="widget">
             <div class="widget-title"><i class="fa fa-archive"> 归档</i></div>
             <ul class="archive-list">
+              <li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li>
               <li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">三月 2020</a></li>
               <li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">十月 2019</a></li>
               <li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">九月 2019</a></li>

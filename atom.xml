@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://ipiao.top/"/>
-  <updated>2020-03-30T08:21:11.126Z</updated>
+  <updated>2020-06-24T03:33:12.025Z</updated>
   <id>http://ipiao.top/</id>
   
   <author>
@@ -15,6 +15,63 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>github居然被fork了！</title>
+    <link href="http://ipiao.top/2020/06/24/github%E5%B1%85%E7%84%B6%E8%A2%ABfork%E4%BA%86%EF%BC%81/"/>
+    <id>http://ipiao.top/2020/06/24/github居然被fork了！/</id>
+    <published>2020-06-24T03:26:00.000Z</published>
+    <updated>2020-06-24T03:33:12.025Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote>  <p>没有任何的宣传（上论坛社区贴链接什么的），居然有人fork或star了我的github项目。没什么特别的意思，就是有点意外的高兴，虽然人数不多</p></blockquote><ul>  <li><img src="/images/pasted-20.png" alt="upload successful"></li></ul><p><img src="/images/pasted-21.png" alt="upload successful"></p><ul>  <li>    <p><img src="/images/pasted-22.png" alt="upload successful"><br><img src="/images/pasted-23.png" alt="upload successful"></p>  </li></ul><p>-</p><p><img src="/images/pasted-24.png" alt="upload successful"></p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;blockquote&gt;
+  &lt;p&gt;没有任何的宣传（上论坛社区贴链接什么的），居然有人fork或star了我的github项目。没什么特别的意思，就是有点意外的高兴，虽然人数不多&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;img src=&quot;/images/pas
+      
+    
+    </summary>
+    
+      <category term="闲文野曲" scheme="http://ipiao.top/categories/%E9%97%B2%E6%96%87%E9%87%8E%E6%9B%B2/"/>
+    
+    
+      <category term="其他" scheme="http://ipiao.top/tags/%E5%85%B6%E4%BB%96/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>开发过程遇到的一些问题排查</title>
+    <link href="http://ipiao.top/2020/06/22/%E5%BC%80%E5%8F%91%E8%BF%87%E7%A8%8B%E9%81%87%E5%88%B0%E7%9A%84%E4%B8%80%E4%BA%9B%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5/"/>
+    <id>http://ipiao.top/2020/06/22/开发过程遇到的一些问题排查/</id>
+    <published>2020-06-22T09:41:00.000Z</published>
+    <updated>2020-06-22T09:42:07.470Z</updated>
+    
+    <content type="html"><![CDATA[<h4 id="开发过程中遇到的问题"><a href="#开发过程中遇到的问题" class="headerlink" title="开发过程中遇到的问题"></a>开发过程中遇到的问题</h4><ol>  <li>    <p>Kafka日志传输网络延迟导致的服务假死。</p>    <blockquote>      <p>原因：zap框架挂载了kafka日志传输，是同步模式。由于网络延迟，kafka日志不能及时完成传输，导致业务代码产生延迟。</p>      <p>场景: 同事首先发现问题是在某个TCP写的位置，本地正常，初步怀疑是TCP写延迟，但是并未明确</p>      <p>排查过程:</p>      <ol>        <li>          <p>TCP读顺利无延迟,写最终能被接收，初步排除网络连接方面问题</p>          <ol start="2">            <li>pprof, 火焰图heap,cpufile均无明显异常，goroutine没有明显增高(实际有异常增多，但是当时用户量不高，没有发现，只是以为用户量引起的goroutine变化)</li>            <li>前后打日志（本地正常，所以无法对服务器做断点测试），标准输出或文本输出都正常,但是在write之后的日志出来的慢</li>            <li>疑惑…仍然怀疑TCP问题，但是稍加思考后还是否定了</li>            <li>只有日志模块（当时基本没有怀疑日志），没有查看ELK日志，因为一开始不知道使用了kafka日志传输</li>            <li>查看日志模块代码，有挂载kafka日志。查看配置，生产的连接写成了测试的连接地址，服务器在国外。</li>          </ol>        </li>      </ol>      <p>解决方案: 修改连接，顺便将kafka的传输方式改成异步。 </p>    </blockquote>  </li>  <li>    <p>Kafka日志传输造成的服务“停止”</p>    <blockquote>      <p>原因：kafka服务没有开启</p>      <p>场景：客户端大量接收不到回包，日志稀少(但是阅读代码发现服务在大部分情况下确实不打日志)。但是过一段时间（半小时到1小时），几乎所有用户连接不上，telnet通过。</p>      <p>排查过程：</p>      <pre><code>1. 查询逻辑，发现没有明显会造成阻塞的情况2. 在相关消息入口增加日志，重启服务后发现过一段时间后重现，日志不打印3. 怀疑日志问题，查看日志模块4. 发现kafka挂载，查看kafka异步代码，阻塞通道满</code></pre>      <p>总结: 这两次其实通过异常goroutine的排场是可以直接从pprof中定位到问题所在的，但是由于对他人项目的不熟，加上一眼看上去没有问题的心理，没有充分使用到pprof分析，导致后来依赖阅读代码的来排查。</p>    </blockquote>  </li>  <li>    <p>连接指针未释放造成的最终内存持续累积</p>    <blockquote>      <p>原因: 连接未释放，早期read方法有点奇葩，好像是先分配一个指定大小的 byte 数组再去读数据的（具体不记得了）</p>      <p>场景: 内存持续缓慢增长，heap数量只增不减</p>      <p>排查过程: </p>      <pre><code>1. 通过pprof生成heap文件，图形化显示下查询到内存占用最多的地方累积在read方法。2. read的奇葩读法，但是read每次分配好像是4M,,依照当时的用户量以及15超时清理分钟，也不应该达到那么大累积量3. 继续查看pprof文件，发现有大量的Client连接，考虑到15分钟断开可能有所累积，但是结合web图的引导，确实是连接下的read积累了最多的内存4. 怀疑连接没有正确释放造成(这里是无法直接得出哪块代码有问题的)5. 查询代码，发现客户端和用户管理混乱，让其自己按照这个方向排查代码6. 得出问题，是在服务器异常断开后，没有EOF，新连接替代了旧连接，然后在用户管理下的超市清理处理不到这部分链接，被一直保存到connMap中，其read goroutine 也无法断开</code></pre>    </blockquote>  </li>  <li>    <p>客户端允许body过长造成的内存突增</p>    <blockquote>      <p>原因:socket分包的时候通过协议header的bodyLen分配内存，客户端由于某些错误传递了很大的bodyLen使得内存突增</p>      <p>场景:监控服务报警，内存突增。</p>      <p>排查过程:</p>      <pre><code>1. 由于有上述的经验，首先怀疑是read时候分配内存堆积造成的，实际上确实如此，但有所不同的是当前是徒增，而且没有出现指针不释放的问题2. 直接查看源码，发现bodyLen的判断是小于MaxInt323. 直接依靠经验判断是bodyLen传入过大(而且基于最近出现了客户端连接异常的情况，发数据无响应等)。</code></pre>    </blockquote>  </li>  <li>    <p>客户端总是因心跳超时而被清理(早期设置心跳超时是30秒，没有设置readTimeout而是服务器根据心跳时间判断清理)</p>    <blockquote>      <p>原因: mars框架对相同数据发送的处理</p>      <p>排查过程: </p>      <pre><code>1. debug模式下查看心跳日志，日志显示心跳在一段时间后(每五秒)会停止，客户端怀疑是服务端业务处理延迟。2. 通过tcpdum抓包，明确服务端业务处理没有问题3. 怀疑是tcp纳格算法造成的小数据包延迟4. 设置了TCPNODELAY依然会出现5. 敦促客户端自查源码，发现mars框架相同的数据传送多少次之后就不再传送</code></pre>    </blockquote>  </li></ol><h4 id="总结"><a href="#总结" class="headerlink" title="总结:"></a>总结:</h4><pre><code>1.  服务端的代码框架是自己开发的，所以流程十分清晰，日志齐全，排查定位问题简单2.  设计TCP的知识略有疑惑，但所幸通过baidu能及时解决3.  当时和客户端商议提出一起写一份属于自己公司的通用框架模版，结果自己花费月余时间收集整理，客户端却直套了第三方，只是做业务处理上的框架，导致开发过程中不断要兼容客户端的处理方式，十分痛苦。但是也正是因为是自己开发的框架，在变更处理逻辑的时候十分顺畅。4.  日志是很重要的，尽管有pprof可以排查问题，但是很多时候自己还是忽略了pprof的某些信息导致没有排查到问题，这样清晰的日志也可以很快帮忙定位问题。</code></pre>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h4 id=&quot;开发过程中遇到的问题&quot;&gt;&lt;a href=&quot;#开发过程中遇到的问题&quot; class=&quot;headerlink&quot; title=&quot;开发过程中遇到的问题&quot;&gt;&lt;/a&gt;开发过程中遇到的问题&lt;/h4&gt;
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;Kafka日志传输网络延迟导致的服务假死。
+      
+    
+    </summary>
+    
+      <category term="golang大法好" scheme="http://ipiao.top/categories/golang%E5%A4%A7%E6%B3%95%E5%A5%BD/"/>
+    
+    
+      <category term="go" scheme="http://ipiao.top/tags/go/"/>
+    
+  </entry>
   
   <entry>
     <title>GODEBUG</title>
@@ -653,80 +710,6 @@
 &lt;blockquote&gt;
   &lt;p&gt;翻译一下:&lt;br&gt;定式:&lt;br&gt; 在无缓冲通道,除非send和rece都在单线程下阻塞, c.sendq和c.recvq至少有一个是空的,而且c.sendq和c.recvq的长度只受select语法限制&lt;/p&gt;
 &lt;/blockquote&gt;
-    
-    </summary>
-    
-      <category term="golang大法好" scheme="http://ipiao.top/categories/golang%E5%A4%A7%E6%B3%95%E5%A5%BD/"/>
-    
-    
-      <category term="go" scheme="http://ipiao.top/tags/go/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>go-runtime之pprof子包</title>
-    <link href="http://ipiao.top/2019/06/19/go/"/>
-    <id>http://ipiao.top/2019/06/19/go/</id>
-    <published>2019-06-19T02:22:00.000Z</published>
-    <updated>2019-06-19T07:56:17.464Z</updated>
-    
-    <content type="html"><![CDATA[<h4 id="elf-go"><a href="#elf-go" class="headerlink" title="elf.go"></a>elf.go</h4><figure class="highlight go">  <table>    <tr>      <td class="gutter">        <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre>      </td>      <td class="code">        <pre><span class="line"><span class="comment">// elfBuildID returns the GNU build ID of the named ELF binary,</span></span><br><span class="line"><span class="comment">// without introducing a dependency on debug/elf and its dependencies.</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">elfBuildID</span><span class="params">(file <span class="keyword">string</span>)</span> <span class="params">(<span class="keyword">string</span>, error)</span></span></span><br></pre>      </td>    </tr>  </table></figure><blockquote>  <p>返回ELF二进制文件的GNU build ID</p></blockquote><a id="more"></a><h4 id="label-go"><a href="#label-go" class="headerlink" title="label.go"></a>label.go</h4><blockquote>  <p>通过 context.Context 上操作kv值,达到设置 label的目的</p></blockquote><h4 id="map-go"><a href="#map-go" class="headerlink" title="map.go"></a>map.go</h4><figure class="highlight go">  <table>    <tr>      <td class="gutter">        <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre>      </td>      <td class="code">        <pre><span class="line"><span class="comment">// A profMap is a map from (stack, tag) to mapEntry.</span></span><br><span class="line"><span class="comment">// It grows without bound, but that's assumed to be OK.</span></span><br><span class="line"><span class="keyword">type</span> profMap <span class="keyword">struct</span> &#123;</span><br><span class="line">hash    <span class="keyword">map</span>[<span class="keyword">uintptr</span>]*profMapEntry</span><br><span class="line">all     *profMapEntry</span><br><span class="line">last    *profMapEntry</span><br><span class="line">free    []profMapEntry</span><br><span class="line">freeStk []<span class="keyword">uintptr</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// A profMapEntry is a single entry in the profMap.</span></span><br><span class="line"><span class="keyword">type</span> profMapEntry <span class="keyword">struct</span> &#123;</span><br><span class="line">nextHash *profMapEntry <span class="comment">// next in hash list</span></span><br><span class="line">nextAll  *profMapEntry <span class="comment">// next in list of all entries</span></span><br><span class="line">stk      []<span class="keyword">uintptr</span></span><br><span class="line">tag      unsafe.Pointer</span><br><span class="line">count    <span class="keyword">int64</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(m *profMap)</span> <span class="title">lookup</span><span class="params">(stk []<span class="keyword">uint64</span>, tag unsafe.Pointer)</span> *<span class="title">profMapEntry</span></span></span><br></pre>      </td>    </tr>  </table></figure><blockquote>  <p>大概是标签查找</p></blockquote><h4 id="pprof-go"><a href="#pprof-go" class="headerlink" title="pprof.go"></a>pprof.go</h4><ol>  <li>    <p>定义了Profile</p>    <figure class="highlight go">      <table>        <tr>          <td class="gutter">            <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre>          </td>          <td class="code">            <pre><span class="line"><span class="keyword">type</span> Profile <span class="keyword">struct</span> &#123;</span><br><span class="line">name  <span class="keyword">string</span></span><br><span class="line">mu    sync.Mutex</span><br><span class="line">m     <span class="keyword">map</span>[<span class="keyword">interface</span>&#123;&#125;][]<span class="keyword">uintptr</span></span><br><span class="line">count <span class="function"><span class="keyword">func</span><span class="params">()</span> <span class="title">int</span></span></span><br><span class="line"><span class="function"><span class="title">write</span> <span class="title">func</span><span class="params">(io.Writer, <span class="keyword">int</span>)</span> <span class="title">error</span></span></span><br><span class="line"><span class="function">&#125;</span></span><br></pre>          </td>        </tr>      </table>    </figure>  </li>  <li>    <p>初始化了一些Profile</p>    <blockquote>      <p>goroutine,threadcreate,heap,allocs,block,mutex</p>    </blockquote>  </li>  <li>    <p>提供 NewProfile(name string) 方法支持自定义生成 </p>  </li>  <li>    <p>func (p *Profile) Add(value interface{}, skip int)</p>    <blockquote>      <p>将和value相关的执行栈加入到profile.Add在内部实现的map中存储value,所以value必须是可以被用作map的key,而且在没有收到移除(Remove)指令前不会被自动gc掉.</p>    </blockquote>  </li>  <li>    <p>writexxx</p>  </li></ol><h4 id="proto-go"><a href="#proto-go" class="headerlink" title="proto.go"></a>proto.go</h4><blockquote>  <p>基本是构建pprof文件信息的方法</p></blockquote><h4 id="protobuf-go"><a href="#protobuf-go" class="headerlink" title="protobuf.go"></a>protobuf.go</h4><blockquote>  <p>编码,buffer</p></blockquote><h4 id="protomem-go"><a href="#protomem-go" class="headerlink" title="protomem.go"></a>protomem.go</h4><h4 id="runtime-go"><a href="#runtime-go" class="headerlink" title="runtime.go"></a>runtime.go</h4><blockquote>  <p>标记当前线程</p></blockquote><hr><h4 id="internal子包"><a href="#internal子包" class="headerlink" title="internal子包"></a>internal子包</h4><blockquote>  <p>为了给外部调用,里面多封了一层profile包</p></blockquote><ol>  <li>encode.go<blockquote>      <p>对Profile的编解码</p>    </blockquote>  </li>  <li>filter.go<blockquote>      <p>过滤</p>    </blockquote>  </li>  <li>legacy_profile.go</li>  <li>profile.go<figure class="highlight go">      <table>        <tr>          <td class="gutter">            <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre>          </td>          <td class="code">            <pre><span class="line"><span class="comment">// Profile is an in-memory representation of profile.proto.</span></span><br><span class="line"><span class="keyword">type</span> Profile <span class="keyword">struct</span> &#123;</span><br><span class="line">SampleType        []*ValueType</span><br><span class="line">DefaultSampleType <span class="keyword">string</span></span><br><span class="line">Sample            []*Sample</span><br><span class="line">Mapping           []*Mapping</span><br><span class="line">Location          []*Location</span><br><span class="line">Function          []*Function</span><br><span class="line">Comments          []<span class="keyword">string</span></span><br><span class="line"></span><br><span class="line">DropFrames <span class="keyword">string</span></span><br><span class="line">KeepFrames <span class="keyword">string</span></span><br><span class="line"></span><br><span class="line">TimeNanos     <span class="keyword">int64</span></span><br><span class="line">DurationNanos <span class="keyword">int64</span></span><br><span class="line">PeriodType    *ValueType</span><br><span class="line">Period        <span class="keyword">int64</span></span><br><span class="line"></span><br><span class="line">commentX           []<span class="keyword">int64</span></span><br><span class="line">dropFramesX        <span class="keyword">int64</span></span><br><span class="line">keepFramesX        <span class="keyword">int64</span></span><br><span class="line">stringTable        []<span class="keyword">string</span></span><br><span class="line">defaultSampleTypeX <span class="keyword">int64</span></span><br><span class="line">&#125;</span><br></pre>          </td>        </tr>      </table>    </figure>  </li></ol><blockquote>  <p>profile.proto文件的内存信息</p></blockquote>]]></content>
-    
-    <summary type="html">
-    
-      &lt;h4 id=&quot;elf-go&quot;&gt;&lt;a href=&quot;#elf-go&quot; class=&quot;headerlink&quot; title=&quot;elf.go&quot;&gt;&lt;/a&gt;elf.go&lt;/h4&gt;
-&lt;figure class=&quot;highlight go&quot;&gt;
-  &lt;table&gt;
-    &lt;tr&gt;
-      &lt;td class=&quot;gutter&quot;&gt;
-        &lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;
-      &lt;/td&gt;
-      &lt;td class=&quot;code&quot;&gt;
-        &lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;// elfBuildID returns the GNU build ID of the named ELF binary,&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;// without introducing a dependency on debug/elf and its dependencies.&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;elfBuildID&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;(file &lt;span class=&quot;keyword&quot;&gt;string&lt;/span&gt;)&lt;/span&gt; &lt;span class=&quot;params&quot;&gt;(&lt;span class=&quot;keyword&quot;&gt;string&lt;/span&gt;, error)&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;
-      &lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/table&gt;
-&lt;/figure&gt;
-&lt;blockquote&gt;
-  &lt;p&gt;返回ELF二进制文件的GNU build ID&lt;/p&gt;
-&lt;/blockquote&gt;
-    
-    </summary>
-    
-      <category term="golang大法好" scheme="http://ipiao.top/categories/golang%E5%A4%A7%E6%B3%95%E5%A5%BD/"/>
-    
-    
-      <category term="go" scheme="http://ipiao.top/tags/go/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>go-runtime之debug子包</title>
-    <link href="http://ipiao.top/2019/06/18/go-runtime%E4%B9%8Bdebug%E5%AD%90%E5%8C%85-1/"/>
-    <id>http://ipiao.top/2019/06/18/go-runtime之debug子包-1/</id>
-    <published>2019-06-18T08:30:00.000Z</published>
-    <updated>2019-06-18T08:59:14.841Z</updated>
-    
-    <content type="html"><![CDATA[<h4 id="garbage-go"><a href="#garbage-go" class="headerlink" title="garbage.go"></a>garbage.go</h4><ol>  <li>gc 状态<figure class="highlight go">      <table>        <tr>          <td class="gutter">            <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre>          </td>          <td class="code">            <pre><span class="line"><span class="comment">// gc状态集包含了最近的gc信息</span></span><br><span class="line"><span class="keyword">type</span> GCStats <span class="keyword">struct</span> &#123;</span><br><span class="line">LastGC         time.Time       <span class="comment">// 上次gc时间</span></span><br><span class="line">NumGC          <span class="keyword">int64</span>           <span class="comment">// gc次数</span></span><br><span class="line">PauseTotal     time.Duration   <span class="comment">// 所有gc的总暂停时间</span></span><br><span class="line">Pause          []time.Duration <span class="comment">// gc暂时时间历史记录,最近的在最前</span></span><br><span class="line">PauseEnd       []time.Time     <span class="comment">// gc暂停结束时间记录,最近的在最前</span></span><br><span class="line">PauseQuantiles []time.Duration <span class="comment">//</span></span><br><span class="line">&#125;</span><br></pre>          </td>        </tr>      </table>    </figure>  </li></ol><a id="more"></a><ol start="2">  <li>ReadGCStats(stats *GCStats)<figure class="highlight go">      <table>        <tr>          <td class="gutter">            <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre>          </td>          <td class="code">            <pre><span class="line"><span class="comment">// ReadGCStats reads statistics about garbage collection into stats.</span></span><br><span class="line"><span class="comment">// The number of entries in the pause history is system-dependent;</span></span><br><span class="line"><span class="comment">// stats.Pause slice will be reused if large enough, reallocated otherwise.</span></span><br><span class="line"><span class="comment">// ReadGCStats may use the full capacity of the stats.Pause slice.</span></span><br><span class="line"><span class="comment">// If stats.PauseQuantiles is non-empty, ReadGCStats fills it with quantiles</span></span><br><span class="line"><span class="comment">// summarizing the distribution of pause time. For example, if</span></span><br><span class="line"><span class="comment">// len(stats.PauseQuantiles) is 5, it will be filled with the minimum,</span></span><br><span class="line"><span class="comment">// 25%, 50%, 75%, and maximum pause times.</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">ReadGCStats</span><span class="params">(stats *GCStats)</span></span> &#123;</span><br></pre>          </td>        </tr>      </table>    </figure>  </li></ol><blockquote>  <p>gc会根据PauseQuantiles的长度填充暂停时间</p></blockquote><ol start="3">  <li>    <p>SetGCPercent(percent int) int</p>    <blockquote>      <p>设置gc的比率,默认100,消极gc</p>    </blockquote>  </li>  <li>    <p>FreeOSMemory()</p>    <blockquote>      <p>最大程度的释放系统内存</p>    </blockquote>  </li>  <li>    <p>SetMaxStack(bytes int) int</p>    <blockquote>      <p>设置单个goroutine的最大可用栈空间,64位默认1G,32位250M</p>    </blockquote>  </li>  <li>    <p>SetMaxThreads(threads int) int</p>    <blockquote>      <p>设置最大可用的操作系统级别线程(M)数量</p>    </blockquote>  </li>  <li>    <p>SetPanicOnFault(enabled bool) bool</p>    <blockquote>      <p>设置<em>当前</em>goroutine是否在运行错误的时候进行panic</p>    </blockquote>  </li>  <li>    <p>WriteHeapDump(fd uintptr)</p>    <blockquote>      <p>将堆以及堆对象的描述信息写进指定文件符.改操作会挂起所有线程直到全部写完.所以写入文件符对应的管道另一端不能是当前进程的,可以写入临时文件或者socket里</p>    </blockquote>  </li>  <li>    <p>SetTraceback(level string)</p>    <blockquote>      <p>设置Traceback的层级,”all”是全部</p>    </blockquote>  </li></ol><h4 id="stack-go"><a href="#stack-go" class="headerlink" title="stack.go"></a>stack.go</h4><ol>  <li>    <p>PrintStack()</p>    <blockquote>      <p>将runtime.Stack返回的stack track输出到标准错误</p>    </blockquote>  </li>  <li>    <p>Stack()</p>    <blockquote>      <p>分配一个足够大的缓存容纳调用 runtime.Stack的返回.返回当前线程的格式化的stack trace.</p>    </blockquote>  </li></ol><h4 id="stubs-go"><a href="#stubs-go" class="headerlink" title="stubs.go"></a>stubs.go</h4><figure class="highlight go">  <table>    <tr>      <td class="gutter">        <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre>      </td>      <td class="code">        <pre><span class="line"><span class="comment">// Implemented in package runtime.</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">readGCStats</span><span class="params">(*[]time.Duration)</span></span></span><br><span class="line"><span class="function"><span class="title">func</span> <span class="title">freeOSMemory</span><span class="params">()</span></span></span><br><span class="line"><span class="function"><span class="title">func</span> <span class="title">setMaxStack</span><span class="params">(<span class="keyword">int</span>)</span> <span class="title">int</span></span></span><br><span class="line"><span class="function"><span class="title">func</span> <span class="title">setGCPercent</span><span class="params">(<span class="keyword">int32</span>)</span> <span class="title">int32</span></span></span><br><span class="line"><span class="function"><span class="title">func</span> <span class="title">setPanicOnFault</span><span class="params">(<span class="keyword">bool</span>)</span> <span class="title">bool</span></span></span><br><span class="line"><span class="function"><span class="title">func</span> <span class="title">setMaxThreads</span><span class="params">(<span class="keyword">int</span>)</span> <span class="title">int</span></span></span><br></pre>      </td>    </tr>  </table></figure><blockquote>  <p>固有方法,在runtime里实现</p></blockquote>]]></content>
-    
-    <summary type="html">
-    
-      &lt;h4 id=&quot;garbage-go&quot;&gt;&lt;a href=&quot;#garbage-go&quot; class=&quot;headerlink&quot; title=&quot;garbage.go&quot;&gt;&lt;/a&gt;garbage.go&lt;/h4&gt;
-&lt;ol&gt;
-  &lt;li&gt;gc 状态&lt;figure class=&quot;highlight go&quot;&gt;
-      &lt;table&gt;
-        &lt;tr&gt;
-          &lt;td class=&quot;gutter&quot;&gt;
-            &lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;
-          &lt;/td&gt;
-          &lt;td class=&quot;code&quot;&gt;
-            &lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;// gc状态集包含了最近的gc信息&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;type&lt;/span&gt; GCStats &lt;span class=&quot;keyword&quot;&gt;struct&lt;/span&gt; &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	LastGC         time.Time       &lt;span class=&quot;comment&quot;&gt;// 上次gc时间&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	NumGC          &lt;span class=&quot;keyword&quot;&gt;int64&lt;/span&gt;           &lt;span class=&quot;comment&quot;&gt;// gc次数&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	PauseTotal     time.Duration   &lt;span class=&quot;comment&quot;&gt;// 所有gc的总暂停时间&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	Pause          []time.Duration &lt;span class=&quot;comment&quot;&gt;// gc暂时时间历史记录,最近的在最前&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	PauseEnd       []time.Time     &lt;span class=&quot;comment&quot;&gt;// gc暂停结束时间记录,最近的在最前&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	PauseQuantiles []time.Duration &lt;span class=&quot;comment&quot;&gt;//&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;
-          &lt;/td&gt;
-        &lt;/tr&gt;
-      &lt;/table&gt;
-    &lt;/figure&gt;
-  &lt;/li&gt;
-&lt;/ol&gt;
     
     </summary>
     

@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta name="generator" content="Hexo 3.8.0">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta content="yes" name="apple-mobile-web-app-capable">
+  <meta content="black-translucent" name="apple-mobile-web-app-status-bar-style">
+  <meta content="telephone=no" name="format-detection">
+  <meta name="description" content="没有理由，只是想做些什么">
+  <meta name="keywords" content="go,ipiao">
+  <title>开发过程遇到的一些问题排查 | 欣欣然不知所以</title>
+  <link rel="stylesheet" type="text/css" href="//fonts.neworld.org/css?family=Source+Code+Pro">
+  <link rel="stylesheet" type="text/css" href="/css/style.css?v=2.0.1">
+  <link rel="stylesheet" type="text/css" href="/css/highlight.css?v=2.0.1">
+  <link rel="Shortcut Icon" href="/favicon.ico">
+  <link rel="bookmark" href="/favicon.ico">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png">
+  <link rel="alternate" type="application/atom+xml" href="/atom.xml">
+</head>
+
+<body>
+  <div class="body_container">
+    <div id="header">
+      <div class="site-name">
+        <h1 class="hidden">开发过程遇到的一些问题排查</h1><a id="logo" href="/.">欣欣然不知所以</a>
+        <p class="description">......</p>
+      </div>
+      <div id="nav-menu"><a href="/." class="current"><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/about/"><i class="fa fa-user"> 关于</i></a><a href="/atom.xml"><i class="fa fa-rss"> 订阅</i></a></div>
+      <div id="search-form">
+        <div id="result-mask" class="hide"></div><label><input id="search-key" type="text" autocomplete="on" placeholder="input keyword to search..."></label>
+        <div id="result-wrap" class="hide">
+          <div id="search-result"></div>
+        </div>
+        <div class="hide"><template id="search-tpl">
+            <div class="item"><a href="/{path}" title="{title}">
+                <div class="title">{title}</div>
+                <div class="time">{date}</div>
+                <div class="tags">{tags}</div>
+              </a></div>
+          </template></div>
+      </div>
+    </div>
+    <div id="layout" class="layout-g">
+      <div class="layout-l">
+        <div class="content_container">
+          <div class="post">
+            <h1 class="post-title">开发过程遇到的一些问题排查</h1>
+            <div class="post-meta"><a href="/2020/06/22/开发过程遇到的一些问题排查/#comments" class="comment-count"><i id="changyan_count_unit" data-xid="2020/06/22/开发过程遇到的一些问题排查/"></i>留言,<i id="changyan_parti_unit" data-xid="2020/06/22/开发过程遇到的一些问题排查/"></i>参与</a>
+              <p><span class="date">Jun 22, 2020</span><span><a href="/categories/golang大法好/" class="category">golang大法好</a></span></p>
+            </div>
+            <div class="post-content">
+              <h4 id="开发过程中遇到的问题"><a href="#开发过程中遇到的问题" class="headerlink" title="开发过程中遇到的问题"></a>开发过程中遇到的问题</h4>
+              <ol>
+                <li>
+                  <p>Kafka日志传输网络延迟导致的服务假死。</p>
+                  <blockquote>
+                    <p>原因：zap框架挂载了kafka日志传输，是同步模式。由于网络延迟，kafka日志不能及时完成传输，导致业务代码产生延迟。</p>
+                    <p>场景: 同事首先发现问题是在某个TCP写的位置，本地正常，初步怀疑是TCP写延迟，但是并未明确</p>
+                    <p>排查过程:</p>
+                    <ol>
+                      <li>
+                        <p>TCP读顺利无延迟,写最终能被接收，初步排除网络连接方面问题</p>
+                        <ol start="2">
+                          <li>pprof, 火焰图heap,cpufile均无明显异常，goroutine没有明显增高(实际有异常增多，但是当时用户量不高，没有发现，只是以为用户量引起的goroutine变化)</li>
+                          <li>前后打日志（本地正常，所以无法对服务器做断点测试），标准输出或文本输出都正常,但是在write之后的日志出来的慢</li>
+                          <li>疑惑…仍然怀疑TCP问题，但是稍加思考后还是否定了</li>
+                          <li>只有日志模块（当时基本没有怀疑日志），没有查看ELK日志，因为一开始不知道使用了kafka日志传输</li>
+                          <li>查看日志模块代码，有挂载kafka日志。查看配置，生产的连接写成了测试的连接地址，服务器在国外。</li>
+                        </ol>
+                      </li>
+                    </ol>
+                    <p>解决方案: 修改连接，顺便将kafka的传输方式改成异步。 </p>
+                  </blockquote>
+                </li>
+                <li>
+                  <p>Kafka日志传输造成的服务“停止”</p>
+                  <blockquote>
+                    <p>原因：kafka服务没有开启</p>
+                    <p>场景：客户端大量接收不到回包，日志稀少(但是阅读代码发现服务在大部分情况下确实不打日志)。但是过一段时间（半小时到1小时），几乎所有用户连接不上，telnet通过。</p>
+                    <p>排查过程：</p>
+                    <pre><code>1. 查询逻辑，发现没有明显会造成阻塞的情况
+2. 在相关消息入口增加日志，重启服务后发现过一段时间后重现，日志不打印
+3. 怀疑日志问题，查看日志模块
+4. 发现kafka挂载，查看kafka异步代码，阻塞通道满
+</code></pre>
+                    <p>总结: 这两次其实通过异常goroutine的排场是可以直接从pprof中定位到问题所在的，但是由于对他人项目的不熟，加上一眼看上去没有问题的心理，没有充分使用到pprof分析，导致后来依赖阅读代码的来排查。</p>
+                  </blockquote>
+                </li>
+                <li>
+                  <p>连接指针未释放造成的最终内存持续累积</p>
+                  <blockquote>
+                    <p>原因: 连接未释放，早期read方法有点奇葩，好像是先分配一个指定大小的 byte 数组再去读数据的（具体不记得了）</p>
+                    <p>场景: 内存持续缓慢增长，heap数量只增不减</p>
+                    <p>排查过程: </p>
+                    <pre><code>1. 通过pprof生成heap文件，图形化显示下查询到内存占用最多的地方累积在read方法。
+2. read的奇葩读法，但是read每次分配好像是4M,,依照当时的用户量以及15超时清理分钟，也不应该达到那么大累积量
+3. 继续查看pprof文件，发现有大量的Client连接，考虑到15分钟断开可能有所累积，但是结合web图的引导，确实是连接下的read积累了最多的内存
+4. 怀疑连接没有正确释放造成(这里是无法直接得出哪块代码有问题的)
+5. 查询代码，发现客户端和用户管理混乱，让其自己按照这个方向排查代码
+6. 得出问题，是在服务器异常断开后，没有EOF，新连接替代了旧连接，然后在用户管理下的超市清理处理不到这部分链接，被一直保存到connMap中，其read goroutine 也无法断开
+</code></pre>
+                  </blockquote>
+                </li>
+                <li>
+                  <p>客户端允许body过长造成的内存突增</p>
+                  <blockquote>
+                    <p>原因:socket分包的时候通过协议header的bodyLen分配内存，客户端由于某些错误传递了很大的bodyLen使得内存突增</p>
+                    <p>场景:监控服务报警，内存突增。</p>
+                    <p>排查过程:</p>
+                    <pre><code>1. 由于有上述的经验，首先怀疑是read时候分配内存堆积造成的，实际上确实如此，但有所不同的是当前是徒增，而且没有出现指针不释放的问题
+2. 直接查看源码，发现bodyLen的判断是小于MaxInt32
+3. 直接依靠经验判断是bodyLen传入过大(而且基于最近出现了客户端连接异常的情况，发数据无响应等)。
+</code></pre>
+                  </blockquote>
+                </li>
+                <li>
+                  <p>客户端总是因心跳超时而被清理(早期设置心跳超时是30秒，没有设置readTimeout而是服务器根据心跳时间判断清理)</p>
+                  <blockquote>
+                    <p>原因: mars框架对相同数据发送的处理</p>
+                    <p>排查过程: </p>
+                    <pre><code>1. debug模式下查看心跳日志，日志显示心跳在一段时间后(每五秒)会停止，客户端怀疑是服务端业务处理延迟。
+2. 通过tcpdum抓包，明确服务端业务处理没有问题
+3. 怀疑是tcp纳格算法造成的小数据包延迟
+4. 设置了TCPNODELAY依然会出现
+5. 敦促客户端自查源码，发现mars框架相同的数据传送多少次之后就不再传送
+</code></pre>
+                  </blockquote>
+                </li>
+              </ol>
+              <h4 id="总结"><a href="#总结" class="headerlink" title="总结:"></a>总结:</h4>
+              <pre><code>1.  服务端的代码框架是自己开发的，所以流程十分清晰，日志齐全，排查定位问题简单
+2.  设计TCP的知识略有疑惑，但所幸通过baidu能及时解决
+3.  当时和客户端商议提出一起写一份属于自己公司的通用框架模版，结果自己花费月余时间收集整理，客户端却直套了第三方，只是做业务处理上的框架，导致开发过程中不断要兼容客户端的处理方式，十分痛苦。但是也正是因为是自己开发的框架，在变更处理逻辑的时候十分顺畅。
+4.  日志是很重要的，尽管有pprof可以排查问题，但是很多时候自己还是忽略了pprof的某些信息导致没有排查到问题，这样清晰的日志也可以很快帮忙定位问题。
+</code></pre>
+            </div>
+            <div class="tags"><a href="/tags/go/">go</a></div>
+            <div class="post-share">
+              <div class="bdsharebuttonbox"><span style="float:left;line-height: 28px;height: 28px;font-size:16px;font-weight:blod">分享到：</span><a href="#" data-cmd="more" class="bds_more"></a><a href="#" data-cmd="mshare" title="分享到一键分享" class="bds_mshare"></a><a href="#" data-cmd="fbook" title="分享到Facebook" class="bds_fbook"></a><a href="#" data-cmd="twi" title="分享到Twitter" class="bds_twi"></a><a href="#" data-cmd="linkedin" title="分享到linkedin" class="bds_linkedin"></a><a href="#" data-cmd="youdao" title="分享到有道云笔记" class="bds_youdao"></a><a href="#" data-cmd="evernotecn" title="分享到印象笔记" class="bds_evernotecn"></a><a href="#" data-cmd="weixin" title="分享到微信" class="bds_weixin"></a><a href="#" data-cmd="qzone" title="分享到QQ空间" class="bds_qzone"></a><a href="#" data-cmd="tsina" title="分享到新浪微博" class="bds_tsina"></a></div>
+            </div>
+            <div class="post-nav"><a href="/2020/06/24/github居然被fork了！/" class="pre">github居然被fork了！</a><a href="/2020/03/30/GODEBUG/" class="next">GODEBUG</a></div>
+            <div id="comments">
+              <div id="SOHUCS" sid="2020/06/22/开发过程遇到的一些问题排查/"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="layout-r">
+        <div id="sidebar">
+          <div class="search-pla"></div>
+          <div id="toc" class="widget">
+            <div class="widget-title"><i class="fa fa-fei">文章目录</i></div>
+            <ol class="toc">
+              <li class="toc-item toc-level-4"><a class="toc-link" href="#开发过程中遇到的问题"><span class="toc-text">开发过程中遇到的问题</span></a></li>
+              <li class="toc-item toc-level-4"><a class="toc-link" href="#总结"><span class="toc-text">总结:</span></a></li>
+            </ol>
+          </div>
+          <div class="widget">
+            <div class="widget-title"><i class="fa fa-xie"> 最新文章</i></div>
+            <ul class="post-list">
+              <li class="post-list-item"><a class="post-list-link" href="/2020/06/24/github居然被fork了！/">github居然被fork了！</a></li>
+              <li class="post-list-item"><a class="post-list-link" href="/2020/06/22/开发过程遇到的一些问题排查/">开发过程遇到的一些问题排查</a></li>
+              <li class="post-list-item"><a class="post-list-link" href="/2020/03/30/GODEBUG/">GODEBUG</a></li>
+              <li class="post-list-item"><a class="post-list-link" href="/2020/03/19/Raft算法/">Raft算法</a></li>
+              <li class="post-list-item"><a class="post-list-link" href="/2020/03/11/Go-Plugin动态加载库/">Go Plugin动态加载库</a></li>
+              <li class="post-list-item"><a class="post-list-link" href="/2019/10/24/mysql并发调试命名/">mysql并发调试</a></li>
+              <li class="post-list-item"><a class="post-list-link" href="/2019/09/11/TCP-Delayed-Ack-Ack确认延迟-Nagle-Algorithm-纳格算法/">TCP Delayed Ack(Ack确认延迟) && Nagle Algorithm(纳格算法)</a></li>
+              <li class="post-list-item"><a class="post-list-link" href="/2019/09/11/Go语言TCP网络编程/">Go语言TCP网络编程</a></li>
+              <li class="post-list-item"><a class="post-list-link" href="/2019/07/23/redis-其他/">redis_其他</a></li>
+              <li class="post-list-item"><a class="post-list-link" href="/2019/07/12/读-Redis设计与实现-与redis-5-0-源码-rdb/">读<<redis设计与实现>>与redis(5.0)源码__rdb</redis设计与实现></a></li>
+            </ul>
+          </div>
+          <div class="widget">
+            <div class="widget-title"><i class="fa fa-gui"> 分类</i></div>
+            <ul class="category-list">
+              <li class="category-list-item"><a class="category-list-link" href="/categories/golang大法好/">golang大法好</a><span class="category-list-count">13</span></li>
+              <li class="category-list-item"><a class="category-list-link" href="/categories/reading/">reading</a><span class="category-list-count">9</span></li>
+              <li class="category-list-item"><a class="category-list-link" href="/categories/不务正业/">不务正业</a><span class="category-list-count">9</span></li>
+              <li class="category-list-item"><a class="category-list-link" href="/categories/我爱数学/">我爱数学</a><span class="category-list-count">1</span></li>
+              <li class="category-list-item"><a class="category-list-link" href="/categories/日常练习/">日常练习</a><span class="category-list-count">8</span></li>
+              <li class="category-list-item"><a class="category-list-link" href="/categories/第三方/">第三方</a><span class="category-list-count">1</span></li>
+              <li class="category-list-item"><a class="category-list-link" href="/categories/装13指南/">装13指南</a><span class="category-list-count">1</span></li>
+              <li class="category-list-item"><a class="category-list-link" href="/categories/闲文野曲/">闲文野曲</a><span class="category-list-count">1</span></li>
+              <li class="category-list-item"><a class="category-list-link" href="/categories/闲文野趣/">闲文野趣</a><span class="category-list-count">1</span></li>
+            </ul>
+          </div>
+          <div class="widget">
+            <div class="widget-title"><i class="fa fa-biao"> 标签</i></div>
+            <div class="tagcloud"><a href="/tags/字符串/" style="font-size: 15px;">字符串</a> <a href="/tags/吃瓜/" style="font-size: 15px;">吃瓜</a> <a href="/tags/apns/" style="font-size: 15px;">apns</a> <a href="/tags/emoji/" style="font-size: 15px;">emoji</a> <a href="/tags/博客迁移/" style="font-size: 15px;">博客迁移</a> <a href="/tags/leetcode/" style="font-size: 15px;">leetcode</a> <a href="/tags/tcp/" style="font-size: 15px;">tcp</a> <a href="/tags/pe/" style="font-size: 15px;">pe</a> <a href="/tags/算法/" style="font-size: 15px;">算法</a> <a href="/tags/分布式/" style="font-size: 15px;">分布式</a> <a href="/tags/go/" style="font-size: 15px;">go</a> <a href="/tags/其他/" style="font-size: 15px;">其他</a> <a href="/tags/sh/" style="font-size: 15px;">sh</a> <a href="/tags/python/" style="font-size: 15px;">python</a> <a href="/tags/redis/" style="font-size: 15px;">redis</a> <a href="/tags/mysql/" style="font-size: 15px;">mysql</a> <a href="/tags/爬虫/" style="font-size: 15px;">爬虫</a> <a href="/tags/数/" style="font-size: 15px;">数</a> <a href="/tags/链表/" style="font-size: 15px;">链表</a> <a href="/tags/魔术/" style="font-size: 15px;">魔术</a></div>
+          </div>
+          <div class="widget">
+            <div class="widget-title"><i class="fa fa-archive"> 归档</i></div>
+            <ul class="archive-list">
+              <li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a></li>
+              <li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">三月 2020</a></li>
+              <li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">十月 2019</a></li>
+              <li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">九月 2019</a></li>
+              <li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">七月 2019</a></li>
+              <li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">六月 2019</a></li>
+              <li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">四月 2019</a></li>
+              <li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">一月 2019</a></li>
+              <li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">十二月 2018</a></li>
+            </ul>
+          </div>
+          <div class="widget">
+            <div class="widget-title"><i class="fa fa-you"> 友情链接</i></div>
+            <ul></ul><a href="https://chaoo.oschina.io" title="本站主题（BlueLake）" target="_blank">本站主题（BlueLake）</a>
+            <ul></ul><a href="http://118.25.7.38:8080" title="旧站" target="_blank">旧站</a>
+            <ul></ul><a href="http://pe-cn.github.io/problems/" title="欧拉计划（Project Euler）" target="_blank">欧拉计划（Project Euler）</a>
+            <ul></ul><a href="https://leetcode-cn.com/" title="力扣题库（leetcode）" target="_blank">力扣题库（leetcode）</a>
+          </div>
+        </div>
+      </div>
+    </div><a id="totop" href="#top"></a>
+    <div id="footer">
+      <div class="footer-info">
+        <p><a href="/baidusitemap.xml">Baidu Site Haritası</a> | <a href="/atom.xml">订阅</a> | <a href="/about/">关于</a></p>
+        <p><span> Copyright &copy;<a href="/." rel="nofollow">ipiao.</a></span><span> Theme by<a rel="nofollow" target="_blank" href="https://github.com/chaooo/hexo-theme-BlueLake"> BlueLake.</a></span><span> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a></span></p>
+      </div>
+    </div>
+  </div>
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?6d320488e0e5cdce0a6edea059168872";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+  <script type="text/javascript" src="/js/search.json.js?v=2.0.1"></script>
+  <script type="text/javascript" src="/js/toctotop.js?v=2.0.1" async></script>
+  <script>
+    window._bd_share_config = {
+      "common": {
+        "bdSnsKey": {},
+        "bdText": "",
+        "bdMini": "2",
+        "bdMiniList": ["mshare", "weixin", "tsina", "qzone", "linkedin", "fbook", "twi", "print", "renren", "sqq", "evernotecn", "bdysc", "tqq", "tqf", "bdxc", "kaixin001", "tieba", "douban", "bdhome", "thx", "ibaidu", "meilishuo", "mogujie", "diandian", "huaban", "duitang", "hx", "fx", "youdao", "sdo", "qingbiji", "people", "xinhua", "mail", "isohu", "yaolan", "wealink", "ty", "iguba", "h163", "copy"],
+        "bdPic": "",
+        "bdStyle": "1",
+        "bdSize": "16"
+      },
+      "share": {},
+      "image": {
+        "viewList": ["tsina", "qzone", "weixin", "fbook", "twi", "linkedin", "youdao", "evernotecn", "mshare"],
+        "viewText": "分享到：",
+        "viewSize": "16"
+      },
+      "selectShare": {
+        "bdContainerClass": null,
+        "bdSelectMiniList": ["tsina", "qzone", "weixin", "fbook", "twi", "linkedin", "youdao", "evernotecn", "mshare"]
+      }
+    };
+    with(document) 0[(getElementsByTagName('head')[0] || head).appendChild(createElement('script')).src = 'http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion=' + ~(-new Date() / 36e5)];
+  </script>
+  <script>
+    window._config = {
+      showScore: true
+    };
+    (function() {
+      var appid = 'cytY1dJ9s';
+      var conf = '00803aac284d01ab6c837519fdffa5b8';
+      var width = window.innerWidth || document.documentElement.clientWidth;
+      var nodes = document.getElementsByTagName("head")[0] || document.head || document.documentElement;
+      if (/(Android|iPhone|iPad|iPod|iOS)/i.test(navigator.userAgent) && width < 750) {
+        window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>');
+      } else {
+        var loadJs = function(d, a) {
+          var b = document.createElement("script");
+          b.setAttribute("type", "text/javascript");
+          b.setAttribute("charset", "UTF-8");
+          b.setAttribute("src", d);
+          if (typeof a === "function") {
+            if (window.attachEvent) {
+              b.onreadystatechange = function() {
+                var e = b.readyState;
+                if (e === "loaded" || e === "complete") {
+                  b.onreadystatechange = null;
+                  a()
+                }
+              }
+            } else {
+              b.onload = a
+            }
+          }
+          nodes.appendChild(b)
+        };
+        loadJs("https://changyan.sohu.com/upload/changyan.js", function() {
+          window.changyan.api.config({
+            appid: appid,
+            conf: conf
+          })
+        });
+      }
+      var loadCss = function(cssString) {
+        var style = document.createElement("style");
+        style.setAttribute("type", "text/css");
+        if (style.styleSheet) { // IE  
+          style.styleSheet.cssText = cssString;
+        } else { // w3c  
+          var cssText = document.createTextNode(cssString);
+          style.appendChild(cssText);
+        }
+        nodes.appendChild(style);
+      }
+      window.onload = function() {
+        loadCss('.module-hot-topic,.module-cmt-float-bar{display:none!important}#SOHUCS #SOHU_MAIN .module-cmt-box .post-wrap-w .wrap-action-w .cbox-prompt-w span.prompt-empty-w,#SOHUCS #SOHU_MAIN .module-cmt-float-bar .wrap-cont-w .cont-form-w .form-text-w span.text-null,#SOHUCS #SOHU_MAIN .module-cmt-float-bar .wrap-cont-w .cont-minwidth-w div.cont-comment-w a.comment-link-w,#SOHUCS #SOHU_MAIN .module-cmt-float-bar .wrap-cont-w .cont-minwidth-w div.cont-comment-w span.comment-text-w,#SOHUCS #SOHU_MAIN .module-cmt-footer .section-service-w div.service-wrap-w a:hover,#SOHUCS #SOHU_MAIN .module-cmt-header .section-cbox-w .block-head-w div.header-login,#SOHUCS #SOHU_MAIN .module-cmt-header .section-title-w .title-user-w .user-wrap-w span.wrap-name-w,#SOHUCS #SOHU_MAIN .module-cmt-list .action-click-gw span.click-disable-eg a em.icon-name-bg,#SOHUCS #SOHU_MAIN .module-cmt-list .block-title-gw ul li div.title-name-gw,#SOHUCS #SOHU_MAIN .module-cmt-list .cmt-list-type .cmt-list-number .comment-number span.cy-number,#SOHUCS #SOHU_MAIN .module-cmt-list .cmt-list-type .cmt-list-number span.comment-number,#SOHUCS #SOHU_MAIN .module-cmt-list .cmt-list-type .type-lists li.active,#SOHUCS #SOHU_MAIN .module-cmt-list .msg-wrap-gw .wrap-action-gw .action-click-gw span a:hover,#SOHUCS #SOHU_MAIN .module-cmt-list .picture-box-gw div.box-action-gw a:hover,#SOHUCS #SOHU_MAIN .module-cmt-list .wrap-action-gw .action-click-gw span a:hover em.icon-name-bg,#SOHUCS #SOHU_MAIN .module-cmt-list .wrap-user-gw span.user-name-gw a{color:#40759b!important}#SOHUCS #SOHU_MAIN .module-cmt-box .post-wrap-w .post-wrap-border-t div.post-wrap-border-t-r,#SOHUCS #SOHU_MAIN .module-cmt-box .post-wrap-w div.post-wrap-border-l,#SOHUCS #SOHU_MAIN .module-cmt-box .post-wrap-w div.post-wrap-border-r{display:none!important}#SOHUCS #SOHU_MAIN .module-cmt-box .post-wrap-w .post-wrap-border-t div.post-wrap-border-t-l{background:#FFF!important;top:-2px!important}#SOHUCS #SOHU_MAIN .module-cmt-box .post-wrap-w .wrap-action-w .action-function-w .uploading-wrapper-dw div.wrapper-image-dw,#SOHUCS #SOHU_MAIN .module-cmt-box .post-wrap-w div.post-wrap-main,#SOHUCS #SOHU_MAIN .module-cmt-float-bar .wrap-cont-w .cont-form-w div.form-text-w,#SOHUCS #SOHU_MAIN .module-cmt-header .section-cbox-w .block-head-w div.header-login,#SOHUCS #SOHU_MAIN .module-cmt-list .module-cmt-box .post-wrap-w div.post-wrap-main{border:1px solid #e6e6e6!important;border-radius:20px 20px 20px 20px;margin:0!important}#SOHUCS #SOHU_MAIN .module-cmt-box .post-wrap-w .wrap-action-w .action-issue-w .issue-btn-w a .btn-fw{width:130px!important;height:34px!important;line-height:33px!important;font-size:17px!important;background:#5483b1!important;border-radius:20px!important;color:#FFF!important;-webkit-box-shadow:0 -1px 4px #5483b1 inset;box-shadow:0 -1px 10px #5483b1 inset}#SOHUCS #SOHU_MAIN .module-cmt-box .post-wrap-w .wrap-action-w .action-issue-w .issue-btn-w a .btn-fw:before{content:"发表评论"}#SOHUCS #SOHU_MAIN .module-cmt-box .post-wrap-w .wrap-action-w .action-issue-w .issue-btn-w a:hover .btn-fw{color:#40759b!important;background:#FFF!important}#SOHUCS #SOHU_MAIN .module-cmt-list .cmt-list-type .type-lists li{background:none!important;border-bottom:1px solid #e6e6e6}#SOHUCS #SOHU_MAIN .module-cmt-list .cmt-list-type .type-lists li.active{border:1px solid #e6e6e6;border-radius:10px 10px 0 0;border-bottom:none}#SOHUCS #SOHU_MAIN .module-cmt-list .block-title-gw ul li .title-name-gw div.title-name-gw-tag{background:#5483b1!important;border-radius:3px}#SOHUCS #SOHU_MAIN .module-cmt-list .cmt-list-type div.cmt-list-border{background-color:#e6e6e6!important}#SOHUCS #SOHU_MAIN .module-cmt-notice ul.nt-list li.nt-item{border:1px solid #e6e6e6!important}#SOHUCS #SOHU_MAIN .module-cmt-notice ul.nt-list li.nt-item .nt-logo{text-align:center;line-height:40px;border-radius:50%!important;background:#e6e6e6!important}#SOHUCS #SOHU_MAIN .module-cmt-notice ul.nt-list li.nt-item .nt-logo:before{content:"畅";font-size:22px;color:#FFF}#SOHUCS #SOHU_MAIN .module-cmt-notice ul.nt-list li.nt-item a.nt-text,#SOHUCS #SOHU_MAIN .module-cmt-notice ul.nt-list li.nt-item a.nt-text i{color:#5483b1!important}#SOHUCS #SOHU_MAIN .module-cmt-header .section-title-w .title-user-w .user-wrap-w{background:#FFF!important}');
+      };
+    })();
+  </script>
+  <script src="https://assets.changyan.sohu.com/upload/plugins/plugins.count.js"></script>
+</body>
+
+</html>
